@@ -11,6 +11,9 @@ export default function AboutPage() {
   // Active Stage state for Section 3 Process Journey
   const [activeStage, setActiveStage] = useState(0);
 
+  // Active Principle state for Section 6 "What Defines Our Work"
+  const [activePrinciple, setActivePrinciple] = useState(0);
+
   // 4 Process Stages for Section 3
   const stages = [
     {
@@ -43,27 +46,35 @@ export default function AboutPage() {
     }
   ];
 
-  // 4 Qualities for Section 6: WHAT DEFINES OUR WORK
-  const qualities = [
+  // 4 Editorial Principles for Section 6: WHAT DEFINES OUR WORK
+  const principles = [
     {
       number: '01',
       title: 'PRECISION',
-      desc: 'Attention to detail in every component, held strictly to drawing tolerances and concentricity standards.'
+      desc: 'Attention to detail in every component, helping maintain tight tolerances and consistent engineering standards.',
+      image: '/images/precision_metrology_datum.jpg',
+      spec: 'MICRON-LEVEL GD&T TOLERANCES'
     },
     {
       number: '02',
       title: 'CUSTOM ENGINEERING',
-      desc: 'Solutions developed around specific manufacturing needs and special-purpose machinery requirements.'
+      desc: 'Solutions developed around specific manufacturing needs and custom machine requirements.',
+      image: '/images/real_products_curated/01_high_altitude_checking.jpg',
+      spec: 'APPLICATION-SPECIFIC TOOLING'
     },
     {
       number: '03',
       title: 'RELIABILITY',
-      desc: 'A practical and consistent approach to manufacturing engineered for continuous industrial duty.'
+      desc: 'A practical and consistent approach to manufacturing engineered for continuous industrial use.',
+      image: '/images/service_jigs_fixtures.jpg',
+      spec: 'CONTINUOUS SHOPFLOOR DUTY'
     },
     {
       number: '04',
       title: 'COMMITMENT',
-      desc: 'Focused on delivering dependable engineering solutions on time and built to last.'
+      desc: 'Focused on delivering dependable engineering solutions and supporting every project from requirement to final output.',
+      image: '/images/real_products_curated/05_hydraulic_press_structure.jpg',
+      spec: 'END-TO-END PROJECT SUPPORT'
     }
   ];
 
@@ -953,20 +964,45 @@ export default function AboutPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 06 — WHAT DEFINES OUR WORK (Numbered Editorial Principles)         */}
+      {/* SECTION 06 — WHAT DEFINES OUR WORK (Premium Editorial Composition)         */}
       {/* ========================================================================= */}
       <section
         id="what-defines-us"
         style={{
-          paddingTop: 'clamp(80px, 10vw, 130px)',
-          paddingBottom: 'clamp(80px, 10vw, 130px)',
+          position: 'relative',
+          paddingTop: 'clamp(90px, 11vw, 150px)',
+          paddingBottom: 'clamp(90px, 11vw, 150px)',
           backgroundColor: '#ffffff',
-          borderBottom: '1px solid #e5e7eb'
+          borderBottom: '1px solid #e5e7eb',
+          overflow: 'hidden'
         }}
       >
-        <div className="container-custom">
+        {/* Giant Watermark Background Number (Subtle & Dynamic) */}
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '55%',
+            transform: 'translate(-50%, -50%)',
+            fontFamily: 'var(--font-tech)',
+            fontSize: 'clamp(180px, 26vw, 380px)',
+            fontWeight: 900,
+            color: '#111827',
+            opacity: 0.028,
+            lineHeight: 1,
+            userSelect: 'none',
+            pointerEvents: 'none',
+            zIndex: 1,
+            transition: 'all 0.5s ease'
+          }}
+          aria-hidden="true"
+        >
+          {principles[activePrinciple].number}
+        </div>
+
+        <div className="container-custom" style={{ position: 'relative', zIndex: 2 }}>
           
-          {/* Section Heading */}
+          {/* Top-Left Section Heading */}
           <div style={{ maxWidth: '640px', marginBottom: 'clamp(44px, 5.5vw, 68px)' }}>
             <div
               style={{
@@ -994,10 +1030,10 @@ export default function AboutPage() {
             <h2
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(32px, 4.2vw, 54px)',
+                fontSize: 'clamp(32px, 4.4vw, 56px)',
                 fontWeight: 900,
-                lineHeight: 1.1,
-                letterSpacing: '-0.03em',
+                lineHeight: 1.08,
+                letterSpacing: '-0.035em',
                 color: '#111827',
                 margin: 0,
                 textTransform: 'uppercase'
@@ -1008,80 +1044,324 @@ export default function AboutPage() {
             </h2>
           </div>
 
-          {/* 4 Numbered Editorial Qualities with Subtle Line Expansion on Hover */}
+          {/* ========================================================================= */}
+          {/* ASYMMETRICAL EDITORIAL COMPOSITION (Surrounding Central Macro Visual)     */}
+          {/* ========================================================================= */}
           <div
-            className="qualities-numbered-grid"
+            className="editorial-principles-layout"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: 'clamp(24px, 3.5vw, 44px)'
+              gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 0.9fr) minmax(0, 1.15fr)',
+              gap: 'clamp(28px, 4vw, 52px)',
+              alignItems: 'center'
             }}
           >
-            {qualities.map((q, idx) => (
+            {/* LEFT WING: Principle 01 (Top) & Principle 03 (Bottom) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(40px, 5vw, 68px)' }}>
+              
+              {/* 01 — PRECISION */}
               <div
-                key={q.title}
+                onMouseEnter={() => setActivePrinciple(0)}
+                onClick={() => setActivePrinciple(0)}
                 style={{
-                  paddingLeft: idx > 0 ? 'clamp(16px, 2vw, 28px)' : '0',
-                  borderLeft: idx > 0 ? '1px solid #e5e7eb' : 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.25s ease'
+                  cursor: 'pointer',
+                  opacity: activePrinciple === 0 ? 1 : 0.7,
+                  transform: activePrinciple === 0 ? 'translateX(4px)' : 'none',
+                  transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
-                className="quality-numbered-col"
+                className="principle-editorial-item"
               >
-                {/* Number & Accent Line */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '8px' }}>
                   <span
                     style={{
                       fontFamily: 'var(--font-tech)',
                       fontSize: '14px',
                       fontWeight: 800,
                       letterSpacing: '0.1em',
-                      color: '#c52227'
+                      color: activePrinciple === 0 ? '#c52227' : '#94a3b8',
+                      transition: 'color 0.3s ease'
                     }}
-                    className="quality-num"
                   >
-                    {q.number}
+                    01
                   </span>
-                  <span
+                  <h3
                     style={{
-                      width: '20px',
-                      height: '2px',
-                      backgroundColor: '#c52227',
-                      transition: 'width 0.3s ease'
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'clamp(22px, 2.4vw, 32px)',
+                      fontWeight: 900,
+                      letterSpacing: '-0.02em',
+                      color: activePrinciple === 0 ? '#111827' : '#475569',
+                      margin: 0,
+                      textTransform: 'uppercase',
+                      transition: 'color 0.3s ease'
                     }}
-                    className="quality-line"
-                  />
+                  >
+                    PRECISION
+                  </h3>
                 </div>
 
-                {/* Title */}
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'clamp(17px, 1.3vw, 20px)',
-                    fontWeight: 900,
-                    letterSpacing: '0.02em',
-                    color: '#111827',
-                    margin: '0 0 10px 0',
-                    textTransform: 'uppercase'
-                  }}
-                >
-                  {q.title}
-                </h3>
-
-                {/* Description */}
                 <p
                   style={{
-                    fontSize: '14px',
-                    lineHeight: 1.6,
-                    color: '#64748b',
-                    margin: 0
+                    fontSize: '14.5px',
+                    lineHeight: 1.65,
+                    color: activePrinciple === 0 ? '#334155' : '#64748b',
+                    margin: 0,
+                    maxWidth: '380px',
+                    transition: 'color 0.3s ease'
                   }}
                 >
-                  {q.desc}
+                  {principles[0].desc}
                 </p>
               </div>
-            ))}
+
+              {/* 03 — RELIABILITY */}
+              <div
+                onMouseEnter={() => setActivePrinciple(2)}
+                onClick={() => setActivePrinciple(2)}
+                style={{
+                  cursor: 'pointer',
+                  opacity: activePrinciple === 2 ? 1 : 0.7,
+                  transform: activePrinciple === 2 ? 'translateX(4px)' : 'none',
+                  transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+                className="principle-editorial-item"
+              >
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '8px' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-tech)',
+                      fontSize: '14px',
+                      fontWeight: 800,
+                      letterSpacing: '0.1em',
+                      color: activePrinciple === 2 ? '#c52227' : '#94a3b8',
+                      transition: 'color 0.3s ease'
+                    }}
+                  >
+                    03
+                  </span>
+                  <h3
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'clamp(22px, 2.4vw, 32px)',
+                      fontWeight: 900,
+                      letterSpacing: '-0.02em',
+                      color: activePrinciple === 2 ? '#111827' : '#475569',
+                      margin: 0,
+                      textTransform: 'uppercase',
+                      transition: 'color 0.3s ease'
+                    }}
+                  >
+                    RELIABILITY
+                  </h3>
+                </div>
+
+                <p
+                  style={{
+                    fontSize: '14.5px',
+                    lineHeight: 1.65,
+                    color: activePrinciple === 2 ? '#334155' : '#64748b',
+                    margin: 0,
+                    maxWidth: '380px',
+                    transition: 'color 0.3s ease'
+                  }}
+                >
+                  {principles[2].desc}
+                </p>
+              </div>
+
+            </div>
+
+            {/* CENTER CORE: Refined Industrial Macro Visual Focal Point (Clean Crop, No Cards) */}
+            <div
+              style={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center'
+              }}
+              className="editorial-central-visual"
+            >
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  maxWidth: '320px',
+                  borderRadius: '2px',
+                  overflow: 'hidden',
+                  border: '1px solid #e5e7eb',
+                  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.07)',
+                  backgroundColor: '#0a1128'
+                }}
+              >
+                <div style={{ position: 'relative', width: '100%', height: 'clamp(280px, 32vw, 380px)', overflow: 'hidden' }}>
+                  {principles.map((pr, idx) => (
+                    <img
+                      key={pr.number}
+                      src={pr.image}
+                      alt={pr.title}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        opacity: activePrinciple === idx ? 1 : 0,
+                        transform: activePrinciple === idx ? 'scale(1)' : 'scale(1.04)',
+                        transition: 'opacity 0.6s ease, transform 0.6s ease',
+                        display: 'block'
+                      }}
+                    />
+                  ))}
+
+                  {/* Clean Bottom Metadata Tag */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      padding: '12px 16px',
+                      background: 'linear-gradient(180deg, transparent 0%, rgba(10, 17, 40, 0.94) 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      color: '#ffffff',
+                      zIndex: 2
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-tech)',
+                        fontSize: '10.5px',
+                        fontWeight: 700,
+                        letterSpacing: '0.1em',
+                        color: '#ffffff',
+                        textTransform: 'uppercase'
+                      }}
+                    >
+                      {principles[activePrinciple].spec}
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-tech)', fontSize: '11px', fontWeight: 800, color: '#c52227' }}>
+                      {principles[activePrinciple].number}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT WING: Principle 02 (Top) & Principle 04 (Bottom) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(40px, 5vw, 68px)' }}>
+              
+              {/* 02 — CUSTOM ENGINEERING */}
+              <div
+                onMouseEnter={() => setActivePrinciple(1)}
+                onClick={() => setActivePrinciple(1)}
+                style={{
+                  cursor: 'pointer',
+                  opacity: activePrinciple === 1 ? 1 : 0.7,
+                  transform: activePrinciple === 1 ? 'translateX(4px)' : 'none',
+                  transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+                className="principle-editorial-item"
+              >
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '8px' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-tech)',
+                      fontSize: '14px',
+                      fontWeight: 800,
+                      letterSpacing: '0.1em',
+                      color: activePrinciple === 1 ? '#c52227' : '#94a3b8',
+                      transition: 'color 0.3s ease'
+                    }}
+                  >
+                    02
+                  </span>
+                  <h3
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'clamp(22px, 2.4vw, 32px)',
+                      fontWeight: 900,
+                      letterSpacing: '-0.02em',
+                      color: activePrinciple === 1 ? '#111827' : '#475569',
+                      margin: 0,
+                      textTransform: 'uppercase',
+                      transition: 'color 0.3s ease'
+                    }}
+                  >
+                    CUSTOM ENGINEERING
+                  </h3>
+                </div>
+
+                <p
+                  style={{
+                    fontSize: '14.5px',
+                    lineHeight: 1.65,
+                    color: activePrinciple === 1 ? '#334155' : '#64748b',
+                    margin: 0,
+                    maxWidth: '380px',
+                    transition: 'color 0.3s ease'
+                  }}
+                >
+                  {principles[1].desc}
+                </p>
+              </div>
+
+              {/* 04 — COMMITMENT */}
+              <div
+                onMouseEnter={() => setActivePrinciple(3)}
+                onClick={() => setActivePrinciple(3)}
+                style={{
+                  cursor: 'pointer',
+                  opacity: activePrinciple === 3 ? 1 : 0.7,
+                  transform: activePrinciple === 3 ? 'translateX(4px)' : 'none',
+                  transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+                className="principle-editorial-item"
+              >
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '8px' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-tech)',
+                      fontSize: '14px',
+                      fontWeight: 800,
+                      letterSpacing: '0.1em',
+                      color: activePrinciple === 3 ? '#c52227' : '#94a3b8',
+                      transition: 'color 0.3s ease'
+                    }}
+                  >
+                    04
+                  </span>
+                  <h3
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'clamp(22px, 2.4vw, 32px)',
+                      fontWeight: 900,
+                      letterSpacing: '-0.02em',
+                      color: activePrinciple === 3 ? '#111827' : '#475569',
+                      margin: 0,
+                      textTransform: 'uppercase',
+                      transition: 'color 0.3s ease'
+                    }}
+                  >
+                    COMMITMENT
+                  </h3>
+                </div>
+
+                <p
+                  style={{
+                    fontSize: '14.5px',
+                    lineHeight: 1.65,
+                    color: activePrinciple === 3 ? '#334155' : '#64748b',
+                    margin: 0,
+                    maxWidth: '380px',
+                    transition: 'color 0.3s ease'
+                  }}
+                >
+                  {principles[3].desc}
+                </p>
+              </div>
+
+            </div>
           </div>
 
         </div>
@@ -1262,15 +1542,7 @@ export default function AboutPage() {
           transform: scale(1.03) !important;
         }
 
-        .quality-numbered-col:hover {
-          transform: translateY(-3px) !important;
-        }
-
-        .quality-numbered-col:hover .quality-line {
-          width: 32px !important;
-        }
-
-        @media (max-width: 960px) {
+        @media (max-width: 990px) {
           .story-split-grid {
             grid-template-columns: 1fr !important;
             gap: 36px !important;
@@ -1291,13 +1563,13 @@ export default function AboutPage() {
           .verified-facts-grid {
             padding-left: 0 !important;
           }
-          .qualities-numbered-grid {
-            grid-template-columns: 1fr 1fr !important;
-            row-gap: 32px !important;
+          .editorial-principles-layout {
+            grid-template-columns: 1fr !important;
+            gap: 36px !important;
           }
-          .quality-numbered-col {
-            padding-left: 0 !important;
-            border-left: none !important;
+          .editorial-central-visual {
+            order: -1 !important;
+            margin-bottom: 20px !important;
           }
         }
 
@@ -1308,10 +1580,6 @@ export default function AboutPage() {
           .verified-facts-grid {
             grid-template-columns: 1fr !important;
             gap: 20px !important;
-          }
-          .qualities-numbered-grid {
-            grid-template-columns: 1fr !important;
-            row-gap: 28px !important;
           }
         }
       `}</style>
