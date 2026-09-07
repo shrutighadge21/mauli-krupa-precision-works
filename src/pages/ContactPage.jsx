@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { COMPANY_INFO } from '../data/companyData';
-import { ChevronRight, ArrowRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, MapPin, ArrowRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
+    company: '',
     email: '',
     phone: '',
+    service: 'Precision Machining',
     message: ''
   });
   const [errors, setErrors] = useState({});
@@ -28,7 +29,7 @@ export default function ContactPage() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Please provide your name';
+    if (!formData.name.trim()) newErrors.name = 'Please provide your full name';
     if (!formData.email.trim()) {
       newErrors.email = 'Please provide your email address';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -39,8 +40,11 @@ export default function ContactPage() {
     } else if (formData.phone.replace(/\D/g, '').length < 10) {
       newErrors.phone = 'Please enter a valid phone number (min. 10 digits)';
     }
+    if (!formData.service.trim()) {
+      newErrors.service = 'Please select a requirement';
+    }
     if (!formData.message.trim()) {
-      newErrors.message = 'Please describe your requirement or inquiry';
+      newErrors.message = 'Please provide your project or requirement details';
     }
     return newErrors;
   };
@@ -65,86 +69,107 @@ export default function ContactPage() {
 
   const handleReset = () => {
     setSubmitted(false);
-    setFormData({ name: '', email: '', phone: '', message: '' });
+    setFormData({
+      name: '',
+      company: '',
+      email: '',
+      phone: '',
+      service: 'Precision Machining',
+      message: ''
+    });
     setErrors({});
   };
 
-  const mapQuery = encodeURIComponent('Mauli Krupa Precision Works, Sector No. 3, Bhosari MIDC, Pune');
+  const mapQuery = encodeURIComponent('Mauli Krupa Precision Works, Gulve Vasti, Bhosari MIDC, Pune 411039');
   const googleMapEmbedUrl = `https://maps.google.com/maps?q=${mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Mauli Krupa Precision Works Sector No 3 Bhosari MIDC Pune')}`;
+  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Mauli Krupa Precision Works Gulve Vasti Bhosari MIDC Pune 411039')}`;
 
   return (
-    <div className="contact-page-root" style={{ backgroundColor: '#fafbfc', color: '#111827', overflow: 'hidden' }}>
+    <div className="contact-page-wrapper" style={{ backgroundColor: '#ffffff', color: '#111827', overflow: 'hidden' }}>
       
       {/* ========================================================================= */}
-      {/* SECTION 01 — CONTACT HERO + ENQUIRY FORM (Minimal Industrial Layout)       */}
+      {/* SECTION 1 — CINEMATIC CONTACT HERO (Dark Industrial CNC Milling Background)*/}
       {/* ========================================================================= */}
       <section
         style={{
-          paddingTop: 'clamp(110px, 14vh, 145px)',
-          paddingBottom: 'clamp(60px, 9vh, 96px)',
-          position: 'relative'
+          position: 'relative',
+          minHeight: 'clamp(520px, 72vh, 680px)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          paddingTop: 'clamp(110px, 14vh, 140px)',
+          paddingBottom: '36px',
+          backgroundColor: '#0a1128',
+          color: '#ffffff',
+          overflow: 'hidden'
         }}
       >
-        <div className="container-custom">
-          {/* Breadcrumb Navigation */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '28px',
-              fontFamily: 'var(--font-tech)',
-              fontSize: '12px',
-              color: '#6b7280',
-              letterSpacing: '0.06em'
-            }}
-          >
-            <Link to="/" style={{ color: '#6b7280', textDecoration: 'none' }}>HOME</Link>
-            <ChevronRight size={13} color="#9ca3af" />
-            <span style={{ color: '#c52227', fontWeight: 700 }}>CONTACT US</span>
-          </div>
+        {/* Cinematic Background Image with Slow Subtle Ambient Zoom */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'url(/images/contact_hero_cnc.jpg)',
+            backgroundPosition: 'center 40%',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            animation: 'subtleHeroZoom 24s ease-in-out infinite alternate',
+            zIndex: 0
+          }}
+        />
 
+        {/* Dark Cinematic Industrial Gradient Overlay */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, rgba(10, 17, 40, 0.92) 0%, rgba(10, 17, 40, 0.82) 45%, rgba(10, 17, 40, 0.6) 100%)',
+            zIndex: 1
+          }}
+        />
+
+        {/* Hero Content */}
+        <div className="container-custom" style={{ position: 'relative', zIndex: 2, width: '100%', my: 'auto' }}>
           <div
-            className="contact-main-grid"
+            className="hero-grid-layout"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 0.85fr)',
-              gap: 'clamp(36px, 6vw, 84px)',
-              alignItems: 'start'
+              gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 0.8fr)',
+              gap: '40px',
+              alignItems: 'center'
             }}
           >
-            {/* Left Column: Heading, Description & Minimal Open Enquiry Form */}
-            <div>
-              {/* Eyebrow */}
+            {/* Left Content */}
+            <div style={{ maxWidth: '680px' }}>
+              {/* Eyebrow Label */}
               <div
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
                   fontFamily: 'var(--font-tech)',
-                  fontSize: '12.5px',
+                  fontSize: '12px',
                   fontWeight: 700,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.14em',
+                  letterSpacing: '0.16em',
                   color: '#c52227',
-                  marginBottom: '16px'
+                  marginBottom: '18px'
                 }}
               >
-                <span style={{ width: '16px', height: '2px', backgroundColor: '#c52227', display: 'inline-block' }} />
+                <span style={{ width: '18px', height: '2px', backgroundColor: '#c52227', display: 'inline-block' }} />
                 <span>CONTACT</span>
               </div>
 
-              {/* Large Bold Heading with single red accent */}
+              {/* Main Heading with Red Accent */}
               <h1
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(38px, 5.2vw, 68px)',
+                  fontSize: 'clamp(40px, 5.8vw, 76px)',
                   fontWeight: 900,
                   lineHeight: 1.05,
                   letterSpacing: '-0.03em',
-                  color: '#0a1128',
-                  margin: '0 0 20px 0',
+                  color: '#ffffff',
+                  margin: '0 0 22px 0',
                   textTransform: 'uppercase'
                 }}
               >
@@ -153,88 +178,214 @@ export default function ContactPage() {
                 WITH <span style={{ color: '#c52227' }}>PRECISION.</span>
               </h1>
 
-              {/* Short Description */}
+              {/* Supporting Text */}
               <p
                 style={{
-                  fontSize: 'clamp(15.5px, 1.25vw, 18px)',
+                  fontSize: 'clamp(15.5px, 1.3vw, 19px)',
                   lineHeight: 1.65,
-                  color: '#4b5563',
-                  margin: '0 0 36px 0',
-                  maxWidth: '540px'
+                  color: '#cbd5e1',
+                  margin: 0,
+                  maxWidth: '560px',
+                  fontWeight: 400
                 }}
               >
                 Have a requirement? Let's discuss how our precision engineering and manufacturing capabilities can support your project.
               </p>
+            </div>
 
-              {/* Minimal Open Enquiry Form */}
-              <div style={{ maxWidth: '540px' }}>
-                {submitted ? (
+            {/* Right Side Triad Watermark */}
+            <div
+              className="hero-right-triad"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                fontFamily: 'var(--font-tech)',
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '0.22em',
+                color: 'rgba(255, 255, 255, 0.45)',
+                textTransform: 'uppercase',
+                lineHeight: 2,
+                borderRight: '2px solid rgba(197, 34, 39, 0.6)',
+                paddingRight: '18px'
+              }}
+            >
+              <div>PRECISION</div>
+              <div>PEOPLE</div>
+              <div>PROGRESS</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar in Hero */}
+        <div className="container-custom" style={{ position: 'relative', zIndex: 2, width: '100%' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingTop: '20px',
+              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+              fontFamily: 'var(--font-tech)',
+              fontSize: '11px',
+              letterSpacing: '0.12em',
+              color: 'rgba(255, 255, 255, 0.5)',
+              textTransform: 'uppercase'
+            }}
+          >
+            <span>FROM IDEAS — TO — REAL SOLUTIONS</span>
+            <span className="hero-bhosari-tag">BHOSARI MIDC, PUNE · ESTD. 2015</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 2 — CONTACT FORM + CONTACT INFORMATION (Spacious 2-Column Layout)  */}
+      {/* ========================================================================= */}
+      <section
+        style={{
+          paddingTop: 'clamp(60px, 9vh, 100px)',
+          paddingBottom: 'clamp(60px, 9vh, 100px)',
+          backgroundColor: '#fafbfc'
+        }}
+      >
+        <div className="container-custom">
+          <div
+            className="contact-two-col-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'minmax(0, 1.25fr) minmax(0, 0.75fr)',
+              gap: 'clamp(40px, 6vw, 84px)',
+              alignItems: 'start'
+            }}
+          >
+            {/* LEFT SIDE: ENQUIRY FORM */}
+            <div>
+              {/* Eyebrow */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.14em',
+                  color: '#c52227',
+                  marginBottom: '12px'
+                }}
+              >
+                <span style={{ width: '16px', height: '2px', backgroundColor: '#c52227', display: 'inline-block' }} />
+                <span>SEND US A MESSAGE</span>
+              </div>
+
+              {/* Heading */}
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(28px, 3.6vw, 44px)',
+                  fontWeight: 800,
+                  letterSpacing: '-0.025em',
+                  color: '#0a1128',
+                  margin: '0 0 12px 0'
+                }}
+              >
+                Get in Touch With Our Team
+              </h2>
+
+              {/* Subtext */}
+              <p
+                style={{
+                  fontSize: '15px',
+                  color: '#4b5563',
+                  lineHeight: 1.6,
+                  margin: '0 0 32px 0'
+                }}
+              >
+                Share your requirement with us. Our team will get back to you shortly.
+              </p>
+
+              {/* The Form */}
+              {submitted ? (
+                <div
+                  style={{
+                    padding: '36px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '2px',
+                    textAlign: 'left'
+                  }}
+                >
                   <div
                     style={{
-                      padding: '32px',
-                      backgroundColor: '#ffffff',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '2px',
-                      textAlign: 'left'
+                      width: '46px',
+                      height: '46px',
+                      backgroundColor: 'rgba(14, 138, 68, 0.1)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '16px'
                     }}
                   >
-                    <div
-                      style={{
-                        width: '44px',
-                        height: '44px',
-                        backgroundColor: 'rgba(14, 138, 68, 0.1)',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '16px'
-                      }}
-                    >
-                      <CheckCircle2 size={24} color="#0e8a44" />
-                    </div>
-                    <h3
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: '20px',
-                        fontWeight: 800,
-                        color: '#0a1128',
-                        margin: '0 0 8px 0',
-                        textTransform: 'uppercase'
-                      }}
-                    >
-                      Enquiry Received
-                    </h3>
-                    <p style={{ fontSize: '14px', color: '#4b5563', lineHeight: 1.6, margin: '0 0 20px 0' }}>
-                      Thank you, <strong>{formData.name}</strong>. Our engineering team at Bhosari MIDC will review your specifications and get back to you shortly.
-                    </p>
-                    <button
-                      onClick={handleReset}
-                      style={{
-                        padding: '10px 20px',
-                        backgroundColor: '#0a1128',
-                        color: '#ffffff',
-                        fontFamily: 'var(--font-tech)',
-                        fontSize: '12.5px',
-                        fontWeight: 700,
-                        letterSpacing: '0.06em',
-                        textTransform: 'uppercase',
-                        border: 'none',
-                        borderRadius: '2px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#c52227'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0a1128'}
-                    >
-                      Send Another Enquiry
-                    </button>
+                    <CheckCircle2 size={26} color="#0e8a44" />
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
-                    {/* Field 1: YOUR NAME */}
-                    <div className="minimal-form-group">
-                      <label className="minimal-form-label">
-                        YOUR NAME <span style={{ color: '#c52227' }}>*</span>
+
+                  <h3
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '22px',
+                      fontWeight: 800,
+                      color: '#0a1128',
+                      margin: '0 0 8px 0',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    Enquiry Received
+                  </h3>
+
+                  <p style={{ fontSize: '14.5px', color: '#4b5563', lineHeight: 1.6, margin: '0 0 24px 0' }}>
+                    Thank you, <strong>{formData.name}</strong>. Your enquiry regarding <strong>{formData.service}</strong> has been received. Our technical team at Bhosari MIDC will review your specifications and contact you soon.
+                  </p>
+
+                  <button
+                    onClick={handleReset}
+                    style={{
+                      padding: '12px 24px',
+                      backgroundColor: '#0a1128',
+                      color: '#ffffff',
+                      fontFamily: 'var(--font-tech)',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      border: 'none',
+                      borderRadius: '2px',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#c52227'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0a1128'}
+                  >
+                    Submit Another Enquiry
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {/* Row 1: Full Name & Company Name */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                      gap: '24px'
+                    }}
+                  >
+                    <div className="editorial-form-group">
+                      <label className="editorial-form-label">
+                        Full Name <span style={{ color: '#c52227' }}>*</span>
                       </label>
                       <input
                         type="text"
@@ -242,233 +393,301 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         placeholder="e.g. Rajesh Patil"
-                        className={`minimal-form-input ${errors.name ? 'has-error' : ''}`}
+                        className={`editorial-form-input ${errors.name ? 'has-error' : ''}`}
                       />
-                      {errors.name && <span className="minimal-form-error">{errors.name}</span>}
+                      {errors.name && <span className="editorial-form-error">{errors.name}</span>}
                     </div>
 
-                    {/* 2-Col: EMAIL & PHONE */}
-                    <div
+                    <div className="editorial-form-group">
+                      <label className="editorial-form-label">
+                        Company Name
+                      </label>
+                      <input
+                        type="text"
+                        name="company"
+                        value={formData.company}
+                        onChange={handleInputChange}
+                        placeholder="e.g. ABC Industries"
+                        className="editorial-form-input"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 2: Email Address & Phone Number */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                      gap: '24px'
+                    }}
+                  >
+                    <div className="editorial-form-group">
+                      <label className="editorial-form-label">
+                        Email Address <span style={{ color: '#c52227' }}>*</span>
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="e.g. name@company.com"
+                        className={`editorial-form-input ${errors.email ? 'has-error' : ''}`}
+                      />
+                      {errors.email && <span className="editorial-form-error">{errors.email}</span>}
+                    </div>
+
+                    <div className="editorial-form-group">
+                      <label className="editorial-form-label">
+                        Phone Number <span style={{ color: '#c52227' }}>*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="e.g. +91 98765 43210"
+                        className={`editorial-form-input ${errors.phone ? 'has-error' : ''}`}
+                      />
+                      {errors.phone && <span className="editorial-form-error">{errors.phone}</span>}
+                    </div>
+                  </div>
+
+                  {/* Row 3: Product or Service Requirement */}
+                  <div className="editorial-form-group">
+                    <label className="editorial-form-label">
+                      Product or Service Requirement <span style={{ color: '#c52227' }}>*</span>
+                    </label>
+                    <select
+                      name="service"
+                      value={formData.service}
+                      onChange={handleInputChange}
+                      className="editorial-form-input editorial-form-select"
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <option value="Precision Machining">Precision Machining</option>
+                      <option value="Tooling">Tooling</option>
+                      <option value="Heavy Welding">Heavy Welding</option>
+                      <option value="Fabrication">Fabrication</option>
+                      <option value="Custom Engineering">Custom Engineering</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    {errors.service && <span className="editorial-form-error">{errors.service}</span>}
+                  </div>
+
+                  {/* Row 4: Message */}
+                  <div className="editorial-form-group">
+                    <label className="editorial-form-label">
+                      Message <span style={{ color: '#c52227' }}>*</span>
+                    </label>
+                    <textarea
+                      name="message"
+                      rows={4}
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      placeholder="Briefly describe your tooling, fixture, machining, conveyor or fabrication requirement..."
+                      className={`editorial-form-input editorial-form-textarea ${errors.message ? 'has-error' : ''}`}
+                    />
+                    {errors.message && <span className="editorial-form-error">{errors.message}</span>}
+                  </div>
+
+                  {/* Submit Button */}
+                  <div style={{ paddingTop: '8px' }}>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="editorial-submit-btn"
                       style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                        gap: '20px'
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px',
+                        padding: '16px 36px',
+                        backgroundColor: '#c52227',
+                        color: '#ffffff',
+                        fontFamily: 'var(--font-tech)',
+                        fontSize: '14px',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        border: 'none',
+                        borderRadius: '2px',
+                        cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                        boxShadow: '0 4px 14px rgba(197, 34, 39, 0.25)'
                       }}
                     >
-                      <div className="minimal-form-group">
-                        <label className="minimal-form-label">
-                          EMAIL ADDRESS <span style={{ color: '#c52227' }}>*</span>
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          placeholder="e.g. name@company.com"
-                          className={`minimal-form-input ${errors.email ? 'has-error' : ''}`}
-                        />
-                        {errors.email && <span className="minimal-form-error">{errors.email}</span>}
-                      </div>
-
-                      <div className="minimal-form-group">
-                        <label className="minimal-form-label">
-                          PHONE NUMBER <span style={{ color: '#c52227' }}>*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          placeholder="e.g. +91 9876543210"
-                          className={`minimal-form-input ${errors.phone ? 'has-error' : ''}`}
-                        />
-                        {errors.phone && <span className="minimal-form-error">{errors.phone}</span>}
-                      </div>
-                    </div>
-
-                    {/* Field 4: MESSAGE / REQUIREMENT */}
-                    <div className="minimal-form-group">
-                      <label className="minimal-form-label">
-                        MESSAGE / REQUIREMENT <span style={{ color: '#c52227' }}>*</span>
-                      </label>
-                      <textarea
-                        name="message"
-                        rows={3}
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        placeholder="Briefly describe your tooling, fixture, machining, conveyor, or fabrication requirement..."
-                        className={`minimal-form-input minimal-form-textarea ${errors.message ? 'has-error' : ''}`}
-                      />
-                      {errors.message && <span className="minimal-form-error">{errors.message}</span>}
-                    </div>
-
-                    {/* Submit Button */}
-                    <div style={{ paddingTop: '6px' }}>
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="minimal-submit-btn"
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '10px',
-                          padding: '15px 32px',
-                          backgroundColor: '#c52227',
-                          color: '#ffffff',
-                          fontFamily: 'var(--font-tech)',
-                          fontSize: '13.5px',
-                          fontWeight: 700,
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
-                          border: 'none',
-                          borderRadius: '2px',
-                          cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                          transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                          boxShadow: '0 4px 14px rgba(197, 34, 39, 0.25)'
-                        }}
-                      >
-                        <span>{isSubmitting ? 'TRANSMITTING...' : 'SEND ENQUIRY'}</span>
-                        <ArrowRight size={15} className="btn-arrow" />
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </div>
+                      <span>{isSubmitting ? 'TRANSMITTING...' : 'SEND ENQUIRY'}</span>
+                      <ArrowRight size={16} className="btn-arrow-icon" />
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
 
-            {/* Right Column: Authentic Industrial Photograph & Direct Contact Details */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-              {/* Editorial Industrial Image (No SaaS rounded cards) */}
+            {/* RIGHT SIDE: DIRECT ENQUIRIES / CONTACT DETAILS */}
+            <div style={{ paddingLeft: 'clamp(0px, 2vw, 24px)', borderLeft: '1px solid #e5e7eb' }} className="contact-right-col">
+              {/* Eyebrow */}
               <div
                 style={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  borderRadius: '2px',
-                  border: '1px solid #e2e8f0',
-                  backgroundColor: '#0a1128',
-                  aspectRatio: '4/3',
-                  boxShadow: '0 16px 36px -12px rgba(10, 17, 40, 0.1)'
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.14em',
+                  color: '#c52227',
+                  marginBottom: '12px'
                 }}
               >
-                <img
-                  src="/images/real_products_curated/01_fixture_making.jpg"
-                  alt="Mauli Krupa Precision Works Tooling & Manufacturing Facility"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                    transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.025)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(10, 17, 40, 0.65) 0%, rgba(10, 17, 40, 0) 45%)',
-                    pointerEvents: 'none'
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '14px',
-                    left: '16px',
-                    right: '16px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end',
-                    fontFamily: 'var(--font-tech)',
-                    color: '#ffffff',
-                    fontSize: '11px',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase'
-                  }}
-                >
-                  <span style={{ fontWeight: 700 }}>PRECISION MANUFACTURING WORKS</span>
-                  <span style={{ color: 'rgba(255,255,255,0.75)' }}>BHOSARI MIDC, PUNE</span>
-                </div>
+                <span style={{ width: '16px', height: '2px', backgroundColor: '#c52227', display: 'inline-block' }} />
+                <span>CONTACT DETAILS</span>
               </div>
 
-              {/* Minimal Clean Technical Contacts */}
-              <div
+              {/* Company Title */}
+              <h3
                 style={{
-                  padding: '22px 24px',
-                  backgroundColor: '#ffffff',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '2px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '14px'
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '24px',
+                  fontWeight: 900,
+                  color: '#0a1128',
+                  margin: '0 0 6px 0',
+                  textTransform: 'uppercase',
+                  letterSpacing: '-0.01em'
                 }}
               >
-                <div
-                  style={{
-                    fontFamily: 'var(--font-tech)',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    letterSpacing: '0.12em',
-                    color: '#9ca3af',
-                    textTransform: 'uppercase'
-                  }}
-                >
-                  DIRECT TECHNICAL INQUIRIES
+                MAULI KRUPA PRECISION WORKS
+              </h3>
+
+              <p style={{ fontSize: '14.5px', color: '#4b5563', margin: '0 0 32px 0' }}>
+                Let's discuss your requirement.
+              </p>
+
+              {/* Contact Information List */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '26px' }}>
+                {/* Phone */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(197, 34, 39, 0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      marginTop: '2px'
+                    }}
+                  >
+                    <Phone size={18} color="#c52227" />
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <a
+                        href="tel:+919822327460"
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '17px',
+                          fontWeight: 700,
+                          color: '#0a1128',
+                          textDecoration: 'none'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#c52227'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#0a1128'}
+                      >
+                        +91 9822327460
+                      </a>
+                      <a
+                        href="tel:+919370741361"
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '15px',
+                          fontWeight: 600,
+                          color: '#4b5563',
+                          textDecoration: 'none'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#c52227'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#4b5563'}
+                      >
+                        +91 9370741361
+                      </a>
+                    </div>
+                    <span style={{ fontSize: '12.5px', color: '#6b7280' }}>Call us for enquiries</span>
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
-                    <span style={{ fontSize: '13.5px', color: '#4b5563' }}>Abhishek Marotkar</span>
+                {/* Email */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(197, 34, 39, 0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      marginTop: '2px'
+                    }}
+                  >
+                    <Mail size={18} color="#c52227" />
+                  </div>
+                  <div>
                     <a
-                      href="tel:+919370741361"
+                      href="mailto:smauli.krupa@gmail.com"
                       style={{
-                        fontFamily: 'var(--font-tech)',
-                        fontSize: '14px',
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: '16.5px',
                         fontWeight: 700,
                         color: '#0a1128',
-                        textDecoration: 'none'
+                        textDecoration: 'none',
+                        display: 'block'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.color = '#c52227'}
                       onMouseLeave={(e) => e.currentTarget.style.color = '#0a1128'}
                     >
-                      +91 9370741361
+                      smauli.krupa@gmail.com
                     </a>
+                    <span style={{ fontSize: '12.5px', color: '#6b7280' }}>Send us an email</span>
                   </div>
+                </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
-                    <span style={{ fontSize: '13.5px', color: '#4b5563' }}>Santos Marotkar</span>
-                    <a
-                      href="tel:+919822327460"
+                {/* Location */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(197, 34, 39, 0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      marginTop: '2px'
+                    }}
+                  >
+                    <MapPin size={18} color="#c52227" />
+                  </div>
+                  <div>
+                    <div
                       style={{
-                        fontFamily: 'var(--font-tech)',
                         fontSize: '14px',
-                        fontWeight: 700,
-                        color: '#0a1128',
-                        textDecoration: 'none'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.color = '#c52227'}
-                      onMouseLeave={(e) => e.currentTarget.style.color = '#0a1128'}
-                    >
-                      +91 9822327460
-                    </a>
-                  </div>
-
-                  <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '8px', marginTop: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
-                    <span style={{ fontSize: '13.5px', color: '#4b5563' }}>Email</span>
-                    <a
-                      href={`mailto:${COMPANY_INFO.email}`}
-                      style={{
-                        fontFamily: 'var(--font-tech)',
-                        fontSize: '13.5px',
-                        fontWeight: 700,
-                        color: '#c52227',
-                        textDecoration: 'none'
+                        color: '#374151',
+                        lineHeight: 1.6,
+                        marginBottom: '4px'
                       }}
                     >
-                      {COMPANY_INFO.email}
-                    </a>
+                      Gulve vasti,<br />
+                      Near To Hindustan Pressing,<br />
+                      Opposite In Kolte Industries<br />
+                      'S' Block S214, MIDC,<br />
+                      Bhosari, Pune – 411039
+                    </div>
+                    <span style={{ fontSize: '12.5px', color: '#6b7280' }}>Visit our facility</span>
                   </div>
                 </div>
               </div>
@@ -478,63 +697,88 @@ export default function ContactPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 02 — LOCATION MAP (Minimal Find Us Section with Genuine Business Map)*/}
+      {/* SECTION 3 — LOCATION / MAP (Full-Width Map Showing MAULI KRUPA PRECISION) */}
       {/* ========================================================================= */}
       <section
         style={{
-          paddingTop: 'clamp(50px, 7vh, 80px)',
-          paddingBottom: 'clamp(60px, 8vh, 90px)',
-          backgroundColor: '#ffffff',
-          borderTop: '1px solid #e5e7eb'
+          backgroundColor: '#0a1128',
+          color: '#ffffff',
+          paddingTop: 'clamp(50px, 7vh, 70px)',
+          paddingBottom: 'clamp(60px, 8vh, 80px)',
+          position: 'relative'
         }}
       >
-        <div className="container-custom">
-          {/* Minimal Section Header */}
-          <div style={{ marginBottom: 'clamp(24px, 3.5vw, 36px)' }}>
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontFamily: 'var(--font-tech)',
-                fontSize: '12px',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.14em',
-                color: '#c52227',
-                marginBottom: '10px'
-              }}
-            >
-              <span style={{ width: '14px', height: '2px', backgroundColor: '#c52227', display: 'inline-block' }} />
-              <span>LOCATION</span>
+        <div className="container-custom" style={{ marginBottom: '24px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '16px'
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.16em',
+                  color: '#c52227',
+                  marginBottom: '10px'
+                }}
+              >
+                <span style={{ width: '16px', height: '2px', backgroundColor: '#c52227', display: 'inline-block' }} />
+                <span>OUR LOCATION</span>
+              </div>
+
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(30px, 4vw, 44px)',
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  margin: 0,
+                  letterSpacing: '-0.02em'
+                }}
+              >
+                Find Us
+              </h2>
             </div>
 
-            <h2
+            <div
               style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(28px, 3.8vw, 44px)',
-                fontWeight: 900,
-                letterSpacing: '-0.025em',
-                color: '#0a1128',
-                margin: 0,
+                fontFamily: 'var(--font-tech)',
+                fontSize: '12px',
+                color: '#94a3b8',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase'
               }}
             >
-              FIND US.
-            </h2>
+              <strong style={{ color: '#ffffff' }}>MAULI KRUPA PRECISION WORKS</strong>
+              <span style={{ margin: '0 8px', color: '#c52227' }}>·</span>
+              <span>Bhosari, Pune – 411039, Maharashtra, India</span>
+            </div>
           </div>
+        </div>
 
-          {/* Clean Google Map Embed targeting MAULI KRUPA PRECISION WORKS */}
+        {/* Full-Width Clean Landscape Map Container */}
+        <div className="container-custom">
           <div
             style={{
               position: 'relative',
               borderRadius: '2px',
               overflow: 'hidden',
-              border: '1px solid #e2e8f0',
-              backgroundColor: '#f1f5f9',
-              height: 'clamp(360px, 46vh, 480px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              backgroundColor: '#111827',
+              height: 'clamp(420px, 50vh, 520px)',
               width: '100%',
-              marginBottom: '24px'
+              boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.5)'
             }}
           >
             <iframe
@@ -549,26 +793,14 @@ export default function ContactPage() {
             />
           </div>
 
-          {/* Minimal Verified Address Bar (Directly below map, no extra cards) */}
+          {/* Direct Navigation Button below Map */}
           <div
             style={{
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '16px',
-              paddingTop: '8px'
+              justifyContent: 'flex-end',
+              marginTop: '16px'
             }}
           >
-            <div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: 800, color: '#0a1128', textTransform: 'uppercase', marginBottom: '2px' }}>
-                MAULI KRUPA PRECISION WORKS
-              </div>
-              <div style={{ fontSize: '14px', color: '#4b5563', lineHeight: 1.5 }}>
-                Sector No. 3, Bhosari MIDC, Pimpri-Chinchwad, Pune – 411026, Maharashtra, India
-              </div>
-            </div>
-
             <a
               href={directionsUrl}
               target="_blank"
@@ -577,50 +809,64 @@ export default function ContactPage() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '11px 22px',
-                backgroundColor: '#0a1128',
+                padding: '10px 20px',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 color: '#ffffff',
                 fontFamily: 'var(--font-tech)',
-                fontSize: '12.5px',
+                fontSize: '12px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 textDecoration: 'none',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
                 borderRadius: '2px',
                 transition: 'all 0.2s ease'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#c52227';
+                e.currentTarget.style.borderColor = '#c52227';
                 e.currentTarget.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#0a1128';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.18)';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              <span>GET DIRECTIONS</span>
+              <span>GET DIRECTIONS IN GOOGLE MAPS</span>
               <ArrowUpRight size={14} />
             </a>
           </div>
         </div>
       </section>
 
-      {/* Embedded Component Styles */}
+      {/* Component Specific CSS Animations & Styles */}
       <style>{`
-        .minimal-form-group {
+        @keyframes subtleHeroZoom {
+          0% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(1.04);
+          }
+        }
+
+        .editorial-form-group {
           display: flex;
           flex-direction: column;
-          gap: 5px;
+          gap: 6px;
         }
-        .minimal-form-label {
+
+        .editorial-form-label {
           font-family: var(--font-tech);
-          font-size: 11px;
+          font-size: 11.5px;
           font-weight: 700;
-          letter-spacing: 0.1em;
-          color: '#4b5563';
+          letter-spacing: 0.08em;
+          color: #374151;
           text-transform: uppercase;
         }
-        .minimal-form-input {
+
+        .editorial-form-input {
           width: 100%;
           background: transparent;
           border: none;
@@ -633,40 +879,59 @@ export default function ContactPage() {
           border-radius: 0;
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .minimal-form-input:focus {
+
+        .editorial-form-input:focus {
           border-bottom-color: #0a1128;
           box-shadow: 0 1px 0 0 #c52227;
         }
-        .minimal-form-input.has-error {
+
+        .editorial-form-input.has-error {
           border-bottom-color: #dc2626 !important;
         }
-        .minimal-form-error {
+
+        .editorial-form-error {
           font-family: var(--font-tech);
           font-size: 11px;
           color: #dc2626;
           margin-top: 3px;
         }
-        .minimal-form-textarea {
+
+        .editorial-form-textarea {
           resize: vertical;
-          min-height: 70px;
+          min-height: 75px;
           line-height: 1.55;
         }
-        .minimal-submit-btn:hover {
+
+        .editorial-submit-btn:hover {
           background-color: #b31b20 !important;
           transform: translateY(-1px);
           box-shadow: 0 6px 18px rgba(197, 34, 39, 0.35) !important;
         }
-        .minimal-submit-btn:hover .btn-arrow {
+
+        .editorial-submit-btn:hover .btn-arrow-icon {
           transform: translateX(4px);
         }
-        .btn-arrow {
+
+        .btn-arrow-icon {
           transition: transform 0.2s ease;
         }
 
         @media (max-width: 900px) {
-          .contact-main-grid {
+          .hero-grid-layout {
             grid-template-columns: 1fr !important;
-            gap: 44px !important;
+          }
+          .hero-right-triad {
+            display: none !important;
+          }
+          .contact-two-col-grid {
+            grid-template-columns: 1fr !important;
+            gap: 48px !important;
+          }
+          .contact-right-col {
+            padding-left: 0 !important;
+            border-left: none !important;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 36px;
           }
         }
       `}</style>
