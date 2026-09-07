@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowDown, Play } from 'lucide-react';
+import { ArrowRight, ArrowDown } from 'lucide-react';
 
 export default function AboutPage() {
   // Scroll to top on page load
@@ -8,70 +8,81 @@ export default function AboutPage() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
-  // 4 Horizontal Process Steps for Section 3
-  const processSteps = [
+  // Interactive State for Section 3: "HOW WE WORK"
+  const [activeStage, setActiveStage] = useState(0);
+
+  // 4 Stages for Section 3: HOW WE TURN AN IDEA INTO PRECISION
+  const stages = [
     {
       step: '01',
       title: 'UNDERSTAND',
-      desc: 'Requirement and application needs'
+      desc: 'Understand the requirement, application and manufacturing need through detailed technical analysis of drawing tolerances, operating duty, and functional specifications.',
+      image: '/images/real_products_curated/01_high_altitude_checking.jpg',
+      label: 'TECHNICAL DRAWING & SPECIFICATION'
     },
     {
       step: '02',
       title: 'ENGINEER',
-      desc: 'Design and develop the solution'
+      desc: 'Develop the tooling, fixture or engineering solution around the specific requirement, establishing datum references, clamping mechanisms, and structural rigidity.',
+      image: '/images/service_jigs_fixtures.jpg',
+      label: 'TOOLING & FIXTURE DESIGN'
     },
     {
       step: '03',
       title: 'MANUFACTURE',
-      desc: 'Precision machining and fabrication'
+      desc: 'Precision machining and fabrication transform the concept into a physical solution using in-house 400A MIG welding, lathes, drilling, and precision assembly.',
+      image: '/images/real_products_curated/03_welding_spm.jpg',
+      label: 'MACHINING & 400A WELD FABRICATION'
     },
     {
       step: '04',
       title: 'DELIVER',
-      desc: 'Ready for industrial application'
+      desc: 'The completed solution is inspected, surface finished with polishing or chemical pickling, and prepared for seamless integration onto the industrial shop floor.',
+      image: '/images/real_products_curated/05_hydraulic_press_structure.jpg',
+      label: 'FINAL INSPECTION & SHOPFLOOR DISPATCH'
     }
   ];
 
-  // 4 Core Attributes for Section 5
-  const attributes = [
+  // 4 Qualities for Section 5: WHAT DEFINES OUR WORK
+  const qualities = [
     {
       title: 'PRECISION',
-      desc: 'Built with attention to accuracy and application requirements.'
+      desc: 'Attention to detail in every component, held strictly to drawing tolerances and concentricity standards.'
     },
     {
       title: 'CUSTOM ENGINEERING',
-      desc: 'Solutions developed around specific manufacturing needs.'
+      desc: 'Solutions developed around specific industrial requirements and custom machine requirements.'
     },
     {
-      title: 'QUALITY FOCUS',
-      desc: 'A disciplined approach throughout the manufacturing process.'
+      title: 'RELIABILITY',
+      desc: 'A practical and consistent approach to manufacturing engineered for continuous duty.'
     },
     {
-      title: 'PRACTICAL EXPERIENCE',
-      desc: 'Engineering designed for real industrial environments.'
+      title: 'COMMITMENT',
+      desc: 'Focused on delivering dependable engineering solutions on time and built to last.'
     }
   ];
 
   return (
-    <div className="about-page-clean" style={{ backgroundColor: '#ffffff', color: '#111827' }}>
+    <div className="about-editorial-page" style={{ backgroundColor: '#ffffff', color: '#111827', overflow: 'hidden' }}>
       
       {/* ========================================================================= */}
-      {/* SECTION 1 — CINEMATIC HERO (75–85vh, Full-Width Real Workshop Photo)       */}
+      {/* SECTION 1 — CINEMATIC HERO (Versatile Enterprises Inspired Dark Navy Hero) */}
       {/* ========================================================================= */}
       <section
         id="about-hero"
         style={{
           position: 'relative',
-          minHeight: 'clamp(560px, 80vh, 760px)',
+          minHeight: 'clamp(580px, 82vh, 780px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 'clamp(80px, 10vh, 120px) 0 clamp(60px, 8vh, 90px) 0',
-          backgroundColor: '#0c0e12',
+          padding: 'clamp(90px, 12vh, 130px) 0 clamp(60px, 8vh, 90px) 0',
+          backgroundColor: '#0a1128',
           overflow: 'hidden'
         }}
       >
-        {/* Real Factory Background Photograph */}
+        {/* Full-width Real Precision Machining Background Photograph */}
         <div
           style={{
             position: 'absolute',
@@ -79,71 +90,81 @@ export default function AboutPage() {
             backgroundImage: 'url(/images/about_workshop_indian.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center 35%',
-            filter: 'brightness(0.48) contrast(1.08)'
+            filter: 'brightness(0.42) contrast(1.1)'
           }}
         />
 
-        {/* Subtle Dark Overlay (No grid lines, no technical lines) */}
+        {/* Subtle Dark Navy Overlay (No grid lines, no artificial technical lines) */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundColor: 'rgba(12, 14, 18, 0.45)',
+            background: 'linear-gradient(180deg, rgba(10, 17, 40, 0.65) 0%, rgba(10, 17, 40, 0.88) 100%)',
             pointerEvents: 'none'
           }}
         />
 
-        <div className="container-custom" style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '900px' }}>
+        <div className="container-custom" style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '960px' }}>
           
-          {/* Small Category Label */}
+          {/* Small Category Label with Red Accent Line */}
           <div
             style={{
-              fontFamily: 'var(--font-tech)',
-              fontSize: '12px',
-              fontWeight: 700,
-              letterSpacing: '0.14em',
-              color: '#d1d5db',
-              textTransform: 'uppercase',
-              marginBottom: '18px'
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              marginBottom: '20px'
             }}
           >
-            ABOUT MAULI KRUPA
+            <span style={{ width: '20px', height: '2px', backgroundColor: '#c52227' }} />
+            <span
+              style={{
+                fontFamily: 'var(--font-tech)',
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '0.16em',
+                color: '#e2e8f0',
+                textTransform: 'uppercase'
+              }}
+            >
+              ABOUT MAULI KRUPA
+            </span>
           </div>
 
-          {/* Main Statement */}
+          {/* Main Statement in Very Large Bold Typography */}
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(32px, 4.8vw, 62px)',
+              fontSize: 'clamp(34px, 5.2vw, 68px)',
               fontWeight: 900,
-              lineHeight: 1.12,
-              letterSpacing: '-0.03em',
+              lineHeight: 1.08,
+              letterSpacing: '-0.035em',
               color: '#ffffff',
               margin: '0 0 24px 0',
               textTransform: 'uppercase'
             }}
           >
-            PRECISION IS NOT JUST<br />
-            WHAT WE DO.<br />
-            <span style={{ color: '#c52227' }}>IT'S HOW WE WORK.</span>
+            ENGINEERING<br />
+            <span style={{ color: '#c52227' }}>PRECISION</span><br />
+            FOR A STRONGER<br />
+            INDUSTRY.
           </h1>
 
           {/* Supporting Text */}
           <p
             style={{
-              fontSize: 'clamp(15px, 1.2vw, 17.5px)',
+              fontSize: 'clamp(15px, 1.25vw, 18px)',
               lineHeight: 1.65,
-              color: '#d1d5db',
-              maxWidth: '680px',
-              margin: '0 auto clamp(32px, 4vw, 48px) auto'
+              color: '#cbd5e1',
+              maxWidth: '640px',
+              margin: '0 auto clamp(36px, 4.5vw, 52px) auto'
             }}
           >
-            Established in Bhosari MIDC, Pune since 2015. We design, machine and fabricate custom tooling, precision fixtures and special-purpose engineering solutions for demanding industrial applications.
+            Precision tooling, custom fixtures and engineering solutions built for demanding industrial applications.
           </p>
 
-          {/* Simple Animated Scroll Indicator */}
+          {/* Minimal SCROLL TO EXPLORE Indicator */}
           <a
-            href="#story"
+            href="#our-story"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -151,159 +172,214 @@ export default function AboutPage() {
               fontFamily: 'var(--font-tech)',
               fontSize: '12px',
               fontWeight: 700,
-              letterSpacing: '0.1em',
+              letterSpacing: '0.12em',
               color: '#ffffff',
               textTransform: 'uppercase',
               textDecoration: 'none',
               paddingBottom: '4px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.35)',
               transition: 'color 0.2s ease, border-color 0.2s ease'
             }}
-            className="hero-scroll-link"
+            className="hero-scroll-prompt"
           >
-            <span>EXPLORE OUR STORY</span>
-            <ArrowDown size={14} color="#c52227" className="scroll-arrow-anim" />
+            <span>SCROLL TO EXPLORE</span>
+            <ArrowDown size={14} color="#c52227" className="scroll-bobbing-arrow" />
           </a>
 
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 2 — THE STORY (Editorial Storytelling + Real Workshop Photo)       */}
+      {/* SECTION 2 — OUR STORY (Editorial Split Layout + Navy Quote Panel)          */}
       {/* ========================================================================= */}
       <section
-        id="story"
+        id="our-story"
         style={{
-          paddingTop: 'clamp(80px, 9vw, 120px)',
-          paddingBottom: 'clamp(80px, 9vw, 120px)',
+          paddingTop: 'clamp(80px, 10vw, 130px)',
+          paddingBottom: 'clamp(80px, 10vw, 130px)',
           backgroundColor: '#ffffff'
         }}
       >
         <div className="container-custom">
           
           <div
-            className="story-editorial-grid"
+            className="story-split-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'minmax(0, 0.95fr) minmax(0, 1.05fr)',
-              gap: 'clamp(40px, 6vw, 80px)',
-              alignItems: 'start',
-              marginBottom: 'clamp(48px, 6vw, 72px)'
+              gap: 'clamp(40px, 6vw, 84px)',
+              alignItems: 'center'
             }}
           >
-            {/* Left Column: Large Heading */}
+            {/* LEFT SIDE: Heading & Authentic Company Narrative */}
             <div>
+              {/* Red Line and Label */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '16px'
+                }}
+              >
+                <span style={{ width: '18px', height: '2px', backgroundColor: '#c52227' }} />
+                <span
+                  style={{
+                    fontFamily: 'var(--font-tech)',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.14em',
+                    color: '#c52227',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  OUR STORY
+                </span>
+              </div>
+
+              {/* Large Heading */}
               <h2
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(36px, 4.6vw, 60px)',
+                  fontSize: 'clamp(36px, 4.5vw, 58px)',
                   fontWeight: 900,
-                  lineHeight: 1.05,
+                  lineHeight: 1.08,
                   letterSpacing: '-0.035em',
                   color: '#111827',
-                  margin: 0,
+                  margin: '0 0 24px 0',
                   textTransform: 'uppercase'
                 }}
               >
-                BUILT FOR<br />
-                <span style={{ color: '#c52227' }}>PRECISION.</span>
+                BUILT ON<br />
+                PRACTICAL<br />
+                <span style={{ color: '#c52227' }}>ENGINEERING.</span>
               </h2>
+
+              {/* Company Narrative */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                <p
+                  style={{
+                    fontSize: 'clamp(15px, 1.15vw, 17px)',
+                    lineHeight: 1.75,
+                    color: '#334155',
+                    margin: 0
+                  }}
+                >
+                  Established in Bhosari MIDC, Pune, <strong style={{ color: '#111827' }}>Mauli Krupa Precision Works</strong> focuses on precision tooling, custom fixtures, machining and engineering solutions designed around real industrial requirements.
+                </p>
+
+                <p
+                  style={{
+                    fontSize: 'clamp(14.5px, 1.1vw, 16px)',
+                    lineHeight: 1.75,
+                    color: '#64748b',
+                    margin: 0
+                  }}
+                >
+                  From concentricity inspection fixtures and welding SPMs to heavy material handling transit trolleys, our operations are driven by hands-on engineering discipline, high-grade steel fabrication, and direct technical collaboration with industrial clients.
+                </p>
+
+                <p
+                  style={{
+                    fontSize: 'clamp(14.5px, 1.1vw, 16px)',
+                    lineHeight: 1.75,
+                    color: '#64748b',
+                    margin: 0
+                  }}
+                >
+                  Our workshop is fully equipped with in-house 400A heavy MIG/Arc welding units, precision lathes, and dedicated surface polishing & chemical pickling facilities—ensuring drawing compliance, structural durability, and corrosion resistance.
+                </p>
+              </div>
             </div>
 
-            {/* Right Column: Clean Editorial Typography */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <p
+            {/* RIGHT SIDE: Real Workshop Photograph + Dark Navy Editorial Panel */}
+            <div style={{ position: 'relative' }}>
+              
+              {/* Large Real Workshop Image */}
+              <div
                 style={{
-                  fontSize: 'clamp(15.5px, 1.15vw, 17px)',
-                  lineHeight: 1.75,
-                  color: '#334155',
-                  margin: 0
+                  position: 'relative',
+                  width: '100%',
+                  borderRadius: '2px',
+                  overflow: 'hidden',
+                  border: '1px solid #e5e7eb',
+                  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.06)'
                 }}
               >
-                Established in 2015 in the industrial corridor of Bhosari MIDC, Pune, <strong style={{ color: '#111827' }}>Mauli Krupa Precision Works</strong> was founded with a singular purpose: delivering reliable, precision-engineered manufacturing solutions tailored to real shopfloor requirements.
-              </p>
+                <img
+                  src="/images/real_products_curated/01_fixture_making.jpg"
+                  alt="Precision fixture tooling and assembly at Mauli Krupa Precision Works"
+                  style={{
+                    width: '100%',
+                    height: 'clamp(320px, 38vw, 480px)',
+                    objectFit: 'cover',
+                    display: 'block'
+                  }}
+                  loading="lazy"
+                />
+              </div>
 
-              <p
+              {/* Dark Navy Editorial Panel */}
+              <div
                 style={{
-                  fontSize: 'clamp(14.5px, 1.1vw, 16px)',
-                  lineHeight: 1.75,
-                  color: '#64748b',
-                  margin: 0
+                  marginTop: '16px',
+                  padding: '24px 28px',
+                  backgroundColor: '#0a1128',
+                  color: '#ffffff',
+                  borderRadius: '2px',
+                  borderLeft: '4px solid #c52227',
+                  boxShadow: '0 10px 25px rgba(10, 17, 40, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '16px'
                 }}
               >
-                Over the past decade, we have built proven capabilities in custom jigs & fixtures, concentricity checking tooling, heavy material handling trolleys, conveyor systems, and turnkey Special Purpose Machines (SPMs).
-              </p>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'clamp(18px, 1.8vw, 24px)',
+                      fontWeight: 900,
+                      lineHeight: 1.2,
+                      letterSpacing: '-0.02em',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    SIMPLE SOLUTIONS.<br />
+                    <span style={{ color: '#c52227' }}>STRONGER INDUSTRIES.</span>
+                  </div>
+                </div>
 
-              <p
-                style={{
-                  fontSize: 'clamp(14.5px, 1.1vw, 16px)',
-                  lineHeight: 1.75,
-                  color: '#64748b',
-                  margin: 0
-                }}
-              >
-                Our facility operates with in-house 400A heavy MIG/Arc welding stations, precision machining equipment, and dedicated surface polishing & chemical pickling facilities—ensuring drawing accuracy, robust weld integrity, and smooth delivery for automotive, railway, and manufacturing OEMs.
-              </p>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-tech)',
+                    fontSize: '11px',
+                    color: '#94a3b8',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  ESTD. 2015 // BHOSARI MIDC, PUNE
+                </div>
+              </div>
+
             </div>
-          </div>
 
-          {/* Naturally Integrated Real Workshop Photograph */}
-          <div
-            style={{
-              position: 'relative',
-              width: '100%',
-              borderRadius: '3px',
-              overflow: 'hidden',
-              border: '1px solid #e5e7eb',
-              boxShadow: '0 12px 36px rgba(0, 0, 0, 0.05)'
-            }}
-          >
-            <img
-              src="/images/real_products_curated/01_fixture_making.jpg"
-              alt="Precision tooling and concentricity checking fixture assembly in Pune workshop"
-              style={{
-                width: '100%',
-                height: 'clamp(280px, 34vw, 460px)',
-                objectFit: 'cover',
-                display: 'block'
-              }}
-              loading="lazy"
-            />
-            {/* Subtle caption bottom */}
-            <div
-              style={{
-                padding: '12px 18px',
-                backgroundColor: '#ffffff',
-                borderTop: '1px solid #e5e7eb',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '8px',
-                fontFamily: 'var(--font-tech)',
-                fontSize: '11.5px',
-                color: '#64748b',
-                letterSpacing: '0.06em'
-              }}
-            >
-              <span style={{ fontWeight: 700, color: '#111827', textTransform: 'uppercase' }}>
-                TOOLING & FIXTURE ASSEMBLY
-              </span>
-              <span>BHOSARI MIDC, PUNE FACILITY</span>
-            </div>
           </div>
 
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 3 — FROM REQUIREMENT TO REALITY (Horizontal 4-Step Journey)        */}
+      {/* SECTION 3 — HOW WE WORK (Interactive Editorial Engineering Journey)        */}
       {/* ========================================================================= */}
       <section
-        id="process"
+        id="how-we-work"
         style={{
-          paddingTop: 'clamp(80px, 9vw, 120px)',
-          paddingBottom: 'clamp(80px, 9vw, 120px)',
+          paddingTop: 'clamp(80px, 10vw, 130px)',
+          paddingBottom: 'clamp(80px, 10vw, 130px)',
           backgroundColor: '#fafbfc',
           borderTop: '1px solid #e5e7eb',
           borderBottom: '1px solid #e5e7eb'
@@ -312,89 +388,551 @@ export default function AboutPage() {
         <div className="container-custom">
           
           {/* Section Header */}
-          <div style={{ maxWidth: '640px', marginBottom: 'clamp(44px, 5.5vw, 68px)' }}>
+          <div style={{ maxWidth: '720px', marginBottom: 'clamp(48px, 6vw, 76px)' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '14px'
+              }}
+            >
+              <span style={{ width: '18px', height: '2px', backgroundColor: '#c52227' }} />
+              <span
+                style={{
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  letterSpacing: '0.14em',
+                  color: '#c52227',
+                  textTransform: 'uppercase'
+                }}
+              >
+                ENGINEERING JOURNEY
+              </span>
+            </div>
+
             <h2
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(28px, 3.6vw, 44px)',
+                fontSize: 'clamp(32px, 4.2vw, 54px)',
                 fontWeight: 900,
-                lineHeight: 1.15,
+                lineHeight: 1.1,
                 letterSpacing: '-0.03em',
                 color: '#111827',
-                margin: '0 0 10px 0',
+                margin: 0,
                 textTransform: 'uppercase'
               }}
             >
-              FROM REQUIREMENT<br />
-              <span style={{ color: '#c52227' }}>TO REALITY.</span>
+              HOW WE TURN AN IDEA<br />
+              <span style={{ color: '#c52227' }}>INTO PRECISION.</span>
             </h2>
-            <p style={{ fontSize: '15px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
-              A disciplined, engineering-first methodology driving every project from initial component drawing to shopfloor integration.
-            </p>
           </div>
 
-          {/* 4 Large Steps in Clean Horizontal Sequence */}
+          {/* Interactive Editorial 2-Column Composition (Sticky Left Narrative + Dynamic Right Visual) */}
           <div
-            className="process-steps-grid"
+            className="how-we-work-grid"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              columnGap: 'clamp(24px, 3.5vw, 48px)',
-              rowGap: '32px'
+              gridTemplateColumns: 'minmax(0, 1.05fr) minmax(0, 0.95fr)',
+              gap: 'clamp(36px, 5.5vw, 72px)',
+              alignItems: 'start'
             }}
           >
-            {processSteps.map((p) => (
-              <div
-                key={p.step}
+            {/* LEFT COLUMN: Vertical Storytelling Stages with Large Background Numbers */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 3vw, 32px)' }}>
+              {stages.map((stage, idx) => {
+                const isActive = activeStage === idx;
+                return (
+                  <div
+                    key={stage.step}
+                    onClick={() => setActiveStage(idx)}
+                    onMouseEnter={() => setActiveStage(idx)}
+                    style={{
+                      position: 'relative',
+                      padding: '24px 28px',
+                      backgroundColor: isActive ? '#ffffff' : 'transparent',
+                      borderLeft: `3px solid ${isActive ? '#c52227' : '#e2e8f0'}`,
+                      borderRadius: '0 4px 4px 0',
+                      boxShadow: isActive ? '0 10px 30px rgba(0, 0, 0, 0.05)' : 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.35s ease',
+                      overflow: 'hidden'
+                    }}
+                    className="stage-interactive-card"
+                  >
+                    {/* Huge Subtle Background Number */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        right: '16px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        fontFamily: 'var(--font-tech)',
+                        fontSize: 'clamp(64px, 7vw, 96px)',
+                        fontWeight: 900,
+                        color: isActive ? 'rgba(197, 34, 39, 0.06)' : 'rgba(0, 0, 0, 0.03)',
+                        userSelect: 'none',
+                        pointerEvents: 'none',
+                        lineHeight: 1,
+                        transition: 'color 0.3s ease'
+                      }}
+                    >
+                      {stage.step}
+                    </div>
+
+                    {/* Step Number + Title */}
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          marginBottom: '8px'
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-tech)',
+                            fontSize: '13px',
+                            fontWeight: 800,
+                            letterSpacing: '0.1em',
+                            color: isActive ? '#c52227' : '#94a3b8',
+                            transition: 'color 0.3s ease'
+                          }}
+                        >
+                          STAGE {stage.step}
+                        </span>
+                        <h3
+                          style={{
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'clamp(20px, 1.8vw, 24px)',
+                            fontWeight: 800,
+                            color: isActive ? '#111827' : '#475569',
+                            margin: 0,
+                            letterSpacing: '-0.02em',
+                            textTransform: 'uppercase',
+                            transition: 'color 0.3s ease'
+                          }}
+                        >
+                          {stage.title}
+                        </h3>
+                      </div>
+
+                      {/* Description */}
+                      <p
+                        style={{
+                          fontSize: '14.5px',
+                          lineHeight: 1.65,
+                          color: isActive ? '#334155' : '#64748b',
+                          margin: 0,
+                          maxWidth: '480px',
+                          transition: 'color 0.3s ease'
+                        }}
+                      >
+                        {stage.desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* RIGHT COLUMN: Sticky Changing Image Visual Frame */}
+            <div
+              style={{
+                position: 'sticky',
+                top: '110px',
+                borderRadius: '3px',
+                overflow: 'hidden',
+                border: '1px solid #e5e7eb',
+                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.07)',
+                backgroundColor: '#0a1128'
+              }}
+              className="how-we-work-sticky-image"
+            >
+              <div style={{ position: 'relative', width: '100%', height: 'clamp(360px, 38vw, 500px)' }}>
+                {stages.map((st, idx) => (
+                  <img
+                    key={st.step}
+                    src={st.image}
+                    alt={st.title}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      opacity: activeStage === idx ? 1 : 0,
+                      transform: activeStage === idx ? 'scale(1)' : 'scale(1.03)',
+                      transition: 'opacity 0.6s ease, transform 0.6s ease',
+                      display: 'block'
+                    }}
+                  />
+                ))}
+
+                {/* Bottom Active Stage Metadata Bar */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '16px 20px',
+                    background: 'linear-gradient(180deg, transparent 0%, rgba(10, 17, 40, 0.92) 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    color: '#ffffff',
+                    zIndex: 3
+                  }}
+                >
+                  <div style={{ fontFamily: 'var(--font-tech)', fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.08em', color: '#ffffff' }}>
+                    {stages[activeStage].label}
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-tech)', fontSize: '12px', fontWeight: 800, color: '#c52227' }}>
+                    {stages[activeStage].step} / 04
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 4 — WHERE PRECISION TAKES SHAPE (Dark Navy Editorial Sequence)     */}
+      {/* ========================================================================= */}
+      <section
+        id="facility-visuals"
+        style={{
+          paddingTop: 'clamp(80px, 10vw, 130px)',
+          paddingBottom: 'clamp(80px, 10vw, 130px)',
+          backgroundColor: '#0a1128',
+          color: '#ffffff'
+        }}
+      >
+        <div className="container-custom">
+          
+          {/* Main Large Dominant Photograph with Statement Overlay */}
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              borderRadius: '2px',
+              overflow: 'hidden',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.35)',
+              marginBottom: 'clamp(28px, 4vw, 44px)'
+            }}
+          >
+            <div style={{ position: 'relative', width: '100%', height: 'clamp(320px, 44vw, 540px)' }}>
+              <img
+                src="/images/about_workshop_indian.jpg"
+                alt="Mauli Krupa Precision Works Bhosari Facility"
                 style={{
-                  position: 'relative',
-                  paddingTop: '18px',
-                  borderTop: '2px solid #e2e8f0',
-                  display: 'flex',
-                  flexDirection: 'column'
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                  filter: 'brightness(0.55) contrast(1.1)'
                 }}
-                className="process-step-item"
+              />
+
+              {/* Dominant Text Overlay */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  padding: 'clamp(24px, 4vw, 48px)',
+                  background: 'linear-gradient(180deg, transparent 40%, rgba(10, 17, 40, 0.9) 100%)'
+                }}
               >
-                {/* Step Number */}
                 <div
                   style={{
                     fontFamily: 'var(--font-tech)',
-                    fontSize: 'clamp(32px, 3.4vw, 44px)',
-                    fontWeight: 900,
-                    lineHeight: 1,
-                    letterSpacing: '-0.02em',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.14em',
                     color: '#c52227',
-                    marginBottom: '12px'
+                    textTransform: 'uppercase',
+                    marginBottom: '8px'
                   }}
                 >
-                  {p.step}
+                  BHOSARI MIDC, PUNE FACILITY
                 </div>
 
-                {/* Step Title */}
-                <h3
+                <h2
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: 'clamp(16px, 1.25vw, 19px)',
-                    fontWeight: 800,
-                    letterSpacing: '-0.01em',
-                    color: '#111827',
-                    margin: '0 0 8px 0',
+                    fontSize: 'clamp(28px, 4.2vw, 54px)',
+                    fontWeight: 900,
+                    lineHeight: 1.1,
+                    letterSpacing: '-0.03em',
+                    color: '#ffffff',
+                    margin: 0,
                     textTransform: 'uppercase'
                   }}
                 >
-                  {p.title}
+                  WHERE PRECISION<br />
+                  <span style={{ color: '#c52227' }}>TAKES SHAPE.</span>
+                </h2>
+              </div>
+            </div>
+          </div>
+
+          {/* 3 Supporting Manufacturing Photographs (Asymmetrical Editorial Layout, NOT Bento Grid) */}
+          <div
+            className="supporting-photos-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 'clamp(16px, 2.5vw, 28px)'
+            }}
+          >
+            {/* Supporting Photo 1: Precision Machining */}
+            <div
+              style={{
+                position: 'relative',
+                borderRadius: '2px',
+                overflow: 'hidden',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                backgroundColor: '#0c1222'
+              }}
+              className="editorial-photo-card"
+            >
+              <img
+                src="/images/real_products_curated/03_balance_straightening_press.jpg"
+                alt="Precision straightening press machine assembly"
+                style={{
+                  width: '100%',
+                  height: 'clamp(200px, 22vw, 280px)',
+                  objectFit: 'cover',
+                  display: 'block',
+                  transition: 'transform 0.4s ease'
+                }}
+                className="sub-photo-img"
+                loading="lazy"
+              />
+              <div
+                style={{
+                  padding: '12px 16px',
+                  backgroundColor: 'rgba(10, 17, 40, 0.95)',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  color: '#e2e8f0',
+                  textTransform: 'uppercase'
+                }}
+              >
+                PRECISION MACHINING
+              </div>
+            </div>
+
+            {/* Supporting Photo 2: Tooling & Fixtures */}
+            <div
+              style={{
+                position: 'relative',
+                borderRadius: '2px',
+                overflow: 'hidden',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                backgroundColor: '#0c1222'
+              }}
+              className="editorial-photo-card"
+            >
+              <img
+                src="/images/real_products_curated/04_material_handling_trolley.jpg"
+                alt="Industrial component handling trolley"
+                style={{
+                  width: '100%',
+                  height: 'clamp(200px, 22vw, 280px)',
+                  objectFit: 'cover',
+                  display: 'block',
+                  transition: 'transform 0.4s ease'
+                }}
+                className="sub-photo-img"
+                loading="lazy"
+              />
+              <div
+                style={{
+                  padding: '12px 16px',
+                  backgroundColor: 'rgba(10, 17, 40, 0.95)',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  color: '#e2e8f0',
+                  textTransform: 'uppercase'
+                }}
+              >
+                TOOLING & FIXTURES
+              </div>
+            </div>
+
+            {/* Supporting Photo 3: Engineering Support & Fabrication */}
+            <div
+              style={{
+                position: 'relative',
+                borderRadius: '2px',
+                overflow: 'hidden',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                backgroundColor: '#0c1222'
+              }}
+              className="editorial-photo-card"
+            >
+              <img
+                src="/images/service_industrial_fabrication.jpg"
+                alt="Heavy industrial steel fabrication and welding"
+                style={{
+                  width: '100%',
+                  height: 'clamp(200px, 22vw, 280px)',
+                  objectFit: 'cover',
+                  display: 'block',
+                  transition: 'transform 0.4s ease'
+                }}
+                className="sub-photo-img"
+                loading="lazy"
+              />
+              <div
+                style={{
+                  padding: '12px 16px',
+                  backgroundColor: 'rgba(10, 17, 40, 0.95)',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  color: '#e2e8f0',
+                  textTransform: 'uppercase'
+                }}
+              >
+                ENGINEERING SUPPORT
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 5 — WHAT DEFINES OUR WORK (Clean Light Editorial Section)          */}
+      {/* ========================================================================= */}
+      <section
+        id="what-defines-us"
+        style={{
+          paddingTop: 'clamp(80px, 10vw, 130px)',
+          paddingBottom: 'clamp(80px, 10vw, 130px)',
+          backgroundColor: '#ffffff',
+          borderBottom: '1px solid #e5e7eb'
+        }}
+      >
+        <div className="container-custom">
+          
+          {/* Section Heading */}
+          <div style={{ maxWidth: '640px', marginBottom: 'clamp(44px, 5.5vw, 68px)' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '14px'
+              }}
+            >
+              <span style={{ width: '18px', height: '2px', backgroundColor: '#c52227' }} />
+              <span
+                style={{
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  letterSpacing: '0.14em',
+                  color: '#c52227',
+                  textTransform: 'uppercase'
+                }}
+              >
+                CORE PRINCIPLES
+              </span>
+            </div>
+
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(32px, 4.2vw, 54px)',
+                fontWeight: 900,
+                lineHeight: 1.1,
+                letterSpacing: '-0.03em',
+                color: '#111827',
+                margin: 0,
+                textTransform: 'uppercase'
+              }}
+            >
+              WHAT DEFINES<br />
+              <span style={{ color: '#c52227' }}>OUR WORK.</span>
+            </h2>
+          </div>
+
+          {/* 4 Qualities Arranged Horizontally with Subtle Vertical Separators */}
+          <div
+            className="qualities-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: 'clamp(24px, 3.5vw, 44px)'
+            }}
+          >
+            {qualities.map((q, idx) => (
+              <div
+                key={q.title}
+                style={{
+                  paddingLeft: idx > 0 ? 'clamp(16px, 2vw, 28px)' : '0',
+                  borderLeft: idx > 0 ? '1px solid #e5e7eb' : 'none',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}
+                className="quality-col"
+              >
+                {/* Small Red Accent Line */}
+                <span
+                  style={{
+                    width: '24px',
+                    height: '2px',
+                    backgroundColor: '#c52227',
+                    marginBottom: '16px'
+                  }}
+                />
+
+                {/* Title */}
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: 'clamp(17px, 1.3vw, 20px)',
+                    fontWeight: 900,
+                    letterSpacing: '0.02em',
+                    color: '#111827',
+                    margin: '0 0 10px 0',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  {q.title}
                 </h3>
 
-                {/* Step Description */}
+                {/* Description */}
                 <p
                   style={{
-                    fontSize: '13.5px',
-                    lineHeight: 1.55,
+                    fontSize: '14px',
+                    lineHeight: 1.6,
                     color: '#64748b',
                     margin: 0
                   }}
                 >
-                  {p.desc}
+                  {q.desc}
                 </p>
               </div>
             ))}
@@ -404,387 +942,7 @@ export default function AboutPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 4 — REAL WORK. REAL ENVIRONMENT. (Authentic Photo Sequence)       */}
-      {/* ========================================================================= */}
-      <section
-        id="environment"
-        style={{
-          paddingTop: 'clamp(80px, 9vw, 120px)',
-          paddingBottom: 'clamp(80px, 9vw, 120px)',
-          backgroundColor: '#ffffff'
-        }}
-      >
-        <div className="container-custom">
-          
-          {/* Section Header */}
-          <div style={{ maxWidth: '680px', marginBottom: 'clamp(40px, 5vw, 60px)' }}>
-            <h2
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(28px, 3.6vw, 44px)',
-                fontWeight: 900,
-                lineHeight: 1.15,
-                letterSpacing: '-0.03em',
-                color: '#111827',
-                margin: '0 0 10px 0',
-                textTransform: 'uppercase'
-              }}
-            >
-              REAL WORK.{' '}
-              <span style={{ color: '#c52227' }}>REAL ENVIRONMENT.</span>
-            </h2>
-            <p style={{ fontSize: '15px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
-              Photographs of actual manufactured fixtures, machines, and fabrication works from our facility.
-            </p>
-          </div>
-
-          {/* Editorial Photo Sequence: 1 Large Landscape + 2 Supporting Below */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 3vw, 32px)' }}>
-            
-            {/* 1 Dominant Landscape Photo */}
-            <div
-              className="photo-frame"
-              style={{
-                position: 'relative',
-                borderRadius: '3px',
-                overflow: 'hidden',
-                border: '1px solid #e5e7eb',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.04)'
-              }}
-            >
-              <img
-                src="/images/real_products_curated/03_welding_spm.jpg"
-                alt="Welding Special Purpose Machine manufactured at Mauli Krupa Precision Works"
-                style={{
-                  width: '100%',
-                  height: 'clamp(300px, 38vw, 500px)',
-                  objectFit: 'cover',
-                  display: 'block',
-                  transition: 'transform 0.5s ease'
-                }}
-                className="photo-hover-img"
-                loading="lazy"
-              />
-              <div
-                style={{
-                  padding: '12px 18px',
-                  backgroundColor: '#ffffff',
-                  borderTop: '1px solid #e5e7eb',
-                  fontFamily: 'var(--font-tech)',
-                  fontSize: '11.5px',
-                  fontWeight: 700,
-                  color: '#111827',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase'
-                }}
-              >
-                PRECISION MACHINING & CUSTOM SPM ASSEMBLY
-              </div>
-            </div>
-
-            {/* 2 Carefully Positioned Supporting Photos Side-by-Side */}
-            <div
-              className="photo-supporting-row"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 'clamp(20px, 3vw, 32px)'
-              }}
-            >
-              {/* Supporting Photo 1 */}
-              <div
-                className="photo-frame"
-                style={{
-                  position: 'relative',
-                  borderRadius: '3px',
-                  overflow: 'hidden',
-                  border: '1px solid #e5e7eb',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)'
-                }}
-              >
-                <img
-                  src="/images/service_jigs_fixtures.jpg"
-                  alt="Precision jigs and fixtures manufacturing"
-                  style={{
-                    width: '100%',
-                    height: 'clamp(220px, 26vw, 340px)',
-                    objectFit: 'cover',
-                    display: 'block',
-                    transition: 'transform 0.5s ease'
-                  }}
-                  className="photo-hover-img"
-                  loading="lazy"
-                />
-                <div
-                  style={{
-                    padding: '12px 18px',
-                    backgroundColor: '#ffffff',
-                    borderTop: '1px solid #e5e7eb',
-                    fontFamily: 'var(--font-tech)',
-                    fontSize: '11.5px',
-                    fontWeight: 700,
-                    color: '#111827',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase'
-                  }}
-                >
-                  TOOLING & FIXTURES
-                </div>
-              </div>
-
-              {/* Supporting Photo 2 */}
-              <div
-                className="photo-frame"
-                style={{
-                  position: 'relative',
-                  borderRadius: '3px',
-                  overflow: 'hidden',
-                  border: '1px solid #e5e7eb',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)'
-                }}
-              >
-                <img
-                  src="/images/service_industrial_fabrication.jpg"
-                  alt="Heavy industrial steel fabrication and welding"
-                  style={{
-                    width: '100%',
-                    height: 'clamp(220px, 26vw, 340px)',
-                    objectFit: 'cover',
-                    display: 'block',
-                    transition: 'transform 0.5s ease'
-                  }}
-                  className="photo-hover-img"
-                  loading="lazy"
-                />
-                <div
-                  style={{
-                    padding: '12px 18px',
-                    backgroundColor: '#ffffff',
-                    borderTop: '1px solid #e5e7eb',
-                    fontFamily: 'var(--font-tech)',
-                    fontSize: '11.5px',
-                    fontWeight: 700,
-                    color: '#111827',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase'
-                  }}
-                >
-                  IN-HOUSE ENGINEERING & FABRICATION
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 5 — WHAT DEFINES OUR WORK (Bold Dark Industrial Section)           */}
-      {/* ========================================================================= */}
-      <section
-        id="values"
-        style={{
-          paddingTop: 'clamp(80px, 10vw, 130px)',
-          paddingBottom: 'clamp(80px, 10vw, 130px)',
-          backgroundColor: '#0c0e12',
-          color: '#ffffff'
-        }}
-      >
-        <div className="container-custom">
-          
-          <div
-            className="values-grid"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'minmax(0, 0.9fr) minmax(0, 1.1fr)',
-              gap: 'clamp(40px, 6vw, 80px)',
-              alignItems: 'start'
-            }}
-          >
-            {/* Left Column: Large Heading */}
-            <div>
-              <h2
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(36px, 4.6vw, 60px)',
-                  fontWeight: 900,
-                  lineHeight: 1.08,
-                  letterSpacing: '-0.035em',
-                  color: '#ffffff',
-                  margin: 0,
-                  textTransform: 'uppercase'
-                }}
-              >
-                ENGINEERED<br />
-                <span style={{ color: '#c52227' }}>WITH PURPOSE.</span>
-              </h2>
-            </div>
-
-            {/* Right Column: 4 Clean Typography Qualities (No cards, no icons) */}
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {attributes.map((attr, idx) => (
-                <div
-                  key={attr.title}
-                  style={{
-                    padding: '24px 0',
-                    borderTop: idx === 0 ? '1px solid rgba(255, 255, 255, 0.12)' : 'none',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
-                  }}
-                >
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'clamp(17px, 1.3vw, 20px)',
-                      fontWeight: 800,
-                      letterSpacing: '0.02em',
-                      color: '#ffffff',
-                      margin: '0 0 8px 0',
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    {attr.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: '14.5px',
-                      lineHeight: 1.6,
-                      color: '#94a3b8',
-                      margin: 0,
-                      maxWidth: '520px'
-                    }}
-                  >
-                    {attr.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 6 — OUR WORK IN MOTION (Cinematic Real Workshop Video Area)        */}
-      {/* ========================================================================= */}
-      <section
-        id="motion"
-        style={{
-          paddingTop: 'clamp(80px, 9vw, 120px)',
-          paddingBottom: 'clamp(80px, 9vw, 120px)',
-          backgroundColor: '#ffffff',
-          borderBottom: '1px solid #e5e7eb'
-        }}
-      >
-        <div className="container-custom">
-          
-          {/* Large Cinematic Video Area */}
-          <div
-            style={{
-              position: 'relative',
-              width: '100%',
-              borderRadius: '4px',
-              overflow: 'hidden',
-              backgroundColor: '#0c0e12',
-              border: '1px solid #e5e7eb',
-              boxShadow: '0 16px 40px rgba(0, 0, 0, 0.08)',
-              marginBottom: '28px'
-            }}
-          >
-            <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', maxHeight: '560px' }}>
-              {/* Authentic Factory Image */}
-              <img
-                src="/images/about_workshop_indian.jpg"
-                alt="Mauli Krupa Precision Works Shopfloor Facility"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                  filter: 'brightness(0.72) contrast(1.05)'
-                }}
-              />
-
-              {/* Minimal Dark Overlay with Center Play Symbol */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(12, 14, 18, 0.3)'
-                }}
-              >
-                <div
-                  style={{
-                    width: 'clamp(64px, 7vw, 80px)',
-                    height: 'clamp(64px, 7vw, 80px)',
-                    borderRadius: '50%',
-                    backgroundColor: '#c52227',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#ffffff',
-                    boxShadow: '0 8px 24px rgba(197, 34, 39, 0.45)',
-                    cursor: 'default'
-                  }}
-                  title="Facility Preview"
-                >
-                  <Play size={28} fill="#ffffff" style={{ marginLeft: '4px' }} />
-                </div>
-              </div>
-
-              {/* Bottom Tag */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '16px',
-                  left: '20px',
-                  fontFamily: 'var(--font-tech)',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  color: '#ffffff',
-                  textTransform: 'uppercase',
-                  backgroundColor: 'rgba(12, 14, 18, 0.85)',
-                  padding: '6px 12px',
-                  borderRadius: '2px'
-                }}
-              >
-                FACILITY ENVIRONMENT // BHOSARI MIDC, PUNE
-              </div>
-            </div>
-          </div>
-
-          {/* Text Below Video */}
-          <div style={{ maxWidth: '640px' }}>
-            <h2
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(24px, 3vw, 36px)',
-                fontWeight: 900,
-                lineHeight: 1.15,
-                letterSpacing: '-0.025em',
-                color: '#111827',
-                margin: '0 0 8px 0',
-                textTransform: 'uppercase'
-              }}
-            >
-              OUR WORK<br />
-              <span style={{ color: '#c52227' }}>IN MOTION.</span>
-            </h2>
-            <p style={{ fontSize: '15px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
-              A closer look at the environment, processes and precision behind our work.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 7 — CLOSING CTA (Full-Width Powerful Dark Industrial CTA)          */}
+      {/* SECTION 7 — FINAL CTA (Full-Width Dark Navy Industrial CTA)                */}
       {/* ========================================================================= */}
       <section
         id="about-cta"
@@ -792,12 +950,13 @@ export default function AboutPage() {
           position: 'relative',
           paddingTop: 'clamp(90px, 11vw, 140px)',
           paddingBottom: 'clamp(90px, 11vw, 140px)',
-          backgroundColor: '#0c0e12',
+          backgroundColor: '#0a1128',
+          color: '#ffffff',
           overflow: 'hidden',
           textAlign: 'center'
         }}
       >
-        {/* Subtle Workshop Background Image Overlay */}
+        {/* Subtle Dark Real Machining Photograph Overlay */}
         <div
           style={{
             position: 'absolute',
@@ -805,18 +964,18 @@ export default function AboutPage() {
             backgroundImage: 'url(/images/hero_industrial.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: 'brightness(0.22) contrast(1.15)',
+            filter: 'brightness(0.18) contrast(1.2)',
             pointerEvents: 'none'
           }}
         />
 
-        <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '780px' }}>
+        <div className="container-custom" style={{ position: 'relative', zIndex: 2, maxWidth: '800px' }}>
           
           {/* Main Headline */}
           <h2
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(34px, 4.8vw, 60px)',
+              fontSize: 'clamp(34px, 4.8vw, 62px)',
               fontWeight: 900,
               lineHeight: 1.1,
               letterSpacing: '-0.03em',
@@ -826,23 +985,23 @@ export default function AboutPage() {
             }}
           >
             LET'S BUILD<br />
-            <span style={{ color: '#c52227' }}>SOMETHING PRECISE.</span>
+            SOMETHING <span style={{ color: '#c52227' }}>PRECISE.</span>
           </h2>
 
           {/* Supporting Text */}
           <p
             style={{
-              fontSize: 'clamp(15px, 1.2vw, 17.5px)',
+              fontSize: 'clamp(15px, 1.25vw, 18px)',
               lineHeight: 1.65,
-              color: '#94a3b8',
-              margin: '0 auto clamp(32px, 4vw, 44px) auto',
+              color: '#cbd5e1',
+              margin: '0 auto clamp(36px, 4.5vw, 48px) auto',
               maxWidth: '620px'
             }}
           >
-            Have a tooling, fixture, machining or custom engineering requirement? Let's discuss how Mauli Krupa Precision Works can support your application.
+            Have a tooling, fixture, machining or custom engineering requirement? Let's discuss how we can support your application.
           </p>
 
-          {/* Two Simple Actions */}
+          {/* Two Action Buttons */}
           <div
             style={{
               display: 'flex',
@@ -852,7 +1011,7 @@ export default function AboutPage() {
               gap: '16px'
             }}
           >
-            {/* Primary Action Button */}
+            {/* Primary Action Button (Brand Red) */}
             <Link
               to="/contact"
               style={{
@@ -869,7 +1028,7 @@ export default function AboutPage() {
                 textTransform: 'uppercase',
                 textDecoration: 'none',
                 borderRadius: '3px',
-                boxShadow: '0 6px 20px rgba(197, 34, 39, 0.35)',
+                boxShadow: '0 6px 20px rgba(197, 34, 39, 0.4)',
                 transition: 'all 0.25s ease'
               }}
               onMouseEnter={(e) => {
@@ -885,16 +1044,17 @@ export default function AboutPage() {
               <ArrowRight size={16} />
             </Link>
 
-            {/* Secondary Action Link */}
+            {/* Secondary Action Button (Transparent with Subtle White Border) */}
             <Link
-              to="/contact"
+              to="/services"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
+                gap: '8px',
                 padding: '14px 28px',
                 backgroundColor: 'transparent',
                 color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.35)',
                 fontFamily: 'var(--font-tech)',
                 fontSize: '14px',
                 fontWeight: 700,
@@ -906,61 +1066,72 @@ export default function AboutPage() {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = '#ffffff';
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
                 e.currentTarget.style.backgroundColor = 'transparent';
               }}
             >
-              <span>CONTACT US</span>
+              <span>VIEW OUR SERVICES</span>
+              <ArrowRight size={15} />
             </Link>
           </div>
 
         </div>
       </section>
 
-      {/* Embedded CSS for Micro-interactions */}
+      {/* Embedded Styles for Micro-interactions and Responsive Design */}
       <style>{`
-        .scroll-arrow-anim {
-          animation: gentleBob 2s infinite ease-in-out;
+        .scroll-bobbing-arrow {
+          animation: slowBob 2s infinite ease-in-out;
         }
 
-        @keyframes gentleBob {
+        @keyframes slowBob {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(4px); }
         }
 
-        .hero-scroll-link:hover {
+        .hero-scroll-prompt:hover {
           color: #c52227 !important;
           border-bottom-color: #c52227 !important;
         }
 
-        .photo-frame:hover .photo-hover-img {
-          transform: scale(1.02) !important;
+        .editorial-photo-card:hover .sub-photo-img {
+          transform: scale(1.03) !important;
         }
 
-        @media (max-width: 900px) {
-          .story-editorial-grid {
+        @media (max-width: 960px) {
+          .story-split-grid {
             grid-template-columns: 1fr !important;
-            gap: 28px !important;
+            gap: 36px !important;
           }
-          .process-steps-grid {
+          .how-we-work-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .how-we-work-sticky-image {
+            position: relative !important;
+            top: 0 !important;
+            order: -1 !important;
+            margin-bottom: 24px !important;
+          }
+          .qualities-grid {
             grid-template-columns: 1fr 1fr !important;
+            row-gap: 32px !important;
           }
-          .values-grid {
-            grid-template-columns: 1fr !important;
-            gap: 32px !important;
+          .quality-col {
+            padding-left: 0 !important;
+            border-left: none !important;
           }
         }
 
         @media (max-width: 640px) {
-          .process-steps-grid {
+          .supporting-photos-grid {
             grid-template-columns: 1fr !important;
-            row-gap: 24px !important;
           }
-          .photo-supporting-row {
+          .qualities-grid {
             grid-template-columns: 1fr !important;
+            row-gap: 28px !important;
           }
         }
       `}</style>
