@@ -1,79 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown } from 'lucide-react';
 
 export default function AboutPage() {
-  // Scroll to top on page load
+  // Scroll to top on page mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
-  // Interactive State for Section 3: "HOW WE WORK"
+  // Active Stage state for Section 3 Process Journey
   const [activeStage, setActiveStage] = useState(0);
 
-  // 4 Stages for Section 3: HOW WE TURN AN IDEA INTO PRECISION
+  // 4 Process Stages for Section 3
   const stages = [
     {
       step: '01',
       title: 'UNDERSTAND',
-      desc: 'Understand the requirement, application and manufacturing need through detailed technical analysis of drawing tolerances, operating duty, and functional specifications.',
+      desc: 'Understand the requirement, application and manufacturing need through detailed technical analysis of drawing tolerances, operational duty, and functional specifications.',
       image: '/images/real_products_curated/01_high_altitude_checking.jpg',
       label: 'TECHNICAL DRAWING & SPECIFICATION'
     },
     {
       step: '02',
       title: 'ENGINEER',
-      desc: 'Develop the tooling, fixture or engineering solution around the specific requirement, establishing datum references, clamping mechanisms, and structural rigidity.',
+      desc: 'Develop the tooling, fixture or engineering solution around the specific requirement, establishing rigid datum points, clamping mechanisms, and structural integrity.',
       image: '/images/service_jigs_fixtures.jpg',
       label: 'TOOLING & FIXTURE DESIGN'
     },
     {
       step: '03',
       title: 'MANUFACTURE',
-      desc: 'Precision machining and fabrication transform the concept into a physical solution using in-house 400A MIG welding, lathes, drilling, and precision assembly.',
+      desc: 'Precision machining and fabrication transform the concept into a physical solution using in-house 400A MIG welding, precision lathes, drilling setups, and rigid assembly.',
       image: '/images/real_products_curated/03_welding_spm.jpg',
       label: 'MACHINING & 400A WELD FABRICATION'
     },
     {
       step: '04',
       title: 'DELIVER',
-      desc: 'The completed solution is inspected, surface finished with polishing or chemical pickling, and prepared for seamless integration onto the industrial shop floor.',
+      desc: 'The completed solution is verified, surface finished with in-house buffing or chemical pickling, and prepared for seamless industrial shopfloor integration.',
       image: '/images/real_products_curated/05_hydraulic_press_structure.jpg',
-      label: 'FINAL INSPECTION & SHOPFLOOR DISPATCH'
+      label: 'FINAL INSPECTION & SHOPFLOOR DELIVERY'
     }
   ];
 
-  // 4 Qualities for Section 5: WHAT DEFINES OUR WORK
+  // 4 Qualities for Section 6: WHAT DEFINES OUR WORK
   const qualities = [
     {
+      number: '01',
       title: 'PRECISION',
       desc: 'Attention to detail in every component, held strictly to drawing tolerances and concentricity standards.'
     },
     {
+      number: '02',
       title: 'CUSTOM ENGINEERING',
-      desc: 'Solutions developed around specific industrial requirements and custom machine requirements.'
+      desc: 'Solutions developed around specific manufacturing needs and special-purpose machinery requirements.'
     },
     {
+      number: '03',
       title: 'RELIABILITY',
-      desc: 'A practical and consistent approach to manufacturing engineered for continuous duty.'
+      desc: 'A practical and consistent approach to manufacturing engineered for continuous industrial duty.'
     },
     {
+      number: '04',
       title: 'COMMITMENT',
       desc: 'Focused on delivering dependable engineering solutions on time and built to last.'
     }
   ];
 
   return (
-    <div className="about-editorial-page" style={{ backgroundColor: '#ffffff', color: '#111827', overflow: 'hidden' }}>
+    <div className="about-editorial-root" style={{ backgroundColor: '#ffffff', color: '#111827', overflow: 'hidden' }}>
       
       {/* ========================================================================= */}
-      {/* SECTION 1 — CINEMATIC HERO (Versatile Enterprises Inspired Dark Navy Hero) */}
+      {/* SECTION 01 — HERO (Cinematic Full-Width Authentic Workshop Visual)         */}
       {/* ========================================================================= */}
       <section
         id="about-hero"
         style={{
           position: 'relative',
-          minHeight: 'clamp(580px, 82vh, 780px)',
+          minHeight: 'clamp(580px, 80vh, 760px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -82,7 +86,7 @@ export default function AboutPage() {
           overflow: 'hidden'
         }}
       >
-        {/* Full-width Real Precision Machining Background Photograph */}
+        {/* Real Workshop Background Image with Slow Subtle Ambient Zoom */}
         <div
           style={{
             position: 'absolute',
@@ -90,11 +94,14 @@ export default function AboutPage() {
             backgroundImage: 'url(/images/about_workshop_indian.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center 35%',
-            filter: 'brightness(0.42) contrast(1.1)'
+            filter: 'brightness(0.42) contrast(1.1)',
+            transform: 'scale(1.02)',
+            transition: 'transform 7s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
+          className="hero-bg-zoom"
         />
 
-        {/* Subtle Dark Navy Overlay (No grid lines, no artificial technical lines) */}
+        {/* Subtle Dark Navy Gradient Overlay (No Grid Lines, No Blueprint Tech Lines) */}
         <div
           style={{
             position: 'absolute',
@@ -106,13 +113,14 @@ export default function AboutPage() {
 
         <div className="container-custom" style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '960px' }}>
           
-          {/* Small Category Label with Red Accent Line */}
+          {/* Eyebrow Label */}
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '10px',
-              marginBottom: '20px'
+              marginBottom: '20px',
+              animation: 'fadeInUp 0.6s ease forwards'
             }}
           >
             <span style={{ width: '20px', height: '2px', backgroundColor: '#c52227' }} />
@@ -130,23 +138,22 @@ export default function AboutPage() {
             </span>
           </div>
 
-          {/* Main Statement in Very Large Bold Typography */}
+          {/* Main Statement */}
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(34px, 5.2vw, 68px)',
+              fontSize: 'clamp(36px, 5.4vw, 70px)',
               fontWeight: 900,
               lineHeight: 1.08,
               letterSpacing: '-0.035em',
               color: '#ffffff',
               margin: '0 0 24px 0',
-              textTransform: 'uppercase'
+              textTransform: 'uppercase',
+              animation: 'fadeInUp 0.7s 0.1s ease forwards'
             }}
           >
-            ENGINEERING<br />
-            <span style={{ color: '#c52227' }}>PRECISION</span><br />
-            FOR A STRONGER<br />
-            INDUSTRY.
+            WHERE <span style={{ color: '#c52227' }}>PRECISION</span><br />
+            TAKES SHAPE.
           </h1>
 
           {/* Supporting Text */}
@@ -155,11 +162,12 @@ export default function AboutPage() {
               fontSize: 'clamp(15px, 1.25vw, 18px)',
               lineHeight: 1.65,
               color: '#cbd5e1',
-              maxWidth: '640px',
-              margin: '0 auto clamp(36px, 4.5vw, 52px) auto'
+              maxWidth: '680px',
+              margin: '0 auto clamp(36px, 4.5vw, 52px) auto',
+              animation: 'fadeInUp 0.7s 0.2s ease forwards'
             }}
           >
-            Precision tooling, custom fixtures and engineering solutions built for demanding industrial applications.
+            Precision tooling, custom fixtures and engineering solutions built for demanding industrial applications in Bhosari MIDC, Pune since 2015.
           </p>
 
           {/* Minimal SCROLL TO EXPLORE Indicator */}
@@ -178,19 +186,20 @@ export default function AboutPage() {
               textDecoration: 'none',
               paddingBottom: '4px',
               borderBottom: '1px solid rgba(255, 255, 255, 0.35)',
-              transition: 'color 0.2s ease, border-color 0.2s ease'
+              transition: 'color 0.2s ease, border-color 0.2s ease',
+              animation: 'fadeInUp 0.7s 0.3s ease forwards'
             }}
-            className="hero-scroll-prompt"
+            className="hero-scroll-link"
           >
             <span>SCROLL TO EXPLORE</span>
-            <ArrowDown size={14} color="#c52227" className="scroll-bobbing-arrow" />
+            <ArrowDown size={14} color="#c52227" className="scroll-arrow-bob" />
           </a>
 
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 2 — OUR STORY (Editorial Split Layout + Navy Quote Panel)          */}
+      {/* SECTION 02 — OUR STORY / BUILT ON PRACTICAL ENGINEERING                   */}
       {/* ========================================================================= */}
       <section
         id="our-story"
@@ -211,7 +220,7 @@ export default function AboutPage() {
               alignItems: 'center'
             }}
           >
-            {/* LEFT SIDE: Heading & Authentic Company Narrative */}
+            {/* LEFT SIDE: Heading & Genuine Company Story */}
             <div>
               {/* Red Line and Label */}
               <div
@@ -255,7 +264,7 @@ export default function AboutPage() {
                 <span style={{ color: '#c52227' }}>ENGINEERING.</span>
               </h2>
 
-              {/* Company Narrative */}
+              {/* Genuine Story Paragraphs */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                 <p
                   style={{
@@ -292,10 +301,10 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* RIGHT SIDE: Real Workshop Photograph + Dark Navy Editorial Panel */}
+            {/* RIGHT SIDE: Real Workshop Photograph + Clean Editorial Caption */}
             <div style={{ position: 'relative' }}>
               
-              {/* Large Real Workshop Image */}
+              {/* Large Real Workshop Image (No rounded cards, natural crisp integration) */}
               <div
                 style={{
                   position: 'relative',
@@ -305,6 +314,7 @@ export default function AboutPage() {
                   border: '1px solid #e5e7eb',
                   boxShadow: '0 16px 40px rgba(0, 0, 0, 0.06)'
                 }}
+                className="story-image-container"
               >
                 <img
                   src="/images/real_products_curated/01_fixture_making.jpg"
@@ -313,34 +323,36 @@ export default function AboutPage() {
                     width: '100%',
                     height: 'clamp(320px, 38vw, 480px)',
                     objectFit: 'cover',
-                    display: 'block'
+                    display: 'block',
+                    transition: 'transform 0.6s ease'
                   }}
+                  className="story-img-reveal"
                   loading="lazy"
                 />
               </div>
 
-              {/* Dark Navy Editorial Panel */}
+              {/* Editorial Caption Panel Below Image */}
               <div
                 style={{
                   marginTop: '16px',
-                  padding: '24px 28px',
+                  padding: '20px 24px',
                   backgroundColor: '#0a1128',
                   color: '#ffffff',
                   borderRadius: '2px',
                   borderLeft: '4px solid #c52227',
-                  boxShadow: '0 10px 25px rgba(10, 17, 40, 0.15)',
+                  boxShadow: '0 10px 25px rgba(10, 17, 40, 0.12)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
-                  gap: '16px'
+                  gap: '12px'
                 }}
               >
                 <div>
                   <div
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize: 'clamp(18px, 1.8vw, 24px)',
+                      fontSize: 'clamp(16px, 1.6vw, 20px)',
                       fontWeight: 900,
                       lineHeight: 1.2,
                       letterSpacing: '-0.02em',
@@ -361,7 +373,7 @@ export default function AboutPage() {
                     textTransform: 'uppercase'
                   }}
                 >
-                  ESTD. 2015 // BHOSARI MIDC, PUNE
+                  EST. 2015 // BHOSARI MIDC · PUNE
                 </div>
               </div>
 
@@ -373,7 +385,7 @@ export default function AboutPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 3 — HOW WE WORK (Interactive Editorial Engineering Journey)        */}
+      {/* SECTION 03 — HOW WE TURN AN IDEA INTO PRECISION (Signature Journey)       */}
       {/* ========================================================================= */}
       <section
         id="how-we-work"
@@ -408,7 +420,7 @@ export default function AboutPage() {
                   textTransform: 'uppercase'
                 }}
               >
-                ENGINEERING JOURNEY
+                SIGNATURE PROCESS JOURNEY
               </span>
             </div>
 
@@ -429,9 +441,9 @@ export default function AboutPage() {
             </h2>
           </div>
 
-          {/* Interactive Editorial 2-Column Composition (Sticky Left Narrative + Dynamic Right Visual) */}
+          {/* Refined Vertical Process Journey: Connecting Progress Line + 4 Stages */}
           <div
-            className="how-we-work-grid"
+            className="journey-two-col-layout"
             style={{
               display: 'grid',
               gridTemplateColumns: 'minmax(0, 1.05fr) minmax(0, 0.95fr)',
@@ -439,8 +451,8 @@ export default function AboutPage() {
               alignItems: 'start'
             }}
           >
-            {/* LEFT COLUMN: Vertical Storytelling Stages with Large Background Numbers */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 3vw, 32px)' }}>
+            {/* LEFT COLUMN: Vertical Timeline Stages */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 2.5vw, 28px)' }}>
               {stages.map((stage, idx) => {
                 const isActive = activeStage === idx;
                 return (
@@ -453,15 +465,15 @@ export default function AboutPage() {
                       padding: '24px 28px',
                       backgroundColor: isActive ? '#ffffff' : 'transparent',
                       borderLeft: `3px solid ${isActive ? '#c52227' : '#e2e8f0'}`,
-                      borderRadius: '0 4px 4px 0',
+                      borderRadius: '0 3px 3px 0',
                       boxShadow: isActive ? '0 10px 30px rgba(0, 0, 0, 0.05)' : 'none',
                       cursor: 'pointer',
                       transition: 'all 0.35s ease',
                       overflow: 'hidden'
                     }}
-                    className="stage-interactive-card"
+                    className="stage-row-card"
                   >
-                    {/* Huge Subtle Background Number */}
+                    {/* Large Subtle Background Number */}
                     <div
                       style={{
                         position: 'absolute',
@@ -469,7 +481,7 @@ export default function AboutPage() {
                         top: '50%',
                         transform: 'translateY(-50%)',
                         fontFamily: 'var(--font-tech)',
-                        fontSize: 'clamp(64px, 7vw, 96px)',
+                        fontSize: 'clamp(60px, 6.5vw, 90px)',
                         fontWeight: 900,
                         color: isActive ? 'rgba(197, 34, 39, 0.06)' : 'rgba(0, 0, 0, 0.03)',
                         userSelect: 'none',
@@ -481,20 +493,20 @@ export default function AboutPage() {
                       {stage.step}
                     </div>
 
-                    {/* Step Number + Title */}
+                    {/* Step Title & Content */}
                     <div style={{ position: 'relative', zIndex: 2 }}>
                       <div
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '12px',
+                          gap: '10px',
                           marginBottom: '8px'
                         }}
                       >
                         <span
                           style={{
                             fontFamily: 'var(--font-tech)',
-                            fontSize: '13px',
+                            fontSize: '12.5px',
                             fontWeight: 800,
                             letterSpacing: '0.1em',
                             color: isActive ? '#c52227' : '#94a3b8',
@@ -506,7 +518,7 @@ export default function AboutPage() {
                         <h3
                           style={{
                             fontFamily: 'var(--font-heading)',
-                            fontSize: 'clamp(20px, 1.8vw, 24px)',
+                            fontSize: 'clamp(19px, 1.7vw, 23px)',
                             fontWeight: 800,
                             color: isActive ? '#111827' : '#475569',
                             margin: 0,
@@ -538,7 +550,7 @@ export default function AboutPage() {
               })}
             </div>
 
-            {/* RIGHT COLUMN: Sticky Changing Image Visual Frame */}
+            {/* RIGHT COLUMN: Sticky Real Workshop Visual Frame */}
             <div
               style={{
                 position: 'sticky',
@@ -549,7 +561,7 @@ export default function AboutPage() {
                 boxShadow: '0 16px 40px rgba(0, 0, 0, 0.07)',
                 backgroundColor: '#0a1128'
               }}
-              className="how-we-work-sticky-image"
+              className="journey-sticky-image"
             >
               <div style={{ position: 'relative', width: '100%', height: 'clamp(360px, 38vw, 500px)' }}>
                 {stages.map((st, idx) => (
@@ -603,7 +615,7 @@ export default function AboutPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 4 — WHERE PRECISION TAKES SHAPE (Dark Navy Editorial Sequence)     */}
+      {/* SECTION 04 — WHERE PRECISION TAKES SHAPE (Editorial Real Facility Visuals) */}
       {/* ========================================================================= */}
       <section
         id="facility-visuals"
@@ -664,7 +676,7 @@ export default function AboutPage() {
                     marginBottom: '8px'
                   }}
                 >
-                  BHOSARI MIDC, PUNE FACILITY
+                  BHOSARI MIDC · PUNE FACILITY
                 </div>
 
                 <h2
@@ -686,16 +698,16 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* 3 Supporting Manufacturing Photographs (Asymmetrical Editorial Layout, NOT Bento Grid) */}
+          {/* 3 Supporting Manufacturing Photographs in Clean Rectangular Sequence (No Bento, No Rounding) */}
           <div
-            className="supporting-photos-grid"
+            className="editorial-gallery-row"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3, 1fr)',
               gap: 'clamp(16px, 2.5vw, 28px)'
             }}
           >
-            {/* Supporting Photo 1: Precision Machining */}
+            {/* Supporting Photo 1: [ MACHINING ] */}
             <div
               style={{
                 position: 'relative',
@@ -704,7 +716,7 @@ export default function AboutPage() {
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 backgroundColor: '#0c1222'
               }}
-              className="editorial-photo-card"
+              className="editorial-photo-box"
             >
               <img
                 src="/images/real_products_curated/03_balance_straightening_press.jpg"
@@ -714,9 +726,9 @@ export default function AboutPage() {
                   height: 'clamp(200px, 22vw, 280px)',
                   objectFit: 'cover',
                   display: 'block',
-                  transition: 'transform 0.4s ease'
+                  transition: 'transform 0.5s ease'
                 }}
-                className="sub-photo-img"
+                className="gallery-sub-img"
                 loading="lazy"
               />
               <div
@@ -732,11 +744,11 @@ export default function AboutPage() {
                   textTransform: 'uppercase'
                 }}
               >
-                PRECISION MACHINING
+                [ MACHINING ]
               </div>
             </div>
 
-            {/* Supporting Photo 2: Tooling & Fixtures */}
+            {/* Supporting Photo 2: [ TOOLING ] */}
             <div
               style={{
                 position: 'relative',
@@ -745,7 +757,7 @@ export default function AboutPage() {
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 backgroundColor: '#0c1222'
               }}
-              className="editorial-photo-card"
+              className="editorial-photo-box"
             >
               <img
                 src="/images/real_products_curated/04_material_handling_trolley.jpg"
@@ -755,9 +767,9 @@ export default function AboutPage() {
                   height: 'clamp(200px, 22vw, 280px)',
                   objectFit: 'cover',
                   display: 'block',
-                  transition: 'transform 0.4s ease'
+                  transition: 'transform 0.5s ease'
                 }}
-                className="sub-photo-img"
+                className="gallery-sub-img"
                 loading="lazy"
               />
               <div
@@ -773,11 +785,11 @@ export default function AboutPage() {
                   textTransform: 'uppercase'
                 }}
               >
-                TOOLING & FIXTURES
+                [ TOOLING ]
               </div>
             </div>
 
-            {/* Supporting Photo 3: Engineering Support & Fabrication */}
+            {/* Supporting Photo 3: [ FABRICATION ] */}
             <div
               style={{
                 position: 'relative',
@@ -786,7 +798,7 @@ export default function AboutPage() {
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 backgroundColor: '#0c1222'
               }}
-              className="editorial-photo-card"
+              className="editorial-photo-box"
             >
               <img
                 src="/images/service_industrial_fabrication.jpg"
@@ -796,9 +808,9 @@ export default function AboutPage() {
                   height: 'clamp(200px, 22vw, 280px)',
                   objectFit: 'cover',
                   display: 'block',
-                  transition: 'transform 0.4s ease'
+                  transition: 'transform 0.5s ease'
                 }}
-                className="sub-photo-img"
+                className="gallery-sub-img"
                 loading="lazy"
               />
               <div
@@ -814,7 +826,7 @@ export default function AboutPage() {
                   textTransform: 'uppercase'
                 }}
               >
-                ENGINEERING SUPPORT
+                [ FABRICATION ]
               </div>
             </div>
           </div>
@@ -823,7 +835,125 @@ export default function AboutPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 5 — WHAT DEFINES OUR WORK (Clean Light Editorial Section)          */}
+      {/* SECTION 05 — EXPERIENCE / FACTS (Verified Transitional Editorial Facts)    */}
+      {/* ========================================================================= */}
+      <section
+        id="experience-facts"
+        style={{
+          paddingTop: 'clamp(64px, 8vw, 100px)',
+          paddingBottom: 'clamp(64px, 8vw, 100px)',
+          backgroundColor: '#fafbfc',
+          borderBottom: '1px solid #e5e7eb'
+        }}
+      >
+        <div className="container-custom">
+          <div
+            className="facts-editorial-layout"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.2fr)',
+              gap: 'clamp(36px, 5vw, 68px)',
+              alignItems: 'center'
+            }}
+          >
+            {/* Left: Heading */}
+            <div>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '12px'
+                }}
+              >
+                <span style={{ width: '18px', height: '2px', backgroundColor: '#c52227' }} />
+                <span
+                  style={{
+                    fontFamily: 'var(--font-tech)',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.14em',
+                    color: '#c52227',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  TRACK RECORD
+                </span>
+              </div>
+
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(28px, 3.6vw, 46px)',
+                  fontWeight: 900,
+                  lineHeight: 1.12,
+                  letterSpacing: '-0.03em',
+                  color: '#111827',
+                  margin: 0,
+                  textTransform: 'uppercase'
+                }}
+              >
+                ENGINEERED WITH<br />
+                <span style={{ color: '#c52227' }}>EXPERIENCE.</span>
+              </h2>
+            </div>
+
+            {/* Right: Verified Facts & Summary */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: 'clamp(20px, 3vw, 36px)',
+                paddingLeft: 'clamp(0px, 2vw, 24px)'
+              }}
+              className="verified-facts-grid"
+            >
+              {/* Fact 1 */}
+              <div>
+                <div style={{ fontFamily: 'var(--font-tech)', fontSize: 'clamp(32px, 3.5vw, 44px)', fontWeight: 900, color: '#111827', lineHeight: 1 }}>
+                  2015
+                </div>
+                <div style={{ fontFamily: 'var(--font-tech)', fontSize: '11.5px', fontWeight: 700, color: '#c52227', letterSpacing: '0.08em', marginTop: '6px', textTransform: 'uppercase' }}>
+                  ESTD. YEAR
+                </div>
+                <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>
+                  Bhosari MIDC, Pune
+                </div>
+              </div>
+
+              {/* Fact 2 */}
+              <div>
+                <div style={{ fontFamily: 'var(--font-tech)', fontSize: 'clamp(32px, 3.5vw, 44px)', fontWeight: 900, color: '#111827', lineHeight: 1 }}>
+                  10+
+                </div>
+                <div style={{ fontFamily: 'var(--font-tech)', fontSize: '11.5px', fontWeight: 700, color: '#c52227', letterSpacing: '0.08em', marginTop: '6px', textTransform: 'uppercase' }}>
+                  YEARS EXPERIENCE
+                </div>
+                <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>
+                  Precision Toolmaking
+                </div>
+              </div>
+
+              {/* Fact 3 */}
+              <div>
+                <div style={{ fontFamily: 'var(--font-tech)', fontSize: 'clamp(32px, 3.5vw, 44px)', fontWeight: 900, color: '#111827', lineHeight: 1 }}>
+                  400A
+                </div>
+                <div style={{ fontFamily: 'var(--font-tech)', fontSize: '11.5px', fontWeight: 700, color: '#c52227', letterSpacing: '0.08em', marginTop: '6px', textTransform: 'uppercase' }}>
+                  HEAVY WELDING
+                </div>
+                <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>
+                  MIG & Arc Fabrication
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 06 — WHAT DEFINES OUR WORK (Numbered Editorial Principles)         */}
       {/* ========================================================================= */}
       <section
         id="what-defines-us"
@@ -878,9 +1008,9 @@ export default function AboutPage() {
             </h2>
           </div>
 
-          {/* 4 Qualities Arranged Horizontally with Subtle Vertical Separators */}
+          {/* 4 Numbered Editorial Qualities with Subtle Line Expansion on Hover */}
           <div
-            className="qualities-grid"
+            className="qualities-numbered-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(4, 1fr)',
@@ -894,19 +1024,35 @@ export default function AboutPage() {
                   paddingLeft: idx > 0 ? 'clamp(16px, 2vw, 28px)' : '0',
                   borderLeft: idx > 0 ? '1px solid #e5e7eb' : 'none',
                   display: 'flex',
-                  flexDirection: 'column'
+                  flexDirection: 'column',
+                  transition: 'transform 0.25s ease'
                 }}
-                className="quality-col"
+                className="quality-numbered-col"
               >
-                {/* Small Red Accent Line */}
-                <span
-                  style={{
-                    width: '24px',
-                    height: '2px',
-                    backgroundColor: '#c52227',
-                    marginBottom: '16px'
-                  }}
-                />
+                {/* Number & Accent Line */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-tech)',
+                      fontSize: '14px',
+                      fontWeight: 800,
+                      letterSpacing: '0.1em',
+                      color: '#c52227'
+                    }}
+                    className="quality-num"
+                  >
+                    {q.number}
+                  </span>
+                  <span
+                    style={{
+                      width: '20px',
+                      height: '2px',
+                      backgroundColor: '#c52227',
+                      transition: 'width 0.3s ease'
+                    }}
+                    className="quality-line"
+                  />
+                </div>
 
                 {/* Title */}
                 <h3
@@ -942,7 +1088,7 @@ export default function AboutPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 7 — FINAL CTA (Full-Width Dark Navy Industrial CTA)                */}
+      {/* SECTION 07 — FINAL CTA (Cinematic Full-Width Dark Navy CTA)               */}
       {/* ========================================================================= */}
       <section
         id="about-cta"
@@ -956,7 +1102,7 @@ export default function AboutPage() {
           textAlign: 'center'
         }}
       >
-        {/* Subtle Dark Real Machining Photograph Overlay */}
+        {/* Darkened Real Machining Photograph Overlay */}
         <div
           style={{
             position: 'absolute',
@@ -1083,7 +1229,18 @@ export default function AboutPage() {
 
       {/* Embedded Styles for Micro-interactions and Responsive Design */}
       <style>{`
-        .scroll-bobbing-arrow {
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .scroll-arrow-bob {
           animation: slowBob 2s infinite ease-in-out;
         }
 
@@ -1092,13 +1249,25 @@ export default function AboutPage() {
           50% { transform: translateY(4px); }
         }
 
-        .hero-scroll-prompt:hover {
+        .hero-scroll-link:hover {
           color: #c52227 !important;
           border-bottom-color: #c52227 !important;
         }
 
-        .editorial-photo-card:hover .sub-photo-img {
+        .story-image-container:hover .story-img-reveal {
+          transform: scale(1.02) !important;
+        }
+
+        .editorial-photo-box:hover .gallery-sub-img {
           transform: scale(1.03) !important;
+        }
+
+        .quality-numbered-col:hover {
+          transform: translateY(-3px) !important;
+        }
+
+        .quality-numbered-col:hover .quality-line {
+          width: 32px !important;
         }
 
         @media (max-width: 960px) {
@@ -1106,30 +1275,41 @@ export default function AboutPage() {
             grid-template-columns: 1fr !important;
             gap: 36px !important;
           }
-          .how-we-work-grid {
+          .journey-two-col-layout {
             grid-template-columns: 1fr !important;
           }
-          .how-we-work-sticky-image {
+          .journey-sticky-image {
             position: relative !important;
             top: 0 !important;
             order: -1 !important;
             margin-bottom: 24px !important;
           }
-          .qualities-grid {
+          .facts-editorial-layout {
+            grid-template-columns: 1fr !important;
+            gap: 28px !important;
+          }
+          .verified-facts-grid {
+            padding-left: 0 !important;
+          }
+          .qualities-numbered-grid {
             grid-template-columns: 1fr 1fr !important;
             row-gap: 32px !important;
           }
-          .quality-col {
+          .quality-numbered-col {
             padding-left: 0 !important;
             border-left: none !important;
           }
         }
 
         @media (max-width: 640px) {
-          .supporting-photos-grid {
+          .editorial-gallery-row {
             grid-template-columns: 1fr !important;
           }
-          .qualities-grid {
+          .verified-facts-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          .qualities-numbered-grid {
             grid-template-columns: 1fr !important;
             row-gap: 28px !important;
           }
