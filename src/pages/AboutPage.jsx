@@ -73,7 +73,7 @@ export default function AboutPage() {
       number: '04',
       title: 'COMMITMENT',
       desc: 'Focused on delivering dependable engineering solutions and supporting every project from requirement to final output.',
-      image: '/images/real_products_curated/05_hydraulic_press_structure.jpg',
+      image: '/images/service_industrial_fabrication.jpg',
       spec: 'END-TO-END PROJECT SUPPORT'
     }
   ];
