@@ -1,0 +1,98 @@
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import Lenis from 'lenis';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import ServicesPage from './pages/ServicesPage';
+import IndustriesPage from './pages/IndustriesPage';
+import GalleryPage from './pages/GalleryPage';
+import ContactPage from './pages/ContactPage';
+
+// Scroll Handler: Handles route transitions & hash scroll smoothly
+function ScrollHandler() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          const navOffset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
+      }, 80);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [pathname, hash]);
+
+  return null;
+}
+
+export default function App() {
+  useEffect(() => {
+    // Initialize Lenis Smooth Scrolling
+    const lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-white text-[#111827] flex flex-col antialiased">
+        <ScrollHandler />
+
+        {/* Global Navigation */}
+        <Navbar />
+
+        {/* Multi-Page Routes */}
+        <main className="flex-grow">
+          <Routes>
+            {/* 1. Home Page (Minimal preview of all key sections) */}
+            <Route path="/" element={<HomePage />} />
+
+            {/* 2. Dedicated Standalone About Us Page */}
+            <Route path="/about" element={<AboutPage />} />
+
+            {/* 3. Dedicated Standalone Services Page */}
+            <Route path="/services" element={<ServicesPage />} />
+
+            {/* 4. Dedicated Standalone Industries Page (Exploded CAD Machine) */}
+            <Route path="/industries" element={<IndustriesPage />} />
+
+            {/* 5. Dedicated Standalone Gallery Page */}
+            <Route path="/gallery" element={<GalleryPage />} />
+
+            {/* 6. Dedicated Standalone Contact Us Page */}
+            <Route path="/contact" element={<ContactPage />} />
+
+            {/* Fallback to Home */}
+            <Route path="*" element={<HomePage />} />
+          </Routes>
+        </main>
+
+        {/* Global Footer (with WhatsApp floating button) */}
+        <Footer />
+      </div>
+    </BrowserRouter>
+  );
+}

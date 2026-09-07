@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="100%" height="100%" fill="none">
+  <!-- White Background (optional, transparent by default) -->
+  <rect width="1000" height="1000" fill="transparent" />
+  
+  <!-- Outer Black Square Frame -->
+  <rect x="95" y="90" width="805" height="805" stroke="#18181b" stroke-width="20" fill="none" />
+
+  <!-- Left Red Border & Base Line -->
+  <!-- Vertical Left Red Bar -->
+  <rect x="170" y="150" width="22" height="545" fill="#b91c1c" />
+  <!-- Horizontal Bottom Red Bar -->
+  <rect x="170" y="675" width="625" height="22" fill="#b91c1c" />
+
+  <!-- Monogram MKPW Red Artwork -->
+  <!-- Letter M -->
+  <g fill="#b91c1c">
+    <!-- M Left stem -->
+    <path d="M 225 210 L 255 210 L 255 410 L 225 410 Z" />
+    <path d="M 220 205 L 295 205 L 295 218 L 220 218 Z" />
+    <path d="M 220 402 L 305 402 L 305 415 L 220 415 Z" />
+    <!-- M Diagonals and Right stem -->
+    <path d="M 255 210 L 340 375 L 348 375 L 430 210 L 400 210 L 344 325 L 285 210 Z" />
+    <path d="M 335 402 L 405 402 L 405 415 L 335 415 Z" />
+  </g>
+
+  <!-- Letter K -->
+  <g fill="#b91c1c">
+    <!-- K Vertical stem -->
+    <path d="M 395 205 L 455 205 L 455 218 L 440 218 L 440 402 L 455 402 L 455 415 L 395 415 L 395 402 L 412 402 L 412 218 L 395 218 Z" />
+    <!-- K Upper Diagonal -->
+    <path d="M 440 310 L 575 205 L 610 205 L 610 218 L 595 218 L 485 305 L 620 402 L 620 415 L 565 415 L 452 328 Z" />
+  </g>
+
+  <!-- Letter P -->
+  <g fill="#b91c1c">
+    <!-- P Vertical stem -->
+    <path d="M 395 410 L 455 410 L 455 423 L 440 423 L 440 615 L 455 615 L 455 628 L 395 628 L 395 615 L 412 615 L 412 423 L 395 423 Z" />
+    <!-- P Loop -->
+    <path d="M 440 410 C 560 410 590 445 590 485 C 590 525 560 558 440 558 L 440 535 C 530 535 558 515 558 485 C 558 455 530 433 440 433 Z" />
+  </g>
+
+  <!-- Letter W / Chevron base connecting to I -->
+  <g fill="#b91c1c">
+    <!-- W peak upward connecting P to I -->
+    <path d="M 470 625 L 590 540 L 640 620 L 760 620 L 760 628 L 630 628 L 590 565 L 480 628 Z" />
+  </g>
+
+  <!-- Letter I -->
+  <g fill="#b91c1c">
+    <!-- I Upper serif -->
+    <rect x="675" y="402" width="85" height="15" />
+    <!-- I Center stem -->
+    <rect x="705" y="415" width="26" height="200" />
+    <!-- I Lower serif -->
+    <rect x="675" y="615" width="85" height="15" />
+  </g>
+
+  <!-- Two Green Bars Below Red Baseline -->
+  <!-- Top Green Bar -->
+  <rect x="295" y="725" width="500" height="24" rx="2" fill="#0b8a42" />
+  <!-- Bottom Green Bar (Offset to Right) -->
+  <rect x="420" y="772" width="375" height="24" rx="2" fill="#0b8a42" />
+</svg>
