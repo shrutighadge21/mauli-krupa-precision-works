@@ -92,7 +92,7 @@ export default function Hero() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '10px',
-              fontFamily: 'var(--font-tech)',
+              fontFamily: 'var(--font-heading)',
               fontSize: 'clamp(12px, 1.1vw, 13.5px)',
               fontWeight: 600,
               letterSpacing: '0.18em',
@@ -111,7 +111,7 @@ export default function Hero() {
                 display: 'inline-block'
               }} 
             />
-            <span>PRECISION ENGINEERING • MANUFACTURING</span>
+            <span>PRECISION ENGINEERING · MANUFACTURING</span>
           </div>
 
           {/* Clean, Modern Industrial Sans-Serif Heading */}
@@ -135,6 +135,7 @@ export default function Hero() {
           {/* One Short Supporting Sentence */}
           <p 
             style={{
+              fontFamily: 'var(--font-heading)',
               fontSize: 'clamp(16px, 1.35vw, 18.5px)',
               lineHeight: 1.65,
               color: '#f8fafc',

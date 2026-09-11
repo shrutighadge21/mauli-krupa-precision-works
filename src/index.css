@@ -26,10 +26,10 @@
   --border-subtle: #f3f4f6;
   --border-dark: rgba(255, 255, 255, 0.12);
 
-  /* Fonts - Sophisticated, Clean Industrial Sans-Serif */
+  /* Fonts - Sophisticated, Clean Hero Font Family (Outfit) applied consistently site-wide */
   --font-heading: 'Outfit', 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-  --font-body: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-tech: 'Space Grotesk', 'Inter', monospace, sans-serif;
+  --font-body: 'Outfit', 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  --font-tech: 'Outfit', 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
 
   /* Layout Widths & Spacing */
   --container-max: 1240px;
@@ -45,7 +45,7 @@
 
 html {
   scroll-behavior: smooth;
-  font-family: var(--font-body);
+  font-family: var(--font-heading);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   text-rendering: optimizeLegibility;
@@ -54,6 +54,7 @@ html {
 }
 
 body {
+  font-family: var(--font-heading);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -175,7 +176,7 @@ button {
 /* Navigation Links - EXACTLY 16px */
 .nav-link-item {
   font-size: 16px !important;
-  font-family: var(--font-tech);
+  font-family: var(--font-heading);
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;

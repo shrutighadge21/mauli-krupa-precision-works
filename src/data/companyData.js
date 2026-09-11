@@ -21,15 +21,27 @@ export const COMPANY_INFO = {
     }
   ],
 
-  email: "Smauli.krupa@gmail.com",
+  email: "smauli.krupa@gmail.com",
+
+  contact: {
+    email: "smauli.krupa@gmail.com",
+    workAddress: {
+      full: "Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026"
+    },
+    officeAddress: {
+      full: "Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026"
+    }
+  },
 
   address: {
     company: "Mauli Krupa Precision Works",
     line1: "Intelligent Cadet International School,",
     line2: "Vaishno Mata Marg, Sector No. 3,",
     line3: "Bhosari, Pimpri-Chinchwad,",
-    state: "Maharashtra – 411026",
-    full: "Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra – 411026"
+    line4: "Maharashtra 411026",
+    line5: "Maharashtra 411026",
+    state: "Maharashtra 411026",
+    full: "Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026"
   },
 
   taxIdentifiers: {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Phone } from 'lucide-react';
 import Logo from './Logo';
 
 export default function Navbar() {
@@ -20,12 +20,11 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Requested Navigation Order: HOME -> ABOUT US -> SERVICES -> INDUSTRIES -> GALLERY -> CONTACT US
+  // Requested Navigation Order: HOME -> ABOUT US -> SERVICES -> GALLERY -> CONTACT US
   const navItems = [
     { label: 'HOME', path: '/' },
     { label: 'ABOUT US', path: '/about' },
     { label: 'SERVICES', path: '/services' },
-    { label: 'INDUSTRIES', path: '/industries' },
     { label: 'GALLERY', path: '/gallery' },
     { label: 'CONTACT US', path: '/contact' },
   ];
@@ -57,7 +56,7 @@ export default function Navbar() {
     >
       <div className="container-wide" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
         
-        {/* MKP Company Logo Only (No text) */}
+        {/* MKP Company Logo Only (Slightly increased size for prominence, perfectly centered) */}
         <Link 
           to="/" 
           onClick={() => {
@@ -66,7 +65,7 @@ export default function Navbar() {
           style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', padding: '2px 0' }}
           aria-label="Mauli Krupa Precision Works"
         >
-          <Logo size={52} theme="light" showText={false} />
+          <Logo size={58} theme="light" showText={false} />
         </Link>
 
         {/* Center Desktop Navigation Links — Dark Charcoal Text */}
@@ -88,8 +87,8 @@ export default function Navbar() {
                 className={`nav-link-item ${active ? 'active' : ''}`}
                 style={{
                   fontSize: '15px',
-                  fontFamily: 'var(--font-tech)',
-                  fontWeight: active ? 700 : 500,
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: active ? 700 : 600,
                   color: active ? '#c52227' : '#1f2937',
                   padding: '8px 14px',
                   borderRadius: '3px',
@@ -124,42 +123,44 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right CTA Button: GET IN TOUCH -> /contact */}
+        {/* Right Phone Contact Link: Direct Tel Call */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <Link
-            to="/contact"
-            className="navbar-quote-btn"
+          <a
+            href="tel:+919822327460"
+            className="navbar-phone-btn"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '10px 20px',
-              backgroundColor: '#c52227',
-              color: '#ffffff',
-              fontFamily: 'var(--font-tech)',
+              padding: '9px 18px',
+              backgroundColor: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: '4px',
+              color: '#111827',
+              fontFamily: 'var(--font-heading)',
               fontSize: '14px',
               fontWeight: 600,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
+              letterSpacing: '0.02em',
               textDecoration: 'none',
-              borderRadius: '3px',
-              boxShadow: '0 3px 10px rgba(197, 34, 39, 0.25)',
-              transition: 'all 0.25s ease'
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
+              transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#b31b20';
+              e.currentTarget.style.borderColor = '#c52227';
+              e.currentTarget.style.color = '#c52227';
+              e.currentTarget.style.backgroundColor = '#fef2f2';
               e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 5px 14px rgba(197, 34, 39, 0.35)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#c52227';
+              e.currentTarget.style.borderColor = '#e2e8f0';
+              e.currentTarget.style.color = '#111827';
+              e.currentTarget.style.backgroundColor = '#f8fafc';
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 3px 10px rgba(197, 34, 39, 0.25)';
             }}
           >
-            <span>GET IN TOUCH</span>
-            <ArrowRight size={15} />
-          </Link>
+            <Phone size={15} color="#c52227" strokeWidth={2.2} />
+            <span>+91 98223 27460</span>
+          </a>
 
           {/* Mobile Menu Toggle */}
           <button
@@ -210,7 +211,7 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
                   fontSize: '16px',
-                  fontFamily: 'var(--font-tech)',
+                  fontFamily: 'var(--font-heading)',
                   fontWeight: 600,
                   color: active ? '#c52227' : '#1f2937',
                   padding: '12px 0',
@@ -227,36 +228,35 @@ export default function Navbar() {
             );
           })}
 
-          <Link
-            to="/contact"
+          <a
+            href="tel:+919822327460"
             onClick={() => setMobileMenuOpen(false)}
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px',
+              gap: '10px',
               padding: '12px 20px',
               backgroundColor: '#c52227',
               color: '#ffffff',
-              fontFamily: 'var(--font-tech)',
+              fontFamily: 'var(--font-heading)',
               fontSize: '15px',
               fontWeight: 600,
-              textTransform: 'uppercase',
               textDecoration: 'none',
-              borderRadius: '3px',
+              borderRadius: '4px',
               marginTop: '12px'
             }}
           >
-            <span>CONTACT US</span>
-            <ArrowRight size={16} />
-          </Link>
+            <Phone size={16} color="#ffffff" />
+            <span>+91 98223 27460</span>
+          </a>
         </div>
       )}
 
       <style>{`
         @media (max-width: 960px) {
           .desktop-nav-links { display: none !important; }
-          .navbar-quote-btn { display: none !important; }
+          .navbar-phone-btn { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
         }
       `}</style>

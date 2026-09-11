@@ -192,7 +192,7 @@ export default function StartProject() {
                   marginBottom: '12px'
                 }}
               >
-                WORKS & OFFICE LOCATION
+                ADDRESS
               </div>
 
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '14px' }}>
@@ -202,9 +202,9 @@ export default function StartProject() {
                     Mauli Krupa Precision Works
                   </div>
                   <div style={{ fontSize: '13.5px', color: '#4b5563', lineHeight: 1.55 }}>
-                    {COMPANY_INFO.address.line1}<br />
-                    {COMPANY_INFO.address.line2}<br />
-                    {COMPANY_INFO.address.line3} {COMPANY_INFO.address.state}
+                    Intelligent Cadet International School,<br />
+                    Vaishno Mata Marg, Sector No. 3,<br />
+                    Bhosari, Pimpri-Chinchwad, Maharashtra 411026
                   </div>
                 </div>
               </div>

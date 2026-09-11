@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function OurImpact() {
   const sectionRef = useRef(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [counts, setCounts] = useState([0, 0, 0]);
 
   // Exactly 3 genuine, verified metrics requested by the user
@@ -11,82 +11,105 @@ export default function OurImpact() {
     {
       id: 'projects',
       target: 50,
-      prefix: '',
       suffix: '+',
       padZero: false,
+      delay: 0,
       title: 'Projects Completed',
       detail: 'Custom jigs, welding fixtures, SPMs and handling systems delivered across India.'
     },
     {
       id: 'sectors',
       target: 5,
-      prefix: '0',
       suffix: '',
       padZero: true,
+      delay: 100,
       title: 'Industrial Sectors Served',
       detail: 'Automotive, railways, automated production, heavy fabrication & defense.'
     },
     {
       id: 'experience',
       target: 10,
-      prefix: '',
       suffix: '+',
       padZero: false,
+      delay: 200,
       title: 'Years of Experience',
       detail: 'Established in Bhosari MIDC, Pune in 2015 with in-house design, machining & fabrication.'
     }
   ];
 
-  // IntersectionObserver — Trigger animation once only when section enters viewport
+  // Viewport IntersectionObserver — Activates on viewport entry, resets on exit to replay on scroll back
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        } else {
+          // Reset when scrolled out of view so animation replays upon return
+          setIsVisible(false);
+          setCounts([0, 0, 0]);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.25 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const el = sectionRef.current;
+    if (el) {
+      observer.observe(el);
     }
 
     return () => {
-      if (sectionRef.current) observer.unobserve(sectionRef.current);
+      if (el) observer.unobserve(el);
     };
-  }, [hasAnimated]);
+  }, []);
 
-  // Smooth, subtle count-up animation without jumping or bouncing
+  // Smooth, ease-out count-up animation with staggered start
   useEffect(() => {
-    if (!hasAnimated) return;
+    if (!isVisible) {
+      setCounts([0, 0, 0]);
+      return;
+    }
 
-    const duration = 1800; // ms for calm, steady cadence
+    let animationFrameId;
+    const duration = 1800; // ms
     const startTime = performance.now();
 
-    const animate = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // Smooth ease-out cubic
-      const ease = 1 - Math.pow(1 - progress, 3);
+    const animate = (currentTime) => {
+      const elapsedTotal = currentTime - startTime;
 
-      setCounts(metrics.map((m) => Math.round(ease * m.target)));
+      const newCounts = metrics.map((m) => {
+        const elapsed = Math.max(0, elapsedTotal - m.delay);
+        const progress = Math.min(elapsed / (duration - m.delay), 1);
+        // Smooth ease-out cubic (slows down naturally towards the end)
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const currentVal = Math.round(ease * m.target);
+        return Math.min(currentVal, m.target);
+      });
 
-      if (progress < 1) {
-        requestAnimationFrame(animate);
+      setCounts(newCounts);
+
+      if (elapsedTotal < duration + 200) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        // Stop exactly at final values
+        setCounts(metrics.map((m) => m.target));
       }
     };
 
-    const animId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animId);
-  }, [hasAnimated]);
+    animationFrameId = requestAnimationFrame(animate);
 
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, [isVisible]);
+
+  // Formats numbers cleanly: 50+ (adds + on finish), 05 (preserves leading zero), 10+ (adds + on finish)
   const formatNumber = (metric, index) => {
     const val = counts[index];
-    if (metric.padZero && val < 10) {
-      return `0${val}${metric.suffix}`;
+    if (metric.padZero) {
+      return val < 10 ? `0${val}` : `${val}`;
     }
-    return `${val}${metric.suffix}`;
+    const isFinished = val >= metric.target;
+    return isFinished ? `${val}${metric.suffix}` : `${val}`;
   };
 
   return (
@@ -215,7 +238,7 @@ export default function OurImpact() {
                 left: 0,
                 top: 0,
                 height: '100%',
-                width: hasAnimated ? '100%' : '0%',
+                width: isVisible ? '100%' : '0%',
                 backgroundColor: '#c52227',
                 opacity: 0.35,
                 transition: 'width 1.8s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -240,8 +263,8 @@ export default function OurImpact() {
               className="impact-metric-block"
               style={{
                 gridColumn: 'span 5',
-                opacity: hasAnimated ? 1 : 0,
-                transform: hasAnimated ? 'translateY(0)' : 'translateY(16px)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
                 transition: 'opacity 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
                 transitionDelay: '0.1s'
               }}
@@ -325,8 +348,8 @@ export default function OurImpact() {
               className="impact-metric-block"
               style={{
                 gridColumn: 'span 6',
-                opacity: hasAnimated ? 1 : 0,
-                transform: hasAnimated ? 'translateY(0)' : 'translateY(16px)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
                 transition: 'opacity 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
                 transitionDelay: '0.25s',
                 paddingLeft: 'clamp(0px, 2vw, 24px)'
@@ -407,8 +430,8 @@ export default function OurImpact() {
               style={{
                 gridColumn: 'span 7',
                 position: 'relative',
-                opacity: hasAnimated ? 1 : 0,
-                transform: hasAnimated ? 'translateY(0)' : 'translateY(16px)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
                 transition: 'opacity 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
                 transitionDelay: '0.35s'
               }}
@@ -482,8 +505,8 @@ export default function OurImpact() {
               className="impact-metric-block"
               style={{
                 gridColumn: 'span 5',
-                opacity: hasAnimated ? 1 : 0,
-                transform: hasAnimated ? 'translateY(0)' : 'translateY(16px)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
                 transition: 'opacity 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
                 transitionDelay: '0.45s',
                 paddingLeft: 'clamp(0px, 2vw, 16px)'

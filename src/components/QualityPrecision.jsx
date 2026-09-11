@@ -295,7 +295,7 @@ export default function QualityPrecision() {
               >
                 {/* Central Metrology Inspection Component Image */}
                 <img
-                  src="/images/precision_metrology_datum.jpg"
+                  src="/images/about_cad_precision.png"
                   alt="Precision Metrology CAD Inspection at Mauli Krupa Precision Works"
                   style={{
                     width: '100%',

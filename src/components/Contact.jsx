@@ -137,28 +137,15 @@ export default function Contact() {
             {/* Official Addresses from PDF */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               
-              {/* Work / Works Facility */}
+              {/* Official Facility Address */}
               <div style={{ display: 'flex', gap: '16px' }}>
                 <MapPin size={20} color="#0e8a44" style={{ flexShrink: 0, marginTop: '4px' }} />
                 <div>
-                  <div style={{ fontFamily: 'var(--font-tech)', fontSize: '12px', letterSpacing: '0.15em', color: '#0e8a44', textTransform: 'uppercase', fontWeight: 600 }}>
-                    WORK / MANUFACTURING FACILITY
+                  <div style={{ fontFamily: 'var(--font-heading)', fontSize: '12px', letterSpacing: '0.12em', color: '#0e8a44', textTransform: 'uppercase', fontWeight: 700 }}>
+                    WORKS / FACILITY ADDRESS
                   </div>
                   <p style={{ color: '#e2e8f0', fontSize: '15px', marginTop: '6px', lineHeight: 1.6 }}>
-                    {COMPANY_INFO.contact.workAddress.full}
-                  </p>
-                </div>
-              </div>
-
-              {/* Office Address */}
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <Building2 size={20} color="#ef4444" style={{ flexShrink: 0, marginTop: '4px' }} />
-                <div>
-                  <div style={{ fontFamily: 'var(--font-tech)', fontSize: '12px', letterSpacing: '0.15em', color: '#ef4444', textTransform: 'uppercase', fontWeight: 600 }}>
-                    REGISTERED OFFICE ADDRESS
-                  </div>
-                  <p style={{ color: '#e2e8f0', fontSize: '15px', marginTop: '6px', lineHeight: 1.6 }}>
-                    {COMPANY_INFO.contact.officeAddress.full}
+                    {COMPANY_INFO.address.full}
                   </p>
                 </div>
               </div>

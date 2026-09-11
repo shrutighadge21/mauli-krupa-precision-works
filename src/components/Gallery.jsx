@@ -1,143 +1,102 @@
-import React, { useState, useRef } from 'react';
-import { ArrowRight, ArrowLeft, Maximize2, X, Crosshair, Sparkles } from 'lucide-react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  ArrowRight,
+  ArrowLeft,
+  Maximize2,
+  X,
+  Crosshair,
+  CheckCircle2,
+  ChevronRight,
+  ChevronLeft
+} from 'lucide-react';
+import { GALLERY_ITEMS } from '../data/galleryData';
 
 export default function Gallery() {
   const scrollContainerRef = useRef(null);
-  const [activeModalItem, setActiveModalItem] = useState(null);
+  const [activeModalIndex, setActiveModalIndex] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
 
-  // 100% Real, Authentic Project Photographs extracted directly from Mauli Krupa Precision Works' Catalog
-  const galleryItems = [
-    {
-      id: 'high-altitude',
-      code: 'MKP-SPM-01',
-      title: 'High Altitude Checking Machine',
-      category: 'Special Purpose Machine',
-      image: '/images/real_products_curated/01_high_altitude_checking.jpg',
-      aspect: '4 / 3',
-      description: 'Stainless steel manifold piping and pressure testing system manufactured strictly to client CAD drawings and ISO pressure tolerances.',
-      specs: ['High-Pressure Manifold Testing', 'SS 304/316 Structural Tubing', 'Analog & Digital Sensor Integration']
-    },
-    {
-      id: 'welding-spm',
-      code: 'MKP-SPM-02',
-      title: 'Automated Welding SPM',
-      category: 'Custom Machinery',
-      image: '/images/real_products_curated/03_welding_spm.jpg',
-      aspect: '16 / 11',
-      description: 'Custom welding special purpose machine featuring dual-axis motorized rotation, pneumatic clamping, and heavy machine bed.',
-      specs: ['Motorized Workpiece Rotation', 'Pneumatic Job Clamping', 'Heavy Vibration-Damped Base']
-    },
-    {
-      id: 'z-magnetic-conveyor',
-      code: 'MKP-MAT-01',
-      title: 'Z-Type Magnetic Incline Conveyor',
-      category: 'Material Handling',
-      image: '/images/real_products_curated/02_z_magnetic_conveyor.jpg',
-      aspect: '3 / 4',
-      description: 'High-flux magnetic scrap and stamped part incline conveyor designed for continuous shopfloor transit and chip extraction.',
-      specs: ['Permanent High-Flux Magnets', 'Oil & Coolant Resistant SS Belt', 'Integrated Geared Motor Drive']
-    },
-    {
-      id: 'balance-press',
-      code: 'MKP-FAB-01',
-      title: 'Balance Straightening Press Machine',
-      category: 'Heavy Machinery',
-      image: '/images/real_products_curated/03_balance_straightening_press.jpg',
-      aspect: '4 / 3',
-      description: 'Heavy lead-screw hydraulic press for shaft, rod, and structural beam straightening with micrometer alignment dial.',
-      specs: ['Precision Hydraulic Ram Control', 'V-Block Shaft Support Tables', 'Heavy Steel Column Weldment']
-    },
-    {
-      id: 'fixture-making',
-      code: 'MKP-JIG-01',
-      title: 'Concentricity Checking & Tooling Fixture',
-      category: 'Jigs & Fixtures',
-      image: '/images/real_products_curated/01_fixture_making.jpg',
-      aspect: '16 / 10',
-      description: 'Multi-point concentricity checking and clamping fixture machined to within ±0.01mm tolerance on precision surface plates.',
-      specs: ['Ground Datum Bushings', 'Toggle & Screw Fast Clamping', 'Dial Indicator Mount Stations']
-    },
-    {
-      id: 'fuel-sensor-rig',
-      code: 'MKP-TST-01',
-      title: 'Fuel Sensor Automated Testing Rig',
-      category: 'Custom Test Benches',
-      image: '/images/real_products_curated/03_fuel_sensor_testing_rig.jpg',
-      aspect: '4 / 3',
-      description: 'Automated fluid test bench with digital control panel for electronic automotive sensor calibration and leakage checking.',
-      specs: ['Automated Cycle Controller', 'Leakage & Signal Calibration', 'Enclosed Acrylic Inspection Shield']
-    },
-    {
-      id: 'material-trolley',
-      code: 'MKP-TRL-01',
-      title: 'Shopfloor Material Transit Trolley',
-      category: 'Industrial Trolleys',
-      image: '/images/real_products_curated/04_material_handling_trolley.jpg',
-      aspect: '3 / 4',
-      description: 'Ergonomic multi-tier component transit trolley equipped with heavy polyurethane caster wheels and vibration dampening.',
-      specs: ['Heavy-Duty Tubular Frame', 'Anti-Static Polyurethane Wheels', 'Custom Component Part Racks']
-    },
-    {
-      id: 'hydraulic-structure',
-      code: 'MKP-FAB-02',
-      title: 'Hydraulic Press Machine Structure',
-      category: 'Heavy Fabrication',
-      image: '/images/real_products_curated/05_hydraulic_press_structure.jpg',
-      aspect: '16 / 11',
-      description: 'Heavy-gauge steel C-frame machine structure fabricated with 400A MIG welding and stress-relieved machined bed plates.',
-      specs: ['High-Strength Structural Steel', '400A Continuous MIG Welds', 'Precision CNC Milled Bolster Bed']
-    },
-    {
-      id: 'pvc-conveyor',
-      code: 'MKP-MAT-02',
-      title: 'PVC Belt Production Line Conveyor',
-      category: 'Material Handling',
-      image: '/images/real_products_curated/02_pvc_belt_conveyor.jpg',
-      aspect: '4 / 3',
-      description: 'Continuous assembly line belt conveyor engineered for silent, high-durability transit across manufacturing stations.',
-      specs: ['Food & Industrial Grade PVC Belt', 'Variable Speed Drive (VFD)', 'Modular Aluminum & Steel Frame']
-    },
-    {
-      id: 'pneumatic-tackle',
-      code: 'MKP-LFT-01',
-      title: 'Pneumatic Job Lifting Tackle',
-      category: 'Material Handling',
-      image: '/images/real_products_curated/04_pneumatic_lifting_tackle.jpg',
-      aspect: '3 / 4',
-      description: 'Zero-gravity pneumatic job lifter designed for safe, effortless operator handling of heavy raw castings and machined parts.',
-      specs: ['Pneumatic Counterbalance Cylinder', 'Safety Lock Interlock Valve', '360° Articulated Swivel Arm']
-    }
-  ];
+  // Showcase top curated featured projects from the genuine workshop asset library
+  const featuredShowcaseItems = GALLERY_ITEMS.slice(0, 12);
 
   const handleScroll = (direction) => {
     if (!scrollContainerRef.current) return;
     const container = scrollContainerRef.current;
-    const scrollAmount = direction === 'left' ? -420 : 420;
+    const scrollAmount = direction === 'left' ? -460 : 460;
     container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
   const onScrollUpdate = () => {
     if (!scrollContainerRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-    const progress = scrollLeft / (scrollWidth - clientWidth);
-    setScrollPosition(progress);
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll > 0) {
+      setScrollPosition(scrollLeft / maxScroll);
+    }
   };
+
+  // Lightbox handlers
+  const handlePrev = useCallback(() => {
+    if (activeModalIndex === null) return;
+    setActiveModalIndex((prev) => (prev > 0 ? prev - 1 : featuredShowcaseItems.length - 1));
+  }, [activeModalIndex, featuredShowcaseItems.length]);
+
+  const handleNext = useCallback(() => {
+    if (activeModalIndex === null) return;
+    setActiveModalIndex((prev) => (prev < featuredShowcaseItems.length - 1 ? prev + 1 : 0));
+  }, [activeModalIndex, featuredShowcaseItems.length]);
+
+  const handleClose = useCallback(() => {
+    setActiveModalIndex(null);
+  }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (activeModalIndex === null) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        handleNext();
+      } else if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeModalIndex, handlePrev, handleNext, handleClose]);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (activeModalIndex !== null) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [activeModalIndex]);
+
+  const currentItem = activeModalIndex !== null ? featuredShowcaseItems[activeModalIndex] : null;
 
   return (
     <section
       id="gallery"
       style={{
         position: 'relative',
-        paddingTop: '110px',
-        paddingBottom: '100px',
+        paddingTop: '100px',
+        paddingBottom: '90px',
         backgroundColor: '#ffffff',
         borderTop: '1px solid #e5e7eb',
         borderBottom: '1px solid #e5e7eb',
         overflow: 'hidden'
       }}
     >
-      {/* Background Subtle Technical Grid */}
+      {/* Subtle CAD Background Grid */}
       <div
         style={{
           position: 'absolute',
@@ -161,7 +120,7 @@ export default function Gallery() {
             display: 'flex',
             alignItems: 'flex-end',
             justifyContent: 'space-between',
-            marginBottom: '44px',
+            marginBottom: '40px',
             flexWrap: 'wrap',
             gap: '24px'
           }}
@@ -182,7 +141,7 @@ export default function Gallery() {
                 lineHeight: 1.15,
                 letterSpacing: '-0.02em',
                 color: '#111827',
-                margin: '0 0 10px 0',
+                margin: '0 0 12px 0',
                 textTransform: 'uppercase'
               }}
             >
@@ -204,22 +163,51 @@ export default function Gallery() {
               style={{
                 fontSize: 'clamp(14.5px, 1.2vw, 16.5px)',
                 lineHeight: 1.6,
-                color: '#64748b',
+                color: '#4b5563',
                 margin: 0
               }}
             >
-              Photographs of actual precision fixtures, SPMs, conveyor systems, and industrial structures built at our Bhosari MIDC manufacturing facility.
+              Real photographs of heavy structural frames, stainless steel ducting & hoppers, rotary valves, and special purpose machinery built at Bhosari MIDC, Pune.
             </p>
           </div>
 
-          {/* Horizontal Navigation Control Buttons */}
+          {/* Action Buttons: View All & Navigation Control */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Link
+              to="/gallery"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 20px',
+                backgroundColor: '#111827',
+                color: '#ffffff',
+                borderRadius: '3px',
+                fontFamily: 'var(--font-tech)',
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#c52227';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#111827';
+              }}
+            >
+              <span>Explore All 37 Works</span>
+              <ArrowRight size={14} />
+            </Link>
+
             <button
               onClick={() => handleScroll('left')}
               aria-label="Scroll left in gallery"
               style={{
-                width: '44px',
-                height: '44px',
+                width: '42px',
+                height: '42px',
                 borderRadius: '3px',
                 backgroundColor: '#f8f9fa',
                 border: '1px solid #e2e8f0',
@@ -241,15 +229,15 @@ export default function Gallery() {
                 e.currentTarget.style.borderColor = '#e2e8f0';
               }}
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft size={17} />
             </button>
 
             <button
               onClick={() => handleScroll('right')}
               aria-label="Scroll right in gallery"
               style={{
-                width: '44px',
-                height: '44px',
+                width: '42px',
+                height: '42px',
                 borderRadius: '3px',
                 backgroundColor: '#f8f9fa',
                 border: '1px solid #e2e8f0',
@@ -271,176 +259,71 @@ export default function Gallery() {
                 e.currentTarget.style.borderColor = '#e2e8f0';
               }}
             >
-              <ArrowRight size={18} />
+              <ArrowRight size={17} />
             </button>
           </div>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. HORIZONTAL EDITORIAL PORTFOLIO RAIL (NO GENERIC BOXES)                  */}
+      {/* 2. HORIZONTAL EDITORIAL PORTFOLIO RAIL (GCC-INDIA INSPIRATION)             */}
       {/* ========================================================================= */}
       <div
         ref={scrollContainerRef}
         onScroll={onScrollUpdate}
         style={{
           display: 'flex',
-          gap: 'clamp(20px, 3vw, 36px)',
+          gap: '24px',
           overflowX: 'auto',
           paddingLeft: 'max(24px, calc((100vw - 1240px) / 2))',
           paddingRight: 'max(24px, calc((100vw - 1240px) / 2))',
-          paddingBottom: '24px',
+          paddingBottom: '20px',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           scrollSnapType: 'x proximity',
           position: 'relative',
           zIndex: 2
         }}
-        className="gallery-horizontal-rail"
+        className="home-gallery-rail"
       >
-        {galleryItems.map((item, index) => (
+        {featuredShowcaseItems.map((item, index) => (
           <div
             key={item.id}
-            onClick={() => setActiveModalItem(item)}
-            style={{
-              flex: '0 0 auto',
-              width: 'clamp(300px, 32vw, 420px)',
-              cursor: 'pointer',
-              position: 'relative',
-              scrollSnapAlign: 'start',
-              transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-            className="gallery-portfolio-item"
+            onClick={() => setActiveModalIndex(index)}
+            className="home-gallery-card"
           >
-            {/* Top Coordinate Identifier */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingBottom: '8px',
-                borderBottom: '1px solid #e5e7eb',
-                marginBottom: '12px'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Crosshair size={12} color="#c52227" />
-                <span
-                  style={{
-                    fontFamily: 'var(--font-tech)',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    color: '#64748b',
-                    letterSpacing: '0.08em'
-                  }}
-                >
-                  {item.code}
-                </span>
-              </div>
-
-              <span
-                style={{
-                  fontFamily: 'var(--font-tech)',
-                  fontSize: '10.5px',
-                  color: '#94a3b8',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em'
-                }}
-              >
-                {item.category}
-              </span>
-            </div>
-
-            {/* Image Frame with Editorial Proportions */}
-            <div
-              style={{
-                position: 'relative',
-                width: '100%',
-                aspectRatio: item.aspect,
-                borderRadius: '3px',
-                overflow: 'hidden',
-                backgroundColor: '#f1f3f5',
-                border: '1px solid #e2e8f0',
-                boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)'
-              }}
-              className="gallery-img-container"
-            >
+            {/* Image Frame */}
+            <div className="home-gallery-frame">
               <img
                 src={item.image}
                 alt={item.title}
                 loading="lazy"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                  transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
-                className="gallery-main-photo"
+                className="home-gallery-img"
               />
 
-              {/* Hover Overlay with Expand Indicator */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  backgroundColor: 'rgba(15, 23, 42, 0.4)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  opacity: 0,
-                  transition: 'opacity 0.25s ease'
-                }}
-                className="gallery-hover-overlay"
-              >
-                <div
-                  style={{
-                    padding: '8px 14px',
-                    backgroundColor: '#ffffff',
-                    borderRadius: '2px',
-                    color: '#111827',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontFamily: 'var(--font-tech)',
-                    fontSize: '11.5px',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase'
-                  }}
-                >
+              {/* Tag Overlays */}
+              <div className="home-gallery-badge-box">
+                <span className="home-gallery-code">{item.code}</span>
+                <span className="home-gallery-cat">{item.category}</span>
+              </div>
+
+              {/* Hover Veil */}
+              <div className="home-gallery-hover-veil">
+                <div className="home-gallery-hover-pill">
                   <Maximize2 size={13} color="#c52227" />
-                  <span>INSPECT SPEC</span>
+                  <span>INSPECT SPECIFICATION</span>
                 </div>
               </div>
             </div>
 
-            {/* Caption & Specs */}
-            <div style={{ marginTop: '14px' }}>
-              <h3
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '16px',
-                  fontWeight: 700,
-                  color: '#111827',
-                  lineHeight: 1.3,
-                  margin: '0 0 6px 0',
-                  letterSpacing: '-0.01em'
-                }}
-              >
-                {item.title}
-              </h3>
-
-              <p
-                style={{
-                  fontSize: '12.5px',
-                  lineHeight: 1.5,
-                  color: '#64748b',
-                  margin: 0
-                }}
-              >
-                {item.description}
-              </p>
+            {/* Information Box */}
+            <div className="home-gallery-info">
+              <div className="home-gallery-meta-row">
+                <span className="home-gallery-cat-text">{item.category}</span>
+                <span className="home-gallery-code-text">[{item.code}]</span>
+              </div>
+              <h3 className="home-gallery-title">{item.title}</h3>
+              <p className="home-gallery-desc">{item.description}</p>
             </div>
           </div>
         ))}
@@ -449,7 +332,7 @@ export default function Gallery() {
       {/* ========================================================================= */}
       {/* 3. BOTTOM PROGRESS TRACK & SUMMARY                                        */}
       {/* ========================================================================= */}
-      <div className="container-custom" style={{ marginTop: '28px', position: 'relative', zIndex: 2 }}>
+      <div className="container-custom" style={{ marginTop: '24px', position: 'relative', zIndex: 2 }}>
         <div
           style={{
             position: 'relative',
@@ -466,7 +349,7 @@ export default function Gallery() {
               top: 0,
               left: 0,
               height: '100%',
-              width: `${Math.max(scrollPosition * 100, 15)}%`,
+              width: `${Math.max(scrollPosition * 100, 16)}%`,
               backgroundColor: '#c52227',
               transition: 'width 0.2s linear'
             }}
@@ -486,200 +369,283 @@ export default function Gallery() {
             textTransform: 'uppercase'
           }}
         >
-          <span>10 AUTHENTIC SHOPFLOOR PROJECTS</span>
-          <span style={{ color: '#c52227', fontWeight: 600 }}>SWIPE / DRAG TO EXPLORE ALL WORKS</span>
+          <span>37 AUTHENTIC WORKSHOP ASSETS AVAILABLE</span>
+          <span style={{ color: '#c52227', fontWeight: 600 }}>SWIPE / SCROLL HORIZONTALLY TO EXPLORE</span>
           <span>BHOSARI MIDC, PUNE</span>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 4. HIGH-RESOLUTION INSPECTION MODAL                                       */}
+      {/* 4. FULL-SCREEN LIGHTBOX MODAL                                             */}
       {/* ========================================================================= */}
-      {activeModalItem && (
+      {currentItem && (
         <div
-          onClick={() => setActiveModalItem(null)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 120,
-            backgroundColor: 'rgba(10, 12, 16, 0.88)',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
-          }}
+          className="gallery-lightbox-backdrop"
+          onClick={handleClose}
         >
           <div
+            className="gallery-lightbox-container"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              maxWidth: '820px',
-              width: '100%',
-              backgroundColor: '#ffffff',
-              borderRadius: '4px',
-              overflow: 'hidden',
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.35)',
-              position: 'relative',
-              border: '1px solid #e5e7eb',
-              maxHeight: '92vh',
-              overflowY: 'auto'
-            }}
           >
-            {/* Close Button */}
-            <button
-              onClick={() => setActiveModalItem(null)}
-              style={{
-                position: 'absolute',
-                top: '16px',
-                right: '16px',
-                zIndex: 10,
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                backgroundColor: '#ffffff',
-                color: '#111827',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                border: '1px solid #e5e7eb',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-              }}
-              aria-label="Close modal"
-            >
-              <X size={18} />
-            </button>
+            {/* Top Lightbox Header */}
+            <div className="gallery-lightbox-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span className="lightbox-code-pill">{currentItem.code}</span>
+                <span style={{ color: '#475569' }}>|</span>
+                <span className="lightbox-cat-pill">{currentItem.category}</span>
+              </div>
 
-            {/* Modal Image */}
-            <div style={{ maxHeight: '420px', width: '100%', overflow: 'hidden', backgroundColor: '#0f1115' }}>
-              <img
-                src={activeModalItem.image}
-                alt={activeModalItem.title}
-                style={{ width: '100%', maxHeight: '420px', objectFit: 'contain', display: 'block' }}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <span className="lightbox-counter">
+                  {String(activeModalIndex + 1).padStart(2, '0')} / {String(featuredShowcaseItems.length).padStart(2, '0')}
+                </span>
+                <button
+                  onClick={handleClose}
+                  className="lightbox-close-btn"
+                  aria-label="Close Lightbox"
+                >
+                  <X size={18} />
+                </button>
+              </div>
             </div>
 
-            {/* Modal Details */}
-            <div style={{ padding: '32px 36px 36px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-tech)',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    color: '#c52227',
-                    letterSpacing: '0.1em'
-                  }}
+            {/* Lightbox Body */}
+            <div className="gallery-lightbox-body">
+              {/* Image Stage */}
+              <div className="lightbox-image-stage">
+                <img
+                  src={currentItem.image}
+                  alt={currentItem.title}
+                  className="lightbox-img"
+                />
+
+                <button
+                  onClick={handlePrev}
+                  className="lightbox-nav-btn prev"
+                  aria-label="Previous image"
                 >
-                  [{activeModalItem.code}]
-                </span>
-                <span style={{ color: '#cbd5e1' }}>•</span>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-tech)',
-                    fontSize: '12px',
-                    color: '#64748b',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em'
-                  }}
+                  <ChevronLeft size={22} />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="lightbox-nav-btn next"
+                  aria-label="Next image"
                 >
-                  {activeModalItem.category}
-                </span>
+                  <ChevronRight size={22} />
+                </button>
               </div>
 
-              <h3
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '26px',
-                  fontWeight: 800,
-                  color: '#111827',
-                  marginBottom: '14px',
-                  letterSpacing: '-0.02em'
-                }}
-              >
-                {activeModalItem.title}
-              </h3>
+              {/* Technical Spec Drawer */}
+              <div className="lightbox-info-drawer">
+                <div>
+                  <div className="lightbox-meta-top">
+                    <span className="lightbox-serial-tag">WORKSHOP SERIAL: {currentItem.code}</span>
+                    <span className="lightbox-location-tag">BHOSARI MIDC, PUNE</span>
+                  </div>
 
-              <p style={{ fontSize: '15px', color: '#4b5563', lineHeight: 1.65, marginBottom: '22px' }}>
-                {activeModalItem.description}
-              </p>
+                  <h2 className="lightbox-title">{currentItem.title}</h2>
+                  <p className="lightbox-description">{currentItem.description}</p>
 
-              {/* Manufacturing Specs */}
-              <div style={{ marginBottom: '28px' }}>
-                <span
-                  style={{
-                    display: 'block',
-                    fontFamily: 'var(--font-tech)',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                    color: '#111827',
-                    marginBottom: '10px'
-                  }}
-                >
-                  Manufacturing & Engineering Capabilities:
-                </span>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
-                  {activeModalItem.specs.map((spec) => (
-                    <div
-                      key={spec}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        fontSize: '13.5px',
-                        color: '#334155',
-                        padding: '8px 12px',
-                        backgroundColor: '#f8f9fa',
-                        borderRadius: '3px',
-                        borderLeft: '2px solid #c52227'
-                      }}
-                    >
-                      <span>{spec}</span>
+                  <div style={{ marginTop: '20px' }}>
+                    <h4 className="lightbox-specs-heading">
+                      MANUFACTURING & SPECIFICATION DETAILS
+                    </h4>
+                    <div className="lightbox-specs-list">
+                      {currentItem.specs ? currentItem.specs.map((spec, idx) => (
+                        <div key={idx} className="lightbox-spec-item">
+                          <CheckCircle2 size={14} color="#c52227" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <span>{spec}</span>
+                        </div>
+                      )) : (
+                        <div className="lightbox-spec-item">
+                          <CheckCircle2 size={14} color="#c52227" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <span>Manufactured to high precision tolerances at Bhosari MIDC, Pune</span>
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* RFQ Action */}
-              <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
-                <a
-                  href="#contact"
-                  onClick={() => {
-                    setActiveModalItem(null);
-                    const target = document.querySelector('#contact');
-                    if (target) {
-                      const navOffset = 80;
-                      const elementPosition = target.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
-                      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                    }
-                  }}
-                  className="btn-primary-red"
-                  style={{ padding: '11px 22px', fontSize: '14px' }}
-                >
-                  <span>Inquire for Similar Project</span>
-                  <ArrowRight size={15} />
-                </a>
+                <div className="lightbox-footer-action">
+                  <Link
+                    to="/contact"
+                    onClick={handleClose}
+                    className="lightbox-rfq-btn"
+                  >
+                    <span>Inquire for Similar Project</span>
+                    <ArrowRight size={15} />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* Embedded CSS */}
       <style>{`
-        .gallery-horizontal-rail::-webkit-scrollbar {
+        .home-gallery-rail::-webkit-scrollbar {
           display: none;
         }
-        .gallery-portfolio-item:hover {
-          transform: translateY(-4px);
+
+        .home-gallery-card {
+          flex: 0 0 380px;
+          background-color: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 4px;
+          overflow: hidden;
+          cursor: pointer;
+          scroll-snap-align: start;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
         }
-        .gallery-portfolio-item:hover .gallery-main-photo {
-          transform: scale(1.04);
+
+        .home-gallery-card:hover {
+          transform: translateY(-6px);
+          border-color: #c52227;
+          box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
         }
-        .gallery-portfolio-item:hover .gallery-hover-overlay {
-          opacity: 1 !important;
+
+        .home-gallery-frame {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 11;
+          background-color: #f8fafc;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .home-gallery-img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
+          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .home-gallery-card:hover .home-gallery-img {
+          transform: scale(1.05);
+        }
+
+        .home-gallery-badge-box {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .home-gallery-code {
+          padding: 3px 6px;
+          background-color: rgba(17, 24, 39, 0.88);
+          color: #f8fafc;
+          font-family: var(--font-tech);
+          font-size: 9.5px;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          border-radius: 2px;
+          backdrop-filter: blur(4px);
+        }
+
+        .home-gallery-cat {
+          padding: 3px 6px;
+          background-color: rgba(197, 34, 39, 0.9);
+          color: #ffffff;
+          font-family: var(--font-tech);
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          border-radius: 2px;
+        }
+
+        .home-gallery-hover-veil {
+          position: absolute;
+          inset: 0;
+          background-color: rgba(15, 23, 42, 0.45);
+          backdrop-filter: blur(2px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.25s ease;
+          z-index: 3;
+        }
+
+        .home-gallery-card:hover .home-gallery-hover-veil {
+          opacity: 1;
+        }
+
+        .home-gallery-hover-pill {
+          padding: 7px 14px;
+          background-color: #ffffff;
+          color: #111827;
+          border-radius: 2px;
+          font-family: var(--font-tech);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        }
+
+        .home-gallery-info {
+          padding: 16px 18px 18px;
+          background-color: #ffffff;
+        }
+
+        .home-gallery-meta-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 6px;
+          font-family: var(--font-tech);
+          font-size: 10.5px;
+        }
+
+        .home-gallery-cat-text {
+          color: #c52227;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+
+        .home-gallery-code-text {
+          color: #94a3b8;
+          font-weight: 600;
+        }
+
+        .home-gallery-title {
+          font-family: var(--font-heading);
+          font-size: 16px;
+          font-weight: 700;
+          color: #111827;
+          line-height: 1.3;
+          margin: 0 0 6px 0;
+          letter-spacing: -0.01em;
+        }
+
+        .home-gallery-desc {
+          font-size: 12.5px;
+          line-height: 1.5;
+          color: #64748b;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+          .home-gallery-card {
+            flex: 0 0 300px;
+          }
         }
       `}</style>
     </section>

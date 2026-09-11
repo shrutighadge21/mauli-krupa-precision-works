@@ -13,8 +13,9 @@ export default function Services() {
       id: 'jigs-fixtures',
       title: 'Jigs & Fixtures',
       description: 'Precision-engineered jigs and fixtures designed to improve accuracy, consistency and efficiency across industrial manufacturing processes.',
-      image: '/images/real_products_curated/01_fixture_making.jpg',
+      image: '/images/service_jigs_fixtures.jpg',
       alt: 'Precision Jigs and Fixtures Tooling & Inspection in Pune Workshop',
+      objectPosition: 'center 45%',
       specs: [
         'Concentricity Checking Fixtures',
         'Grinding & Welding Fixtures',
@@ -27,8 +28,9 @@ export default function Services() {
       id: 'conveyors-material-handling',
       title: 'Conveyors & Material Handling',
       description: 'Reliable conveyor and material handling solutions designed for smooth, efficient and organised movement of industrial materials.',
-      image: '/images/service_conveyors_handling.jpg',
+      image: '/images/service_conveyors.jpg',
       alt: 'Industrial Automated Conveyor Roller Systems and Material Handling Lines',
+      objectPosition: 'center 50%',
       specs: [
         'PVC & Rubber Belt Conveyors',
         'Z-Type Magnetic Incline Conveyors',
@@ -41,8 +43,9 @@ export default function Services() {
       id: 'industrial-trolleys',
       title: 'Industrial Trolleys',
       description: 'Custom industrial trolleys designed for safe, efficient and practical movement of components, materials and equipment.',
-      image: '/images/service_industrial_trolleys.jpg',
+      image: '/images/service_trolleys.jpg',
       alt: 'Heavy Duty Industrial Shopfloor Transit and Platform Trolleys',
+      objectPosition: 'center 45%',
       specs: [
         'Heavy Duty Platform Trolleys',
         'Wire Mesh Component Trolleys',
@@ -55,8 +58,9 @@ export default function Services() {
       id: 'industrial-fabrication',
       title: 'Industrial Fabrication',
       description: 'Precision fabrication and engineered structural solutions developed to meet specific industrial and manufacturing requirements.',
-      image: '/images/service_industrial_fabrication.jpg',
+      image: '/images/service_fabrication.jpg',
       alt: 'Heavy Industrial Metal Fabrication and Press Machinery Workshop',
+      objectPosition: 'center 48%',
       specs: [
         'Hydraulic Tool Pressing Machine Structures',
         'Heavy Machine Base Beds & Frames',
@@ -69,8 +73,9 @@ export default function Services() {
       id: 'custom-engineering',
       title: 'Custom Machines & Engineering Solutions',
       description: 'Special-purpose machines and customised engineering solutions developed according to client drawings and industrial requirements.',
-      image: '/images/service_custom_machines_spm.jpg',
+      image: '/images/service_custom_spm.jpg',
       alt: 'High-Precision 5-Axis CNC Milling Center and Custom Machine SPM',
+      objectPosition: 'center 45%',
       specs: [
         'Welding SPM Machines as per Drawing',
         'Balance Straightening Press Machines',
@@ -85,6 +90,7 @@ export default function Services() {
       description: 'Buffing, polishing and pickling facilities available to support high-quality surface finishing and industrial component requirements.',
       image: '/images/service_surface_finishing.jpg',
       alt: 'Industrial Buffing, Mirror Polishing and Pickling Facility',
+      objectPosition: 'center 45%',
       specs: [
         'Heavy Duty Metal Buffing & Polishing',
         'Chemical Pickling & Passivation Tanks',
@@ -267,7 +273,7 @@ export default function Services() {
                   inset: 0,
                   backgroundImage: `url(${service.image})`,
                   backgroundSize: 'cover',
-                  backgroundPosition: 'center 45%',
+                  backgroundPosition: service.objectPosition || 'center 45%',
                   opacity: isActive ? 1 : 0,
                   transform: isActive ? 'scale(1)' : 'scale(1.04)',
                   transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -544,7 +550,7 @@ export default function Services() {
               <img 
                 src={activeModalService.image} 
                 alt={activeModalService.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: activeModalService.objectPosition || 'center' }}
               />
             </div>
 

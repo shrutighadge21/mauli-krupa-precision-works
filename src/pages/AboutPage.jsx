@@ -52,7 +52,7 @@ export default function AboutPage() {
       number: '01',
       title: 'PRECISION',
       desc: 'Attention to detail in every component, helping maintain tight tolerances and consistent engineering standards.',
-      image: '/images/precision_metrology_datum.jpg',
+      image: '/images/about_cad_precision.png',
       spec: 'MICRON-LEVEL GD&T TOLERANCES'
     },
     {
@@ -851,8 +851,8 @@ export default function AboutPage() {
       <section
         id="experience-facts"
         style={{
-          paddingTop: 'clamp(64px, 8vw, 100px)',
-          paddingBottom: 'clamp(64px, 8vw, 100px)',
+          paddingTop: 'clamp(48px, 5vw, 70px)',
+          paddingBottom: 'clamp(40px, 4.5vw, 56px)',
           backgroundColor: '#fafbfc',
           borderBottom: '1px solid #e5e7eb'
         }}
@@ -970,8 +970,8 @@ export default function AboutPage() {
         id="what-defines-us"
         style={{
           position: 'relative',
-          paddingTop: 'clamp(90px, 11vw, 150px)',
-          paddingBottom: 'clamp(90px, 11vw, 150px)',
+          paddingTop: 'clamp(48px, 5.5vw, 72px)',
+          paddingBottom: 'clamp(72px, 8.5vw, 110px)',
           backgroundColor: '#ffffff',
           borderBottom: '1px solid #e5e7eb',
           overflow: 'hidden'

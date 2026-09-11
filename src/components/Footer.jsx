@@ -7,12 +7,11 @@ import { Award, ShieldCheck, ChevronRight } from 'lucide-react';
 export default function Footer() {
   const navigate = useNavigate();
 
-  // Navigation links in requested site order: HOME -> ABOUT US -> SERVICES -> INDUSTRIES -> GALLERY -> CONTACT US
+  // Navigation links in requested site order: HOME -> ABOUT US -> SERVICES -> GALLERY -> CONTACT US
   const navLinks = [
     { label: 'HOME', path: '/' },
     { label: 'ABOUT US', path: '/about' },
     { label: 'SERVICES', path: '/services' },
-    { label: 'INDUSTRIES', path: '/industries' },
     { label: 'GALLERY', path: '/gallery' },
     { label: 'CONTACT US', path: '/contact' },
   ];
@@ -64,7 +63,7 @@ export default function Footer() {
             {/* Column 1: Brand & Identity */}
             <div style={{ gridColumn: 'span 4' }} className="footer-col-1">
               <div style={{ marginBottom: '18px', display: 'inline-block' }}>
-                <Logo size={46} theme="dark" showText={true} />
+                <Logo size={54} theme="dark" showText={true} />
               </div>
               
               <p 
@@ -176,11 +175,11 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Column 4: Contact & Works */}
+            {/* Column 4: Address */}
             <div style={{ gridColumn: 'span 3' }} className="footer-col-4">
               <div 
                 style={{
-                  fontFamily: 'var(--font-tech)',
+                  fontFamily: 'var(--font-heading)',
                   fontSize: '12.5px',
                   fontWeight: 700,
                   color: '#ffffff',
@@ -189,32 +188,101 @@ export default function Footer() {
                   marginBottom: '16px'
                 }}
               >
-                Works & Office
+                ADDRESS
               </div>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div>
-                  <div style={{ fontSize: '13px', color: '#94a3b8', lineHeight: 1.5 }}>
-                    {COMPANY_INFO.address.line1} {COMPANY_INFO.address.line2} {COMPANY_INFO.address.line3} {COMPANY_INFO.address.state}
+                  <div 
+                    style={{ 
+                      fontSize: '13.5px', 
+                      color: '#cbd5e1', 
+                      lineHeight: 1.65,
+                      fontWeight: 400
+                    }}
+                  >
+                    Intelligent Cadet International School,<br />
+                    Vaishno Mata Marg, Sector No. 3,<br />
+                    Bhosari, Pimpri-Chinchwad,<br />
+                    Maharashtra 411026
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '12px', color: '#64748b', textTransform: 'uppercase', fontFamily: 'var(--font-tech)' }}>Technical Direct:</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '2px' }}>
-                    <a href="tel:+919370741361" style={{ fontSize: '13px', color: '#ef4444', fontFamily: 'var(--font-tech)', fontWeight: 600, textDecoration: 'none' }}>
+                  <div 
+                    style={{ 
+                      fontSize: '11.5px', 
+                      color: '#94a3b8', 
+                      textTransform: 'uppercase', 
+                      letterSpacing: '0.06em', 
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 600,
+                      marginBottom: '4px'
+                    }}
+                  >
+                    Technical Direct:
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                    <a 
+                      href="tel:+919370741361" 
+                      style={{ 
+                        fontSize: '13.5px', 
+                        color: '#f87171', 
+                        fontFamily: 'var(--font-heading)', 
+                        fontWeight: 600, 
+                        textDecoration: 'none',
+                        transition: 'color 0.2s ease' 
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = '#f87171'}
+                    >
                       Abhishek M: +91 9370741361
                     </a>
-                    <a href="tel:+919822327460" style={{ fontSize: '13px', color: '#ef4444', fontFamily: 'var(--font-tech)', fontWeight: 600, textDecoration: 'none' }}>
+                    <a 
+                      href="tel:+919822327460" 
+                      style={{ 
+                        fontSize: '13.5px', 
+                        color: '#f87171', 
+                        fontFamily: 'var(--font-heading)', 
+                        fontWeight: 600, 
+                        textDecoration: 'none',
+                        transition: 'color 0.2s ease' 
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = '#f87171'}
+                    >
                       Santos M: +91 9822327460
                     </a>
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '12px', color: '#64748b', textTransform: 'uppercase', fontFamily: 'var(--font-tech)' }}>Email:</div>
-                  <a href={`mailto:${COMPANY_INFO.email}`} style={{ fontSize: '13px', color: '#e2e8f0', textDecoration: 'none' }}>
-                    {COMPANY_INFO.email}
+                  <div 
+                    style={{ 
+                      fontSize: '11.5px', 
+                      color: '#94a3b8', 
+                      textTransform: 'uppercase', 
+                      letterSpacing: '0.06em', 
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 600,
+                      marginBottom: '3px'
+                    }}
+                  >
+                    Email:
+                  </div>
+                  <a 
+                    href={`mailto:${COMPANY_INFO.email.toLowerCase()}`} 
+                    style={{ 
+                      fontSize: '13.5px', 
+                      color: '#e2e8f0', 
+                      textDecoration: 'none',
+                      textTransform: 'lowercase',
+                      transition: 'color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#f87171'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#e2e8f0'}
+                  >
+                    {COMPANY_INFO.email.toLowerCase()}
                   </a>
                 </div>
               </div>
@@ -222,7 +290,7 @@ export default function Footer() {
 
           </div>
 
-          {/* Bottom Copyright & QiRo Tech Credit Bar */}
+          {/* Bottom Copyright & Qiro Tech Credit Bar */}
           <div 
             style={{
               paddingTop: '20px',
@@ -232,19 +300,19 @@ export default function Footer() {
               justifyContent: 'space-between',
               flexWrap: 'wrap',
               gap: '14px',
-              fontSize: '12.5px',
-              color: '#64748b'
+              fontSize: '13px',
+              color: '#94a3b8'
             }}
           >
-            <div>
-              © {new Date().getFullYear()} Mauli Krupa Precision Works. All rights reserved.
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              © 2026 Mauli Krupa Precision Works. All Rights Reserved.
             </div>
 
-            {/* Credit Link to QiRo Tech Pvt. Ltd. */}
-            <div>
-              <span>Designed and Developed by </span>
+            {/* Credit Link to Qiro Tech Innovation Pvt. Ltd. */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+              <span>Designed & Developed by </span>
               <a 
-                href="https://qirotech.com" 
+                href="https://qirotec.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 style={{
@@ -253,10 +321,10 @@ export default function Footer() {
                   fontWeight: 600,
                   transition: 'color 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#ef4444'}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#f87171'}
                 onMouseLeave={(e) => e.currentTarget.style.color = '#e2e8f0'}
               >
-                QiRo Tech Pvt. Ltd.
+                Qiro Tech Innovation Pvt. Ltd.
               </a>
             </div>
           </div>

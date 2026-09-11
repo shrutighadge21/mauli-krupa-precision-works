@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useSearchParams, useLocation, Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, ArrowRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 export default function ContactPage() {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
   const [formData, setFormData] = useState({
     name: '',
     company: '',
     email: '',
     phone: '',
-    service: 'Precision Machining',
+    service: 'Select a Service',
     message: ''
   });
   const [errors, setErrors] = useState({});
@@ -17,7 +20,11 @@ export default function ContactPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, []);
+    const serviceParam = searchParams.get('service') || location.state?.service;
+    if (serviceParam) {
+      setFormData((prev) => ({ ...prev, service: serviceParam }));
+    }
+  }, [searchParams, location]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +47,7 @@ export default function ContactPage() {
     } else if (formData.phone.replace(/\D/g, '').length < 10) {
       newErrors.phone = 'Please enter a valid phone number (min. 10 digits)';
     }
-    if (!formData.service.trim()) {
+    if (!formData.service.trim() || formData.service === 'Select a Service') {
       newErrors.service = 'Please select a requirement';
     }
     if (!formData.message.trim()) {
@@ -74,15 +81,16 @@ export default function ContactPage() {
       company: '',
       email: '',
       phone: '',
-      service: 'Precision Machining',
+      service: 'Select a Service',
       message: ''
     });
     setErrors({});
   };
 
-  const mapQuery = encodeURIComponent('Mauli Krupa Precision Works, Gulve Vasti, Bhosari MIDC, Pune 411039');
-  const googleMapEmbedUrl = `https://maps.google.com/maps?q=${mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
-  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Mauli Krupa Precision Works Gulve Vasti Bhosari MIDC Pune 411039')}`;
+  const mapAddress = "Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026";
+  const mapQuery = encodeURIComponent("Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026");
+  const googleMapEmbedUrl = `https://maps.google.com/maps?q=${mapQuery}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent("Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026")}`;
 
   return (
     <div className="contact-page-wrapper" style={{ backgroundColor: '#ffffff', color: '#111827', overflow: 'hidden' }}>
@@ -93,12 +101,12 @@ export default function ContactPage() {
       <section
         style={{
           position: 'relative',
-          minHeight: 'clamp(520px, 72vh, 680px)',
+          minHeight: 'clamp(460px, 60vh, 580px)',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
-          paddingTop: 'clamp(110px, 14vh, 140px)',
-          paddingBottom: '36px',
+          justifyContent: 'center',
+          paddingTop: 'calc(var(--nav-height, 80px) + 40px)',
+          paddingBottom: '50px',
           backgroundColor: '#0a1128',
           color: '#ffffff',
           overflow: 'hidden'
@@ -129,114 +137,58 @@ export default function ContactPage() {
         />
 
         {/* Hero Content */}
-        <div className="container-custom" style={{ position: 'relative', zIndex: 2, width: '100%', my: 'auto' }}>
-          <div
-            className="hero-grid-layout"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 0.8fr)',
-              gap: '40px',
-              alignItems: 'center'
-            }}
-          >
-            {/* Left Content */}
-            <div style={{ maxWidth: '680px' }}>
-              {/* Eyebrow Label */}
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  fontFamily: 'var(--font-tech)',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.16em',
-                  color: '#c52227',
-                  marginBottom: '18px'
-                }}
-              >
-                <span style={{ width: '18px', height: '2px', backgroundColor: '#c52227', display: 'inline-block' }} />
-                <span>CONTACT</span>
-              </div>
-
-              {/* Main Heading with Red Accent */}
-              <h1
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(40px, 5.8vw, 76px)',
-                  fontWeight: 900,
-                  lineHeight: 1.05,
-                  letterSpacing: '-0.03em',
-                  color: '#ffffff',
-                  margin: '0 0 22px 0',
-                  textTransform: 'uppercase'
-                }}
-              >
-                LET'S BUILD
-                <br />
-                WITH <span style={{ color: '#c52227' }}>PRECISION.</span>
-              </h1>
-
-              {/* Supporting Text */}
-              <p
-                style={{
-                  fontSize: 'clamp(15.5px, 1.3vw, 19px)',
-                  lineHeight: 1.65,
-                  color: '#cbd5e1',
-                  margin: 0,
-                  maxWidth: '560px',
-                  fontWeight: 400
-                }}
-              >
-                Have a requirement? Let's discuss how our precision engineering and manufacturing capabilities can support your project.
-              </p>
-            </div>
-
-            {/* Right Side Triad Watermark */}
+        <div className="container-custom" style={{ position: 'relative', zIndex: 2, width: '100%' }}>
+          <div style={{ maxWidth: '680px' }}>
+            {/* Eyebrow Label */}
             <div
-              className="hero-right-triad"
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-                justifyContent: 'center',
-                fontFamily: 'var(--font-tech)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontFamily: 'var(--font-heading)',
                 fontSize: '12px',
                 fontWeight: 700,
-                letterSpacing: '0.22em',
-                color: 'rgba(255, 255, 255, 0.45)',
                 textTransform: 'uppercase',
-                lineHeight: 2,
-                borderRight: '2px solid rgba(197, 34, 39, 0.6)',
-                paddingRight: '18px'
+                letterSpacing: '0.16em',
+                color: '#c52227',
+                marginBottom: '18px'
               }}
             >
-              <div>PRECISION</div>
-              <div>PEOPLE</div>
-              <div>PROGRESS</div>
+              <span style={{ width: '18px', height: '2px', backgroundColor: '#c52227', display: 'inline-block' }} />
+              <span>CONTACT</span>
             </div>
-          </div>
-        </div>
 
-        {/* Bottom Bar in Hero */}
-        <div className="container-custom" style={{ position: 'relative', zIndex: 2, width: '100%' }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingTop: '20px',
-              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-              fontFamily: 'var(--font-tech)',
-              fontSize: '11px',
-              letterSpacing: '0.12em',
-              color: 'rgba(255, 255, 255, 0.5)',
-              textTransform: 'uppercase'
-            }}
-          >
-            <span>FROM IDEAS — TO — REAL SOLUTIONS</span>
-            <span className="hero-bhosari-tag">BHOSARI MIDC, PUNE · ESTD. 2015</span>
+            {/* Main Heading with Red Accent */}
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(40px, 5.8vw, 76px)',
+                fontWeight: 900,
+                lineHeight: 1.05,
+                letterSpacing: '-0.03em',
+                color: '#ffffff',
+                margin: '0 0 22px 0',
+                textTransform: 'uppercase'
+              }}
+            >
+              LET'S BUILD
+              <br />
+              WITH <span style={{ color: '#c52227' }}>PRECISION.</span>
+            </h1>
+
+            {/* Supporting Text */}
+            <p
+              style={{
+                fontSize: 'clamp(15.5px, 1.3vw, 19px)',
+                lineHeight: 1.65,
+                color: '#cbd5e1',
+                margin: 0,
+                maxWidth: '560px',
+                fontWeight: 400
+              }}
+            >
+              Have a requirement? Let's discuss how our precision engineering and manufacturing capabilities can support your project.
+            </p>
           </div>
         </div>
       </section>
@@ -461,15 +413,141 @@ export default function ContactPage() {
                       name="service"
                       value={formData.service}
                       onChange={handleInputChange}
-                      className="editorial-form-input editorial-form-select"
+                      className={`editorial-form-input editorial-form-select ${errors.service ? 'has-error' : ''}`}
                       style={{ cursor: 'pointer' }}
                     >
-                      <option value="Precision Machining">Precision Machining</option>
-                      <option value="Tooling">Tooling</option>
-                      <option value="Heavy Welding">Heavy Welding</option>
-                      <option value="Fabrication">Fabrication</option>
-                      <option value="Custom Engineering">Custom Engineering</option>
-                      <option value="Other">Other</option>
+                      <option value="Select a Service">Select a Service</option>
+                      
+                      {/* Dynamic fallback if service is passed from Services page and not in static options */}
+                      {formData.service &&
+                        formData.service !== 'Select a Service' &&
+                        ![
+                          'Industrial Fabrication',
+                          'SS Fabrication',
+                          'Tube Structure & Channel Angle Fabrication',
+                          'SS Ducting Fabrication',
+                          'SS Tank Fabrication',
+                          'SS Pipeline Fabrication',
+                          'Polishing & Buffing Work',
+                          'Passivation & Pickling Work',
+                          'SS 3rd Party NDT Facility',
+                          'Glass Blasting',
+                          'Laser Cutting',
+                          'MS Fabrication',
+                          'Square Tube, Channel & I-Beam Fabrication',
+                          'MS Ducting Work',
+                          'MS Tank Fabrication',
+                          'MS Pipeline Fabrication',
+                          'Powder Coating',
+                          'Sand Blasting & Painting',
+                          'MS 3rd Party NDT Facility',
+                          'Laser Cutting & Forming',
+                          'Precision Machining',
+                          'Milling',
+                          'Plano Milling',
+                          'VMC Milling',
+                          'Universal Milling',
+                          'Drilling',
+                          'Turning',
+                          'Jig-Fixture Work',
+                          'Tool-Room Work',
+                          'Forming',
+                          'Grinding & Finishing',
+                          'Cylindrical Grinding',
+                          'Surface Grinding',
+                          'Conveyor & Material Handling',
+                          'Belt Conveyor',
+                          'Flat Conveyor',
+                          'Magnetic Conveyor',
+                          'Industrial Trolleys',
+                          'Industrial Pallets',
+                          'Jigs & Fixtures',
+                          'Welding Jigs & Fixtures',
+                          'Machining Fixtures',
+                          'Assembly Fixtures',
+                          'Inspection Fixtures',
+                          'Custom Component Holding Fixtures',
+                          'Special Purpose Machines (SPM)',
+                          'Customized Special Purpose Machines',
+                          'Automated Production Machines',
+                          'Material Handling & Transfer Mechanisms',
+                          'Custom Machine Structures',
+                          'Component Positioning & Clamping Systems',
+                          'Application-Specific Automation Solutions',
+                          'Other'
+                        ].includes(formData.service) && (
+                          <option value={formData.service}>{formData.service}</option>
+                        )}
+
+                      <optgroup label="01 Industrial Fabrication">
+                        <option value="Industrial Fabrication">Industrial Fabrication (Overview)</option>
+                        <option value="SS Fabrication">SS Fabrication (Overview)</option>
+                        <option value="Tube Structure & Channel Angle Fabrication">Tube Structure & Channel Angle Fabrication</option>
+                        <option value="SS Ducting Fabrication">SS Ducting Fabrication</option>
+                        <option value="SS Tank Fabrication">SS Tank Fabrication</option>
+                        <option value="SS Pipeline Fabrication">SS Pipeline Fabrication</option>
+                        <option value="Polishing & Buffing Work">Polishing & Buffing Work</option>
+                        <option value="Passivation & Pickling Work">Passivation & Pickling Work</option>
+                        <option value="SS 3rd Party NDT Facility">SS 3rd Party NDT Facility</option>
+                        <option value="Glass Blasting">Glass Blasting</option>
+                        <option value="Laser Cutting">Laser Cutting</option>
+                        <option value="MS Fabrication">MS Fabrication (Overview)</option>
+                        <option value="Square Tube, Channel & I-Beam Fabrication">Square Tube, Channel & I-Beam Fabrication</option>
+                        <option value="MS Ducting Work">MS Ducting Work</option>
+                        <option value="MS Tank Fabrication">MS Tank Fabrication</option>
+                        <option value="MS Pipeline Fabrication">MS Pipeline Fabrication</option>
+                        <option value="Powder Coating">Powder Coating</option>
+                        <option value="Sand Blasting & Painting">Sand Blasting & Painting</option>
+                        <option value="MS 3rd Party NDT Facility">MS 3rd Party NDT Facility</option>
+                        <option value="Laser Cutting & Forming">Laser Cutting & Forming</option>
+                      </optgroup>
+
+                      <optgroup label="02 Machining">
+                        <option value="Precision Machining">Precision Machining (Overview)</option>
+                        <option value="Laser Cutting">Laser Cutting</option>
+                        <option value="Milling">Milling (Overview)</option>
+                        <option value="Plano Milling">Plano Milling</option>
+                        <option value="VMC Milling">VMC Milling</option>
+                        <option value="Universal Milling">Universal Milling</option>
+                        <option value="Drilling">Drilling</option>
+                        <option value="Turning">Turning</option>
+                        <option value="Jig-Fixture Work">Jig-Fixture Work</option>
+                        <option value="Tool-Room Work">Tool-Room Work</option>
+                        <option value="Forming">Forming</option>
+                        <option value="Grinding & Finishing">Grinding & Finishing (Overview)</option>
+                        <option value="Cylindrical Grinding">Cylindrical Grinding</option>
+                        <option value="Surface Grinding">Surface Grinding</option>
+                      </optgroup>
+
+                      <optgroup label="03 Conveyor & Material Handling">
+                        <option value="Conveyor & Material Handling">Conveyor & Material Handling (Overview)</option>
+                        <option value="Belt Conveyor">Belt Conveyor</option>
+                        <option value="Flat Conveyor">Flat Conveyor</option>
+                        <option value="Magnetic Conveyor">Magnetic Conveyor</option>
+                        <option value="Industrial Trolleys">Industrial Trolleys</option>
+                        <option value="Industrial Pallets">Industrial Pallets</option>
+                      </optgroup>
+
+                      <optgroup label="04 Jigs & Fixtures">
+                        <option value="Jigs & Fixtures">Jigs & Fixtures (Overview)</option>
+                        <option value="Welding Jigs & Fixtures">Welding Jigs & Fixtures</option>
+                        <option value="Machining Fixtures">Machining Fixtures</option>
+                        <option value="Assembly Fixtures">Assembly Fixtures</option>
+                        <option value="Inspection Fixtures">Inspection Fixtures</option>
+                        <option value="Custom Component Holding Fixtures">Custom Component Holding Fixtures</option>
+                      </optgroup>
+
+                      <optgroup label="05 Special Purpose Machines (SPM)">
+                        <option value="Special Purpose Machines (SPM)">Special Purpose Machines (SPM)</option>
+                        <option value="Customized Special Purpose Machines">Customized Special Purpose Machines</option>
+                        <option value="Automated Production Machines">Automated Production Machines</option>
+                        <option value="Material Handling & Transfer Mechanisms">Material Handling & Transfer Mechanisms</option>
+                        <option value="Custom Machine Structures">Custom Machine Structures</option>
+                        <option value="Component Positioning & Clamping Systems">Component Positioning & Clamping Systems</option>
+                        <option value="Application-Specific Automation Solutions">Application-Specific Automation Solutions</option>
+                      </optgroup>
+
+                      <option value="Other">Other Custom Requirement</option>
                     </select>
                     {errors.service && <span className="editorial-form-error">{errors.service}</span>}
                   </div>
@@ -681,11 +759,10 @@ export default function ContactPage() {
                         marginBottom: '4px'
                       }}
                     >
-                      Gulve vasti,<br />
-                      Near To Hindustan Pressing,<br />
-                      Opposite In Kolte Industries<br />
-                      'S' Block S214, MIDC,<br />
-                      Bhosari, Pune – 411039
+                      Intelligent Cadet International School,<br />
+                      Vaishno Mata Marg, Sector No. 3,<br />
+                      Bhosari, Pimpri-Chinchwad,<br />
+                      Maharashtra 411026
                     </div>
                     <span style={{ fontSize: '12.5px', color: '#6b7280' }}>Visit our facility</span>
                   </div>
@@ -724,7 +801,7 @@ export default function ContactPage() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  fontFamily: 'var(--font-tech)',
+                  fontFamily: 'var(--font-heading)',
                   fontSize: '12px',
                   fontWeight: 700,
                   textTransform: 'uppercase',
@@ -753,16 +830,15 @@ export default function ContactPage() {
 
             <div
               style={{
-                fontFamily: 'var(--font-tech)',
-                fontSize: '12px',
-                color: '#94a3b8',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase'
+                fontFamily: 'var(--font-heading)',
+                fontSize: '12.5px',
+                color: '#cbd5e1',
+                lineHeight: 1.5,
+                textAlign: 'right'
               }}
             >
-              <strong style={{ color: '#ffffff' }}>MAULI KRUPA PRECISION WORKS</strong>
-              <span style={{ margin: '0 8px', color: '#c52227' }}>·</span>
-              <span>Bhosari, Pune – 411039, Maharashtra, India</span>
+              <strong style={{ color: '#ffffff', display: 'block' }}>MAULI KRUPA PRECISION WORKS</strong>
+              <span>Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026</span>
             </div>
           </div>
         </div>
@@ -812,7 +888,7 @@ export default function ContactPage() {
                 padding: '10px 20px',
                 backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 color: '#ffffff',
-                fontFamily: 'var(--font-tech)',
+                fontFamily: 'var(--font-heading)',
                 fontSize: '12px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',

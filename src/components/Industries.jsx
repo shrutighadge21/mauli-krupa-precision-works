@@ -1,12 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, ChevronUp, Crosshair } from 'lucide-react';
+import { ArrowRight, ChevronDown, Crosshair } from 'lucide-react';
+
+const TOTAL_FRAMES = 60;
+const FRAME_PATHS = Array.from({ length: TOTAL_FRAMES }, (_, i) => 
+  `/images/cad_dense_sequence/frame_${String(i).padStart(2, '0')}.png`
+);
 
 export default function Industries() {
-  const [smoothProgress, setSmoothProgress] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const sectionRef = useRef(null);
+  const canvasRef = useRef(null);
+  const imagesRef = useRef([]);
   const targetProgressRef = useRef(0);
-  const smoothProgressRef = useRef(0);
+  const currentProgressRef = useRef(0);
+  const rafIdRef = useRef(null);
 
   // 5 Clear Industry Stages based on Mauli Krupa Precision Works capabilities
   const industries = [
@@ -15,40 +24,46 @@ export default function Industries() {
       id: 'railways',
       title: 'Railways',
       subtitle: 'Rolling Stock & Heavy Tooling',
-      stageName: 'Stage 01 — Fully Assembled Machine System',
-      stageDesc: 'Complete, locked industrial engineering system',
-      description: 'Heavy structural tooling, bogie fabrication fixtures and high-load assemblies built to strict railway engineering standards.',
+      stageTag: 'Stage 01 — Fully Assembled Machine System',
+      statusText: 'ASSEMBLED',
+      image: '/images/cad_fixture/fixture_assembled.png',
+      imageAlt: 'Mauli Krupa Precision Works Fully Assembled Machine System',
+      description: 'Heavy structural tooling, bogie fabrication fixtures and high-load assemblies built strictly to Indian Railways & defense engineering standards.',
       highlights: [
-        'Bogie fabrication & structural tooling',
-        'High-tonnage hydraulic press structures'
+        'Bogie fabrication & structural welding tooling',
+        'High-tonnage hydraulic press weldment structures'
       ],
-      targetScroll: 0.10
+      targetScroll: 0.02
     },
     {
       number: '02',
       id: 'automotive',
       title: 'Automotive',
       subtitle: 'BIW Fixtures & Assembly Jigs',
-      stageName: 'Stage 02 — Precision Clamping Units',
-      stageDesc: 'Modular BIW clamping fixtures separate outward',
-      description: 'Precision Body-In-White (BIW) clamping frames, welding jigs and datum-aligned tooling for Tier-1 automotive manufacturing.',
+      stageTag: 'Stage 02 — Early Component Separation',
+      statusText: 'EARLY SEPARATION',
+      image: '/images/cad_fixture/part_left_clamps.png',
+      imageAlt: 'Precision Modular Clamping Jigs and BIW Fixture Tooling',
+      description: 'Precision Body-In-White (BIW) clamping frames, datum-aligned welding jigs and concentricity inspection gauges for automotive Tier-1 OEMs.',
       highlights: [
-        'Robotic welding & BIW clamping jigs',
+        'Robotic welding & modular BIW toggle jigs',
         'Concentricity checking & WIP transit racks'
       ],
-      targetScroll: 0.30
+      targetScroll: 0.28
     },
     {
       number: '03',
       id: 'manufacturing-automation',
       title: 'Manufacturing & Automation',
-      subtitle: 'Custom Machinery & Automation',
-      stageName: 'Stage 03 — Servo Gantry & Linear Actuation',
-      stageDesc: 'Servo gantry & linear guide actuators lift upward',
-      description: 'Turnkey Special Purpose Machines (SPMs), automated straightening presses and digital test rigs engineered to client drawings.',
+      subtitle: 'Custom Machinery & SPMs',
+      stageTag: 'Stage 03 — Partial Sub-Assembly Explosion',
+      statusText: 'PARTIAL EXPLOSION',
+      image: '/images/cad_fixture/part_right_slide.png',
+      imageAlt: 'Linear Actuation, Servo Gantry & Precision Slide Drive',
+      description: 'Turnkey Special Purpose Machines (SPMs), automated straightening presses and calibrated fluid test benches built strictly to customer drawings.',
       highlights: [
-        'Automated Welding SPM machinery',
-        'Shaft straightening presses & testing rigs'
+        'Automated Welding SPM machines & jigs',
+        'Shaft straightening presses & digital test rigs'
       ],
       targetScroll: 0.50
     },
@@ -56,106 +71,162 @@ export default function Industries() {
       number: '04',
       id: 'heavy-engineering',
       title: 'Heavy Engineering',
-      subtitle: 'Fabricated Structures & Machine Bases',
-      stageName: 'Stage 04 — Milled T-Slot Base Bed',
-      stageDesc: 'Milled T-slot foundation base plate moves downward',
-      description: 'Stress-relieved ground base tables, heavy equipment weldments and precision-machined structures built for dynamic load.',
+      subtitle: 'Fabricated Structures & Machine Beds',
+      stageTag: 'Stage 04 — Advanced Disassembly Stage',
+      statusText: 'MOSTLY EXPLODED',
+      image: '/images/cad_fixture/part_base_plate.png',
+      imageAlt: 'Heavy Duty Ground Milled T-Slot Base Bed Structure',
+      description: 'Stress-relieved ground base tables, heavy equipment weldments and precision-machined structures built with 400A MIG welding capacity.',
       highlights: [
-        'Precision T-slot machine bases & beds',
-        'Heavy structural tooling & 400A MIG welding'
+        'Precision T-slot machine beds & base tables',
+        'Heavy structural tooling & 400A MIG weldments'
       ],
-      targetScroll: 0.70
+      targetScroll: 0.72
     },
     {
       number: '05',
       id: 'industrial-production',
       title: 'Industrial Production',
-      subtitle: 'Material Handling & Conveyor Lines',
-      stageName: 'Stage 05 — Exploded Engineering View',
-      stageDesc: 'Complete balanced CAD architecture & material flow',
-      description: 'Continuous conveyor networks, magnetic scrap discharge systems and pneumatic zero-gravity lifting tackles.',
+      subtitle: 'Material Handling & Conveyors',
+      stageTag: 'Stage 05 — Complete Exploded Engineering View',
+      statusText: 'FULLY EXPLODED',
+      image: '/images/cad_fixture/fixture_exploded.png',
+      imageAlt: 'Complete 3D Exploded Engineering Assembly View',
+      description: 'Continuous conveyor networks, magnetic scrap discharge systems and heavy-duty shopfloor transit trolleys built for continuous operations.',
       highlights: [
-        'Z-type magnetic & PVC belt conveyors',
-        'Pneumatic lifting tackles & track conveyors'
+        'Z-type magnetic & PVC heavy belt conveyors',
+        'Multi-tier transit trolleys & material racks'
       ],
-      targetScroll: 0.90
+      targetScroll: 0.98
     }
   ];
 
-  // Physics-based lerp scroll loop for liquid-smooth continuous scrubbing
+  const stageStatusLabels = [
+    'STAGE 01 — ASSEMBLED',
+    'STAGE 02 — EARLY SEPARATION',
+    'STAGE 03 — PARTIAL EXPLOSION',
+    'STAGE 04 — MOSTLY EXPLODED',
+    'STAGE 05 — FULLY EXPLODED'
+  ];
+
+  // Preload all 60 dense CAD sequence frames into memory
   useEffect(() => {
-    let animationFrameId;
+    const loadedImages = [];
+    FRAME_PATHS.forEach((path, idx) => {
+      const img = new Image();
+      img.src = path;
+      img.onload = () => {
+        // Render initial frame 0 on load
+        if (idx === 0 && canvasRef.current && currentProgressRef.current <= 0.01) {
+          const ctx = canvasRef.current.getContext('2d');
+          ctx.clearRect(0, 0, 1376, 768);
+          ctx.globalAlpha = 1;
+          ctx.drawImage(img, 0, 0, 1376, 768);
+        }
+      };
+      loadedImages[idx] = img;
+    });
+    imagesRef.current = loadedImages;
+  }, []);
 
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const totalScrollable = rect.height - windowHeight;
+  // Dedicated 60fps RAF loop with continuous sub-frame scrubbing
+  useEffect(() => {
+    let isRunning = true;
 
-      if (totalScrollable <= 0) return;
+    const renderFrame = (progressVal) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const images = imagesRef.current;
+      if (!images || images.length !== TOTAL_FRAMES) return;
 
-      const currentScroll = -rect.top;
-      const rawProgress = Math.min(Math.max(currentScroll / totalScrollable, 0), 1);
-      targetProgressRef.current = rawProgress;
+      const floatIndex = progressVal * (TOTAL_FRAMES - 1);
+      const idxA = Math.floor(floatIndex);
+      const idxB = Math.min(TOTAL_FRAMES - 1, idxA + 1);
+      const blend = floatIndex - idxA;
+
+      const imgA = images[idxA];
+      const imgB = images[idxB];
+
+      ctx.clearRect(0, 0, 1376, 768);
+
+      if (imgA && imgA.complete && imgA.naturalWidth > 0) {
+        ctx.globalAlpha = 1;
+        ctx.drawImage(imgA, 0, 0, 1376, 768);
+      }
+      if (blend > 0.002 && imgB && imgB.complete && imgB.naturalWidth > 0) {
+        ctx.globalAlpha = blend;
+        ctx.drawImage(imgB, 0, 0, 1376, 768);
+      }
     };
 
-    const updateSmoothLoop = () => {
-      // Smooth lerp easing factor for fluid cinematic scrubbing
-      const diff = targetProgressRef.current - smoothProgressRef.current;
-      smoothProgressRef.current += diff * 0.085;
+    const updateLoop = () => {
+      if (!isRunning) return;
 
-      setSmoothProgress(smoothProgressRef.current);
-      animationFrameId = requestAnimationFrame(updateSmoothLoop);
+      const target = targetProgressRef.current;
+      const current = currentProgressRef.current;
+      const diff = target - current;
+
+      if (Math.abs(diff) > 0.0001) {
+        // Fluid physical dampening (lerp factor: 0.16 for responsive, silky-smooth scrubbing)
+        const next = current + diff * 0.16;
+        currentProgressRef.current = next;
+        setScrollProgress(next);
+        renderFrame(next);
+
+        // Smooth milestone sync for right-side description & left directory (no jumping)
+        let newIndex = 0;
+        if (next < 0.20) {
+          newIndex = 0;
+        } else if (next < 0.45) {
+          newIndex = 1;
+        } else if (next < 0.70) {
+          newIndex = 2;
+        } else if (next < 0.90) {
+          newIndex = 3;
+        } else {
+          newIndex = 4;
+        }
+        setActiveIndex((prev) => (prev !== newIndex ? newIndex : prev));
+      } else if (current !== target) {
+        currentProgressRef.current = target;
+        setScrollProgress(target);
+        renderFrame(target);
+      }
+
+      rafIdRef.current = requestAnimationFrame(updateLoop);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    animationFrameId = requestAnimationFrame(updateSmoothLoop);
+    rafIdRef.current = requestAnimationFrame(updateLoop);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      isRunning = false;
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     };
   }, []);
 
-  const p = smoothProgress;
+  // High-performance scroll listener updating normalized target progress
+  const handleScroll = useCallback(() => {
+    if (!sectionRef.current) return;
 
-  // 5 Defined Stages across 650vh runway
-  let activeIndustryIdx = 0;
-  if (p < 0.20) {
-    activeIndustryIdx = 0; // Stage 1: Railways (0% to 20%) - 100% Solid Assembled System Hold
-  } else if (p < 0.40) {
-    activeIndustryIdx = 1; // Stage 2: Automotive (20% to 40%) - Clamps exploration
-  } else if (p < 0.60) {
-    activeIndustryIdx = 2; // Stage 3: Manufacturing & Automation (40% to 60%) - Internal Gantry
-  } else if (p < 0.80) {
-    activeIndustryIdx = 3; // Stage 4: Heavy Engineering (60% to 80%) - Base separation
-  } else {
-    activeIndustryIdx = 4; // Stage 5: Industrial Production (80% to 100%) - Full Exploded CAD View
-  }
+    const rect = sectionRef.current.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const totalScrollable = rect.height - windowHeight;
 
-  const activeIndustry = industries[activeIndustryIdx];
+    if (totalScrollable > 0) {
+      const currentScroll = -rect.top;
+      const progress = Math.min(Math.max(currentScroll / totalScrollable, 0), 1);
+      targetProgressRef.current = progress;
+    }
+  }, []);
 
-  // Smooth, gradual separation curve:
-  // p: 0.00 - 0.20 -> 100% Solid Assembled System (sep = 0.0, zero movement)
-  // p: 0.20 - 0.80 -> Slow, continuous gradual separation (sep = 0.0 -> 1.0)
-  // p: 0.80 - 1.00 -> Complete stable exploded architecture (sep = 1.0)
-  let rawSep = 0;
-  if (p > 0.20 && p < 0.80) {
-    rawSep = (p - 0.20) / (0.80 - 0.20);
-  } else if (p >= 0.80) {
-    rawSep = 1.0;
-  }
-  // Smooth cubic ease for natural mechanical motion
-  const sep = rawSep * rawSep * (3 - 2 * rawSep);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
-  // Solid Assembled Image Opacity: 1.0 during Stage 1, smoothly crossfades
-  const solidAssembledOpacity = Math.max(0, 1 - sep * 1.6);
-  const explodedLayersOpacity = Math.min(1, sep * 2.0);
-
-  const isFullyAssembled = p < 0.20;
-  const isFullyExploded = p >= 0.80;
-
+  // Smooth programmatic scroll when clicking any industry in the list or scrubber
   const scrollToIndustry = (index) => {
     if (!sectionRef.current) return;
     const rect = sectionRef.current.getBoundingClientRect();
@@ -168,17 +239,9 @@ export default function Industries() {
     window.scrollTo({ top: targetScroll, behavior: 'smooth' });
   };
 
-  const getStageWeight = (idx) => {
-    const stageFloat = Math.min(Math.max(p * 5, 0), 4.999);
-    const dist = Math.abs(stageFloat - idx);
-    return Math.max(0, 1 - dist * 1.25);
-  };
-
-  const weight01 = getStageWeight(0);
-  const weight02 = getStageWeight(1);
-  const weight03 = getStageWeight(2);
-  const weight04 = getStageWeight(3);
-  const weight05 = getStageWeight(4);
+  const activeIndustry = industries[activeIndex];
+  const initialPromptOpacity = Math.max(0, 1 - scrollProgress * 12);
+  const p = scrollProgress;
 
   return (
     <section
@@ -188,13 +251,14 @@ export default function Industries() {
         position: 'relative',
         backgroundColor: '#ffffff',
         color: '#111827',
-        minHeight: '650vh', // Extended 650vh runway for slow, deliberate, scroll-controlled pacing
-        borderTop: '1px solid #f0f0f0',
-        borderBottom: '1px solid #f0f0f0'
+        minHeight: '340vh', // Generous runway for intentional, smooth engineering storytelling
+        borderTop: '1px solid #f1f3f5',
+        borderBottom: '1px solid #f1f3f5'
       }}
     >
-      {/* Pinned Sticky Viewport: Remains locked on screen while user scrubs through the 5-stage story */}
+      {/* Pinned Sticky Viewport: Remains firmly locked while user scrolls through the continuous explosion */}
       <div
+        className="industries-sticky-viewport"
         style={{
           position: 'sticky',
           top: 0,
@@ -204,13 +268,13 @@ export default function Industries() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: '24px 0 16px 0',
+          padding: 'clamp(20px, 3vh, 32px) 0 clamp(16px, 2.4vh, 24px) 0',
           backgroundColor: '#ffffff',
           zIndex: 2
         }}
       >
         {/* ========================================================================= */}
-        {/* 1. SECTION HEADER (CLEAN & MINIMAL + EXPLORE INDUSTRIES LINK)             */}
+        {/* 1. SECTION HEADER                                                         */}
         {/* ========================================================================= */}
         <div className="container-custom" style={{ position: 'relative', zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
@@ -251,16 +315,16 @@ export default function Industries() {
                   margin: 0
                 }}
               >
-                Precision engineering and manufacturing systems applied across critical industrial sectors.
+                Precision engineering and custom manufacturing systems applied across critical industrial sectors.
               </p>
             </div>
 
-            {/* Minimal Link: EXPLORE INDUSTRIES -> /industries */}
+            {/* Minimal Link: EXPLORE ALL SECTORS -> /industries */}
             <Link
               to="/industries"
               className="minimal-text-link"
             >
-              <span>EXPLORE INDUSTRIES</span>
+              <span>EXPLORE ALL SECTORS</span>
               <span className="read-more-arrow">→</span>
             </Link>
           </div>
@@ -277,100 +341,124 @@ export default function Industries() {
             flex: 1,
             display: 'flex',
             alignItems: 'center',
-            width: '100%'
+            width: '100%',
+            minHeight: 0
           }}
         >
           <div
             className="industries-three-col-layout"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'minmax(210px, 1.1fr) minmax(540px, 3.4fr) minmax(230px, 1.3fr)',
-              gap: 'clamp(20px, 3.5vw, 52px)',
+              gridTemplateColumns: 'minmax(200px, 0.95fr) minmax(580px, 3.8fr) minmax(250px, 1.15fr)',
+              gap: 'clamp(16px, 2.5vw, 40px)',
               alignItems: 'center',
               width: '100%'
             }}
           >
             {/* ===================================================================== */}
-            {/* LEFT COLUMN: ALL 5 INDUSTRIES PERMANENTLY VISIBLE & READABLE          */}
+            {/* LEFT COLUMN: 5 SECTOR ITEMS WITH SMOOTH SLIDING RED ACTIVE BAR        */}
             {/* ===================================================================== */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }} className="left-industry-nav">
+            <div className="left-industry-nav" style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
               <div
                 style={{
                   fontFamily: 'var(--font-tech)',
-                  fontSize: '10px',
+                  fontSize: '10.5px',
                   fontWeight: 700,
-                  letterSpacing: '0.14em',
+                  letterSpacing: '0.15em',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
-                  marginBottom: '2px'
+                  marginBottom: '16px'
                 }}
               >
-                INDUSTRIES SERVED
+                SECTOR DIRECTORY
               </div>
 
-              {industries.map((ind, idx) => {
-                const itemWeight = getStageWeight(idx);
+              {/* Relative Nav Item List */}
+              <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                
+                {/* Smooth Animated Active Red Indicator Bar */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: '3px',
+                    height: '44px',
+                    backgroundColor: '#c52227',
+                    borderRadius: '2px',
+                    transform: `translateY(${activeIndex * 56}px)`,
+                    transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+                    zIndex: 2
+                  }}
+                />
 
-                return (
-                  <div
-                    key={ind.id}
-                    onClick={() => scrollToIndustry(idx)}
-                    style={{
-                      position: 'relative',
-                      cursor: 'pointer',
-                      paddingLeft: '14px',
-                      borderLeft: `2.5px solid ${itemWeight > 0.25 ? '#c52227' : 'transparent'}`,
-                      transition: 'border-color 0.25s ease, transform 0.25s ease',
-                      opacity: 0.55 + itemWeight * 0.45,
-                      transform: `translateX(${itemWeight * 4}px)`
-                    }}
-                    className="industry-nav-item"
-                  >
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-tech)',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          color: itemWeight > 0.35 ? '#c52227' : '#64748b',
-                          letterSpacing: '0.08em',
-                          transition: 'color 0.25s ease'
-                        }}
-                      >
-                        {ind.number}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: '14px',
-                          fontWeight: itemWeight > 0.35 ? 800 : 600,
-                          color: itemWeight > 0.35 ? '#111827' : '#334155',
-                          letterSpacing: '0.01em',
-                          transition: 'color 0.25s ease'
-                        }}
-                      >
-                        — {ind.title}
-                      </span>
-                    </div>
+                {industries.map((ind, idx) => {
+                  const isActive = idx === activeIndex;
 
+                  return (
                     <div
+                      key={ind.id}
+                      onClick={() => scrollToIndustry(idx)}
                       style={{
-                        fontSize: '11px',
-                        color: itemWeight > 0.35 ? '#4b5563' : '#64748b',
-                        marginTop: '2px',
-                        lineHeight: 1.35,
-                        transition: 'color 0.25s ease'
+                        position: 'relative',
+                        cursor: 'pointer',
+                        paddingLeft: '16px',
+                        height: '44px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        opacity: isActive ? 1 : 0.45,
+                        transform: isActive ? 'translateX(4px)' : 'translateX(0)',
+                        transition: 'opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
                       }}
+                      className="industry-nav-item"
                     >
-                      {ind.subtitle}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-tech)',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            color: isActive ? '#c52227' : '#64748b',
+                            letterSpacing: '0.08em',
+                            transition: 'color 0.3s ease'
+                          }}
+                        >
+                          {ind.number}
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: '14px',
+                            fontWeight: isActive ? 800 : 600,
+                            color: isActive ? '#111827' : '#475569',
+                            letterSpacing: '0.01em',
+                            transition: 'color 0.3s ease'
+                          }}
+                        >
+                          — {ind.title}
+                        </span>
+                      </div>
+
+                      <div
+                        style={{
+                          fontSize: '11px',
+                          color: isActive ? '#4b5563' : '#94a3b8',
+                          marginTop: '2px',
+                          lineHeight: 1.25,
+                          transition: 'color 0.3s ease'
+                        }}
+                      >
+                        {ind.subtitle}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
             {/* ===================================================================== */}
-            {/* CENTER COLUMN: ONE COMPLETE FULLY ASSEMBLED SYSTEM (HERO)             */}
+            {/* CENTER COLUMN: HIGH-PRECISION CAD CANVAS EXPLODED ENGINE              */}
             {/* ===================================================================== */}
             <div
               style={{
@@ -379,269 +467,183 @@ export default function Industries() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '400px'
+                width: '100%'
               }}
             >
-              {/* Engineering System Status Tag */}
+              {/* Engineering Status Tag with Dynamic Stage Name */}
               <div
                 style={{
                   fontFamily: 'var(--font-tech)',
-                  fontSize: '10px',
+                  fontSize: '10.5px',
                   fontWeight: 700,
-                  letterSpacing: '0.15em',
-                  color: '#94a3b8',
+                  letterSpacing: '0.14em',
+                  color: '#64748b',
                   textTransform: 'uppercase',
-                  marginBottom: '8px',
+                  marginBottom: '10px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px'
+                  gap: '8px',
+                  backgroundColor: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  padding: '5px 14px',
+                  borderRadius: '20px',
+                  boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
+                  transition: 'all 0.3s ease'
                 }}
               >
-                <Crosshair size={12} style={{ color: '#c52227' }} />
-                <span>MKP PRECISION ENGINEERING SYSTEM</span>
-                <span style={{ color: '#c52227' }}>•</span>
-                <span style={{ color: isFullyAssembled ? '#111827' : '#c52227', transition: 'color 0.3s ease' }}>
-                  {activeIndustry.stageName}
+                <Crosshair size={13} color="#c52227" />
+                <span style={{ color: '#111827', fontWeight: 800 }}>MKP PRECISION ASSEMBLY</span>
+                <span style={{ color: '#cbd5e1' }}>|</span>
+                <span style={{ color: '#c52227', fontWeight: 700 }}>
+                  {stageStatusLabels[activeIndex]}
                 </span>
               </div>
 
-              {/* Main Visual Stage (Occupies ~60% of Visual Center) */}
+              {/* Main Visual Stage: Centered, Camera-Locked Engineering Canvas */}
               <div
                 className="main-engineering-canvas"
                 style={{
                   position: 'relative',
-                  width: 'min(660px, 100%)',
-                  height: 'clamp(330px, 37vw, 420px)',
+                  width: 'min(860px, 100%)',
+                  height: 'clamp(340px, 44vh, 470px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  perspective: '1200px'
+                  overflow: 'visible'
                 }}
               >
-                {/* 1. Soft Ambient Ground Floor Shadow */}
+                {/* Dynamic Radial Ambient Ground Shadow */}
                 <div
                   style={{
                     position: 'absolute',
-                    bottom: '8%',
-                    width: '88%',
-                    height: '40px',
+                    bottom: '3%',
+                    width: '84%',
+                    height: '32px',
                     borderRadius: '50%',
-                    background: 'radial-gradient(ellipse at center, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0) 70%)',
-                    transform: `scale(${1 + sep * 0.1})`,
+                    background: 'radial-gradient(ellipse at center, rgba(15, 23, 42, 0.16) 0%, rgba(15, 23, 42, 0) 70%)',
                     pointerEvents: 'none',
-                    zIndex: 1
+                    zIndex: 1,
+                    transform: `scale(${1 + p * 0.10}) translateY(${p * 16}px)`,
+                    opacity: Math.max(0.08, 0.18 - p * 0.06),
+                    transition: 'transform 0.05s linear, opacity 0.05s linear'
                   }}
                 />
 
-                {/* ================================================================= */}
-                {/* 2. SOLID COMPLETE ASSEMBLED HERO MACHINE (100% IN INITIAL STATE)  */}
-                {/* ================================================================= */}
-                <div
+                {/* Hardware-Accelerated 1376x768 Engineering Canvas */}
+                <canvas
+                  ref={canvasRef}
+                  width={1376}
+                  height={768}
                   style={{
-                    position: 'absolute',
-                    width: '95%',
-                    opacity: solidAssembledOpacity,
-                    pointerEvents: sep > 0.3 ? 'none' : 'auto',
-                    transition: 'opacity 0.08s linear',
-                    zIndex: 10,
-                    filter: 'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.08))'
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    display: 'block',
+                    filter: 'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.08))',
+                    zIndex: 4
                   }}
-                >
-                  <img
-                    src="/images/cad_fixture/fixture_assembled.png"
-                    alt="Mauli Krupa Precision Works Complete Assembled Engineering System"
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                  />
-                </div>
-
-                {/* ================================================================= */}
-                {/* 3. PHYSICAL CONSTITUENT LAYERS (SEPARATE SLOWLY ONLY WHEN SCROLLING)*/}
-                {/* ================================================================= */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    opacity: explodedLayersOpacity,
-                    pointerEvents: sep > 0.1 ? 'auto' : 'none',
-                    transition: 'opacity 0.08s linear',
-                    zIndex: 5,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  {/* COMPONENT A: REACTION T-SLOT BASE PLATE (Moves Downward) */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: `${8 - sep * 3}%`,
-                      width: '85%',
-                      transform: `translate3d(0, ${sep * 32}px, 0)`,
-                      zIndex: weight04 > 0.3 ? 15 : 2,
-                      filter: weight04 > 0.3
-                        ? `drop-shadow(0 16px 26px rgba(197, 34, 39, ${weight04 * 0.35}))`
-                        : 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.08))'
-                    }}
-                  >
-                    <img
-                      src="/images/cad_fixture/part_base_plate.png"
-                      alt="Reaction T-Slot Base Plate Structure"
-                      style={{ width: '100%', height: 'auto', display: 'block' }}
-                    />
-                  </div>
-
-                  {/* COMPONENT B: CENTER WORKPIECE SUBSTRATE (Floats in Central Machining Datum) */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '32%',
-                      width: '44%',
-                      transform: `translate3d(0, ${-sep * 8}px, ${sep * 14}px)`,
-                      zIndex: weight05 > 0.3 ? 15 : 4,
-                      filter: weight05 > 0.3
-                        ? `drop-shadow(0 14px 26px rgba(197, 34, 39, ${weight05 * 0.35}))`
-                        : 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12))'
-                    }}
-                  >
-                    <img
-                      src="/images/cad_fixture/part_center_workpiece.png"
-                      alt="Precision Workpiece Substrate & Alignment Stops"
-                      style={{ width: '100%', height: 'auto', display: 'block' }}
-                    />
-                  </div>
-
-                  {/* COMPONENT C: LEFT MODULAR CLAMPING JIG & TOGGLE CLAMPS (Moves Outward to Left) */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '26%',
-                      left: `${-sep * 14}%`,
-                      width: '42%',
-                      transform: `translate3d(${-sep * 38}px, ${sep * 5}px, ${sep * 18}px)`,
-                      zIndex: weight02 > 0.3 ? 15 : 5,
-                      filter: weight02 > 0.3
-                        ? `drop-shadow(0 16px 28px rgba(197, 34, 39, ${weight02 * 0.35}))`
-                        : 'drop-shadow(0 8px 18px rgba(0, 0, 0, 0.1))'
-                    }}
-                  >
-                    <img
-                      src="/images/cad_fixture/part_left_clamps.png"
-                      alt="Modular BIW Clamping Jigs"
-                      style={{ width: '100%', height: 'auto', display: 'block' }}
-                    />
-                  </div>
-
-                  {/* COMPONENT D: RIGHT LINEAR GUIDE RAIL & SERVO DRIVE (Moves Outward to Right) */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '28%',
-                      right: `${-sep * 12}%`,
-                      width: '42%',
-                      transform: `translate3d(${sep * 36}px, ${sep * 7}px, ${sep * 18}px)`,
-                      zIndex: weight03 > 0.3 ? 15 : 5,
-                      filter: weight03 > 0.3
-                        ? `drop-shadow(0 16px 28px rgba(197, 34, 39, ${weight03 * 0.35}))`
-                        : 'drop-shadow(0 8px 18px rgba(0, 0, 0, 0.1))'
-                    }}
-                  >
-                    <img
-                      src="/images/cad_fixture/part_right_slide.png"
-                      alt="Linear Guide Rail & Servo Drive"
-                      style={{ width: '100%', height: 'auto', display: 'block' }}
-                    />
-                  </div>
-
-                  {/* COMPONENT E: TOP STRUCTURAL BRIDGE & GANTRY COLUMN (Lifts Upward along Z/Y-axis) */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: `${-sep * 14}%`,
-                      width: '56%',
-                      transform: `translate3d(0, ${-sep * 44}px, ${sep * 30}px)`,
-                      zIndex: weight01 > 0.3 ? 15 : 6,
-                      filter: weight01 > 0.3
-                        ? `drop-shadow(0 18px 30px rgba(197, 34, 39, ${weight01 * 0.35}))`
-                        : 'drop-shadow(0 12px 24px rgba(0, 0, 0, 0.12))'
-                    }}
-                  >
-                    <img
-                      src="/images/cad_fixture/part_top_bridge.png"
-                      alt="Top Heavy Structural Bridge Column"
-                      style={{ width: '100%', height: 'auto', display: 'block' }}
-                    />
-                  </div>
-                </div>
+                />
               </div>
 
-              {/* Minimal Bottom Dynamic Prompt */}
+              {/* =================================================================== */}
+              {/* SUBTLE PROGRESS INDICATOR: 01 — 02 — 03 — 04 — 05                   */}
+              {/* =================================================================== */}
               <div
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
-                  marginTop: '12px',
-                  textAlign: 'center'
+                  gap: '12px',
+                  marginTop: '10px',
+                  userSelect: 'none'
+                }}
+                className="industries-stage-progress-bar"
+              >
+                {industries.map((ind, idx) => {
+                  const isActive = idx === activeIndex;
+
+                  return (
+                    <React.Fragment key={ind.id}>
+                      {idx > 0 && (
+                        <span
+                          style={{
+                            color: idx <= activeIndex ? '#c52227' : '#e2e8f0',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            letterSpacing: '0.04em',
+                            transition: 'color 0.35s ease'
+                          }}
+                        >
+                          —
+                        </span>
+                      )}
+
+                      <button
+                        onClick={() => scrollToIndustry(idx)}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          background: 'none',
+                          border: 'none',
+                          padding: '4px 6px',
+                          cursor: 'pointer',
+                          fontFamily: 'var(--font-tech)',
+                          fontSize: '12px',
+                          fontWeight: isActive ? 800 : 600,
+                          color: isActive ? '#c52227' : '#94a3b8',
+                          letterSpacing: '0.06em',
+                          transition: 'color 0.3s ease, transform 0.3s ease',
+                          transform: isActive ? 'scale(1.08)' : 'scale(1)'
+                        }}
+                        aria-label={`Go to Stage ${ind.number} - ${ind.title}`}
+                      >
+                        {isActive && (
+                          <span
+                            style={{
+                              width: '6px',
+                              height: '6px',
+                              borderRadius: '50%',
+                              backgroundColor: '#c52227',
+                              display: 'inline-block',
+                              boxShadow: '0 0 8px rgba(197, 34, 39, 0.6)'
+                            }}
+                          />
+                        )}
+                        <span>{ind.number}</span>
+                      </button>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+
+              {/* Initial "Scroll to Explore" Prompt (Smoothly fades out on initial scroll) */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '-28px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: 'var(--font-tech)',
+                  fontSize: '10.5px',
+                  fontWeight: 700,
+                  letterSpacing: '0.14em',
+                  color: '#c52227',
+                  textTransform: 'uppercase',
+                  opacity: initialPromptOpacity,
+                  pointerEvents: 'none',
+                  transition: 'opacity 0.25s ease'
                 }}
               >
-                {isFullyAssembled ? (
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      fontFamily: 'var(--font-tech)',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      letterSpacing: '0.12em',
-                      color: '#c52227',
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    <span>SCROLL TO EXPLORE THE SYSTEM</span>
-                    <ChevronDown size={14} className="cad-chevron-pulse" />
-                  </div>
-                ) : isFullyExploded ? (
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      fontFamily: 'var(--font-tech)',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      letterSpacing: '0.12em',
-                      color: '#0e8a44',
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    <span>SCROLL UP TO REASSEMBLE</span>
-                    <ChevronUp size={14} className="cad-chevron-pulse" />
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      fontFamily: 'var(--font-tech)',
-                      fontSize: '10.5px',
-                      fontWeight: 700,
-                      letterSpacing: '0.12em',
-                      color: '#4b5563',
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    <span>SCROLL TO EXPLODE THE SYSTEM</span>
-                    <span style={{ color: '#c52227' }}>•</span>
-                    <span>{Math.round(sep * 100)}% EXPLODED</span>
-                  </div>
-                )}
+                <span>SCROLL TO EXPLORE ASSEMBLY</span>
+                <ChevronDown size={13} />
               </div>
             </div>
 
             {/* ===================================================================== */}
-            {/* RIGHT COLUMN: ACTIVE INDUSTRY INFORMATION & CAPABILITIES              */}
+            {/* RIGHT COLUMN: SYNCHRONIZED INDUSTRY INFORMATION (ZERO LAYOUT SHIFT)  */}
             {/* ===================================================================== */}
             <div
               style={{
@@ -650,29 +652,29 @@ export default function Industries() {
                 justifyContent: 'center',
                 textAlign: 'left',
                 position: 'relative',
-                minHeight: '260px'
+                minHeight: '290px'
               }}
               className="right-industry-detail"
             >
               <div
                 style={{
                   fontFamily: 'var(--font-tech)',
-                  fontSize: '10.5px',
+                  fontSize: '10px',
                   fontWeight: 700,
                   letterSpacing: '0.16em',
                   color: '#c52227',
                   textTransform: 'uppercase',
-                  marginBottom: '4px'
+                  marginBottom: '6px'
                 }}
               >
-                ACTIVE INDUSTRY
+                INDUSTRY APPLICATION
               </div>
 
-              {/* Stack of 5 industries with smooth continuous opacity crossfades */}
-              <div style={{ position: 'relative', width: '100%', minHeight: '220px' }}>
+              {/* Stacked 5-Stage Industry Content Layers (Clean smooth crossfade without unmounting) */}
+              <div style={{ position: 'relative', width: '100%', minHeight: '250px' }}>
                 {industries.map((ind, idx) => {
-                  const itemWeight = getStageWeight(idx);
-                  const isVisible = itemWeight > 0.05;
+                  const isActive = idx === activeIndex;
+                  const isPast = idx < activeIndex;
 
                   return (
                     <div
@@ -681,21 +683,25 @@ export default function Industries() {
                         position: idx === 0 ? 'relative' : 'absolute',
                         top: 0,
                         left: 0,
-                        width: '100%',
-                        opacity: itemWeight,
-                        transform: `translateY(${(1 - itemWeight) * 6}px)`,
-                        transition: 'opacity 0.25s linear, transform 0.25s linear',
-                        pointerEvents: isVisible && itemWeight > 0.5 ? 'auto' : 'none',
-                        visibility: isVisible ? 'visible' : 'hidden'
+                        right: 0,
+                        opacity: isActive ? 1 : 0,
+                        transform: isActive
+                          ? 'translateY(0)'
+                          : isPast
+                          ? 'translateY(-12px)'
+                          : 'translateY(12px)',
+                        transition: 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                        pointerEvents: isActive ? 'auto' : 'none',
+                        visibility: isActive ? 'visible' : 'hidden'
                       }}
                     >
-                      {/* Active Title */}
+                      {/* Title */}
                       <h3
                         style={{
                           fontFamily: 'var(--font-heading)',
-                          fontSize: 'clamp(18px, 1.8vw, 22px)',
+                          fontSize: 'clamp(20px, 2vw, 24px)',
                           fontWeight: 800,
-                          lineHeight: 1.2,
+                          lineHeight: 1.18,
                           color: '#111827',
                           margin: '0 0 4px 0',
                           textTransform: 'uppercase'
@@ -708,115 +714,127 @@ export default function Industries() {
                       <div
                         style={{
                           fontFamily: 'var(--font-tech)',
-                          fontSize: '11.5px',
+                          fontSize: '12px',
                           fontWeight: 600,
                           color: '#4b5563',
-                          marginBottom: '10px'
+                          marginBottom: '12px'
                         }}
                       >
                         {ind.subtitle}
                       </div>
 
-                      {/* Concise 1-2 Line Description */}
+                      {/* Description */}
                       <p
                         style={{
-                          fontSize: '13px',
-                          lineHeight: 1.55,
+                          fontSize: '13.5px',
+                          lineHeight: 1.6,
                           color: '#64748b',
-                          margin: '0 0 14px 0'
+                          margin: '0 0 16px 0'
                         }}
                       >
                         {ind.description}
                       </p>
 
-                      {/* 2 Clean Bullet Highlights */}
+                      {/* 2 Clean Bullet Highlights with subtle red accent dots */}
                       <div
                         style={{
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '6px',
-                          marginBottom: '18px'
+                          gap: '8px',
+                          marginBottom: '20px'
                         }}
                       >
                         {ind.highlights.map((item, hIdx) => (
-                          <div key={hIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div key={hIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                             <span
                               style={{
-                                width: '4px',
-                                height: '4px',
+                                width: '5px',
+                                height: '5px',
                                 borderRadius: '50%',
                                 backgroundColor: '#c52227',
+                                marginTop: '6px',
                                 flexShrink: 0
                               }}
                             />
-                            <span style={{ fontSize: '12px', color: '#334155', fontWeight: 600 }}>
+                            <span style={{ fontSize: '12.5px', color: '#1f2937', fontWeight: 600, lineHeight: 1.4 }}>
                               {item}
                             </span>
                           </div>
                         ))}
                       </div>
 
-                      {/* Direct Link to Contact for this Sector */}
+                      {/* Direct CTA Link */}
                       <Link
                         to="/contact"
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '6px',
-                          fontFamily: 'var(--font-tech)',
-                          fontSize: '11.5px',
+                          gap: '8px',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '12.5px',
                           fontWeight: 700,
-                          letterSpacing: '0.08em',
+                          letterSpacing: '0.06em',
                           textTransform: 'uppercase',
                           color: '#c52227',
-                          textDecoration: 'none'
+                          textDecoration: 'none',
+                          padding: '6px 0',
+                          borderBottom: '1.5px solid rgba(197, 34, 39, 0.3)',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderBottomColor = '#c52227';
+                          e.currentTarget.style.color = '#b31b20';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderBottomColor = 'rgba(197, 34, 39, 0.3)';
+                          e.currentTarget.style.color = '#c52227';
                         }}
                       >
                         <span>INQUIRE FOR {ind.title}</span>
-                        <ArrowRight size={13} />
+                        <ArrowRight size={14} />
                       </Link>
                     </div>
                   );
                 })}
               </div>
+
             </div>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* 3. BOTTOM SCRUBBER & STATUS TRACK                                         */}
+        {/* 3. BOTTOM STATUS BAR                                                      */}
         {/* ========================================================================= */}
         <div className="container-custom" style={{ position: 'relative', zIndex: 10 }}>
           <div
             style={{
-              paddingTop: '12px',
+              paddingTop: '10px',
               borderTop: '1px solid #f1f3f5',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               fontFamily: 'var(--font-tech)',
-              fontSize: '10.5px',
+              fontSize: '11px',
               color: '#94a3b8',
-              letterSpacing: '0.1em',
+              letterSpacing: '0.08em',
               textTransform: 'uppercase'
             }}
           >
             <div>[01] FULLY ASSEMBLED</div>
             <div style={{ color: '#c52227', fontWeight: 700 }}>
-              {activeIndustry.stageName}
+              {activeIndustry.stageTag}
             </div>
-            <div>[05] EXPLODED CAD ARCHITECTURE</div>
+            <div>[05] COMPLETE EXPLODED CAD VIEW</div>
           </div>
         </div>
       </div>
 
       <style>{`
-        .cad-chevron-pulse {
-          animation: chevronBounce 1.8s infinite ease-in-out;
-        }
-        @keyframes chevronBounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(3px); }
+        @media (prefers-reduced-motion: reduce) {
+          .industries-sticky-viewport * {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+          }
         }
 
         @media (max-width: 992px) {
@@ -827,11 +845,22 @@ export default function Industries() {
           .left-industry-nav {
             display: none !important;
           }
+          .main-engineering-canvas {
+            height: 280px !important;
+          }
           .right-industry-detail {
             min-height: auto !important;
+            text-align: center !important;
+            align-items: center !important;
+          }
+          .industries-stage-progress-bar {
+            margin-top: 8px !important;
           }
         }
       `}</style>
     </section>
   );
 }
+
+
+
