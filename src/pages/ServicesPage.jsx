@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Factory,
   Cog,
@@ -8,1303 +8,672 @@ import {
   Cpu,
   ChevronRight,
   ChevronDown,
-  Plus,
-  Minus,
-  ArrowRight,
-  Headphones,
-  ShieldCheck,
-  Clock,
-  Settings,
-  ThumbsUp,
-  X
+  ArrowRight
 } from 'lucide-react';
 
+// =========================================================================
+// SERVICES COMPACT DATA REPOSITORY (MINIMAL, CLEAN, VISUAL)
+// =========================================================================
+const SERVICES_DATA = {
+  // ---------------- SS FABRICATION (9 Items) ----------------
+  'ss-tube-structure': {
+    id: 'ss-tube-structure',
+    name: 'Tube Structure & Channel Angle Fabrication',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/gallery_assets/structural_frame_01.jpg',
+    description: 'Custom stainless-steel structural fabrication for industrial machine frames, equipment support stands and cleanroom structures, fabricated to project specifications and structural load requirements.',
+    highlights: ['Custom Fabrication', 'Structural Support', 'Industrial Framing'],
+    idealFor: 'Machine base frames, structural platforms and cleanroom equipment supports.'
+  },
+  'ss-ducting': {
+    id: 'ss-ducting',
+    name: 'SS Ducting Fabrication',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/gallery_assets/sheetmetal_ducts_12.jpg',
+    description: 'Corrosion-resistant stainless-steel ducting lines, transitions and manifolds engineered for industrial ventilation, fume extraction and clean air distribution systems.',
+    highlights: ['Custom Ducting', 'Ventilation Systems', 'Stainless Steel'],
+    idealFor: 'Industrial exhaust, cleanroom airflow and chemical fume extraction.'
+  },
+  'ss-tank': {
+    id: 'ss-tank',
+    name: 'SS Tank Fabrication',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/gallery_assets/sheetmetal_hopper_10.jpg',
+    description: 'Custom stainless-steel tank fabrication developed for industrial process, storage and equipment requirements. Fabrication is tailored to project-specific capacity and dimensional parameters.',
+    highlights: ['Custom Fabrication', 'Stainless Steel', 'Industrial Applications'],
+    idealFor: 'Industrial process liquids, chemical storage and plant utility tanks.'
+  },
+  'ss-pipeline': {
+    id: 'ss-pipeline',
+    name: 'SS Pipeline Fabrication',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/gallery_assets/filtration_skid_20.jpg',
+    description: 'Precision stainless-steel pipeline spools and utility manifolds fabricated with high-integrity TIG welding for reliable plant fluid transfer and process distribution.',
+    highlights: ['Process Piping', 'TIG Welded', 'Utility Lines'],
+    idealFor: 'Industrial fluid transfer, process distribution and utility pipelines.'
+  },
+  'ss-polishing': {
+    id: 'ss-polishing',
+    name: 'Polishing & Buffing Work',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/service_surface_finishing.jpg',
+    description: 'Precision mechanical polishing and buffing treatments for stainless-steel fabrications to achieve required surface roughness values from fine satin to mirror finishes.',
+    highlights: ['Surface Finishing', 'Satin & Mirror Finish', 'Sanitary Profile'],
+    idealFor: 'Sanitary process equipment, architectural components and exposed surfaces.'
+  },
+  'ss-passivation': {
+    id: 'ss-passivation',
+    name: 'Passivation & Pickling Work',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/gallery_assets/process_skid_19.jpg',
+    description: 'Chemical pickling and passivation treatments to eliminate weld heat tints, surface contaminants and restore the protective chromium oxide layer across stainless fabrications.',
+    highlights: ['Surface Treatment', 'Oxide Restoration', 'Corrosion Protection'],
+    idealFor: 'Post-weld restoration, chemical-grade fabrications and corrosive environments.'
+  },
+  'ss-ndt': {
+    id: 'ss-ndt',
+    name: 'SS 3rd Party NDT Facility',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/qc_measuring.jpg',
+    description: 'Coordination and facilitation of third-party non-destructive testing including dye penetrant, radiography and ultrasonic inspection for certified weld and structural integrity.',
+    highlights: ['Quality Inspection', 'Weld Verification', 'NDT Testing'],
+    idealFor: 'Critical industrial fabrications, pressure components and compliance verification.'
+  },
+  'ss-glass-blasting': {
+    id: 'ss-glass-blasting',
+    name: 'Glass Blasting',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/gallery_assets/vertical_ducts_17.jpg',
+    description: 'Specialized glass bead abrasive blasting for stainless-steel components to deliver a uniform, clean matte texture while removing micro-burrs and surface discoloration.',
+    highlights: ['Matte Finish', 'Abrasive Blasting', 'Surface Cleaning'],
+    idealFor: 'Clean visual finishes, uniform matte profiles and component descaling.'
+  },
+  'ss-laser-cutting': {
+    id: 'ss-laser-cutting',
+    name: 'Laser Cutting',
+    categoryLabel: 'SS FABRICATION',
+    image: '/images/hero_welding_fabrication.jpg',
+    description: 'High-precision CNC fiber laser cutting for stainless-steel sheet and plate materials, delivering burr-free edges, tight tolerances and accurate complex profiles.',
+    highlights: ['CNC Laser Cutting', 'Clean Edges', 'Sheet Profiling'],
+    idealFor: 'Precision sheet metal parts, mounting brackets and intricate profiles.'
+  },
+
+  // ---------------- MS FABRICATION (8 Items) ----------------
+  'ms-tube-channel': {
+    id: 'ms-tube-channel',
+    name: 'Square Tube, Channel & I-Beam Fabrication',
+    categoryLabel: 'MS FABRICATION',
+    image: '/images/gallery_assets/structural_frame_02.jpg',
+    description: 'Heavy structural mild-steel fabrication utilizing square tubes, channels and I-beams to construct rigid machine bases, structural framing and heavy-duty shopfloor fixtures.',
+    highlights: ['Heavy Structural', 'Machine Bases', 'Robust Frames'],
+    idealFor: 'Heavy machine chassis, plant structural frames and equipment skids.'
+  },
+  'ms-ducting': {
+    id: 'ms-ducting',
+    name: 'MS Ducting Work',
+    categoryLabel: 'MS FABRICATION',
+    image: '/images/gallery_assets/sheetmetal_ducts_14.jpg',
+    description: 'Robust mild-steel ducting lines, dust collector ducts and exhaust channels fabricated for factory ventilation, flue gas exhaust and high-volume industrial airflow.',
+    highlights: ['Industrial Ducting', 'Plant Ventilation', 'Exhaust Channels'],
+    idealFor: 'Factory exhaust lines, dust extraction systems and heavy airflow ducts.'
+  },
+  'ms-tank': {
+    id: 'ms-tank',
+    name: 'MS Tank Fabrication',
+    categoryLabel: 'MS FABRICATION',
+    image: '/images/gallery_assets/enclosure_cabinet_22.jpg',
+    description: 'Custom mild-steel tanks, hydraulic oil reservoirs and process vessels built with reinforced welding to handle demanding industrial storage and fluid containment.',
+    highlights: ['Storage Tanks', 'Oil Reservoirs', 'Custom Welded'],
+    idealFor: 'Hydraulic power packs, coolant reservoirs and general plant storage.'
+  },
+  'ms-pipeline': {
+    id: 'ms-pipeline',
+    name: 'MS Pipeline Fabrication',
+    categoryLabel: 'MS FABRICATION',
+    image: '/images/service_fabrication.jpg',
+    description: 'Heavy-duty mild-steel pipeline spools, compressed air lines and cooling water distribution headers fabricated to required pressure ratings and welding standards.',
+    highlights: ['Plant Piping', 'Utility Distribution', 'Certified Welding'],
+    idealFor: 'Cooling water loops, compressed air lines and utility piping spools.'
+  },
+  'ms-powder-coating': {
+    id: 'ms-powder-coating',
+    name: 'Powder Coating',
+    categoryLabel: 'MS FABRICATION',
+    image: '/images/gallery_assets/industrial_frame_15.jpg',
+    description: 'Industrial electrostatic powder coating and oven curing for mild-steel fabrications, providing long-lasting corrosion protection, impact durability and uniform color finish.',
+    highlights: ['Powder Coating', 'Corrosion Resistance', 'Durable Finish'],
+    idealFor: 'Machine enclosures, electrical panels, brackets and structural assemblies.'
+  },
+  'ms-sand-blasting': {
+    id: 'ms-sand-blasting',
+    name: 'Sand Blasting & Painting',
+    categoryLabel: 'MS FABRICATION',
+    image: '/images/service_sandblasting_painting.jpg',
+    description: 'Thorough abrasive grit/sand blasting to remove rust, scale and mill contaminants, followed by application of industrial epoxy primer and protective polyurethane topcoats.',
+    highlights: ['Grit Blasting', 'Epoxy Primer', 'Protective Coating'],
+    idealFor: 'Heavy structural assemblies, plant equipment bases and outdoor installations.'
+  },
+  'ms-ndt': {
+    id: 'ms-ndt',
+    name: 'MS 3rd Party NDT Facility',
+    categoryLabel: 'MS FABRICATION',
+    image: '/images/precision_metrology_datum.jpg',
+    description: 'Facilitation of third-party NDT quality testing for structural mild-steel weldments, ensuring adherence to industrial quality standards and load-bearing integrity.',
+    highlights: ['Weld Inspection', 'NDT Verification', 'Quality Assurance'],
+    idealFor: 'Load-bearing frames, crane structures and certified industrial weldments.'
+  },
+  'ms-laser-forming': {
+    id: 'ms-laser-forming',
+    name: 'Laser Cutting & Forming',
+    categoryLabel: 'MS FABRICATION',
+    image: '/images/hero_cnc_precision.jpg',
+    description: 'Integrated CNC laser profile cutting and hydraulic press-brake bending for mild-steel plates, producing accurate bent sections, covers, guards and brackets.',
+    highlights: ['Laser Cutting', 'Press Brake Bending', 'Custom Forming'],
+    idealFor: 'Machine guards, chassis covers, structural brackets and sheet components.'
+  },
+
+  // ---------------- MACHINING SERVICES (11 Items) ----------------
+  'mach-laser-cutting': {
+    id: 'mach-laser-cutting',
+    name: 'Laser Cutting',
+    categoryLabel: 'MACHINING',
+    image: '/images/hero_welding_fabrication.jpg',
+    description: 'Precision 2D CNC laser cutting services delivering clean edge definition, tight tolerances and accurate repeatable cutouts across a variety of industrial metals.',
+    highlights: ['CNC Laser Profiling', 'Clean Edge Quality', 'Sheet Profiling'],
+    idealFor: 'Rapid prototype parts, precision sheet metal profiles and production batches.'
+  },
+  'mach-plano-milling': {
+    id: 'mach-plano-milling',
+    name: 'Plano Milling',
+    categoryLabel: 'MACHINING',
+    image: '/images/gallery_assets/structural_frame_08.jpg',
+    description: 'Heavy-capacity plano milling for machining oversized component faces, long machine beds, die blocks and large fabrication datum surfaces with high flatness.',
+    highlights: ['Large Bed Milling', 'Face Machining', 'Heavy Structures'],
+    idealFor: 'Large machine base datum faces, heavy press platens and long slides.'
+  },
+  'mach-vmc-milling': {
+    id: 'mach-vmc-milling',
+    name: 'VMC Milling',
+    categoryLabel: 'MACHINING',
+    image: '/images/hero_cnc_precision.jpg',
+    description: 'Multi-axis vertical machining center (VMC) CNC milling for complex components requiring high dimensional accuracy, fine surface finishes and consistent batch repeatability.',
+    highlights: ['CNC Milling', 'Component Machining', 'Precision Work'],
+    idealFor: 'Complex tooling blocks, precision mechanical parts and machined housings.'
+  },
+  'mach-universal-milling': {
+    id: 'mach-universal-milling',
+    name: 'Universal Milling',
+    categoryLabel: 'MACHINING',
+    image: '/images/about_workshop_indian.jpg',
+    description: 'Flexible universal milling for toolroom operations, keyway cutting, gear slotting, spline milling and custom component modifications with precision setup.',
+    highlights: ['Keyway & Slots', 'Toolroom Machining', 'Helical Milling'],
+    idealFor: 'Shaft keyways, slotting, toolroom maintenance and one-off mechanical parts.'
+  },
+  'mach-drilling': {
+    id: 'mach-drilling',
+    name: 'Drilling',
+    categoryLabel: 'MACHINING',
+    image: '/images/service_custom_machines_spm.jpg',
+    description: 'Heavy radial and multi-spindle drilling, precision boring and thread tapping operations across thick steel plates, flanges and structural fabrications.',
+    highlights: ['Radial Drilling', 'Hole Tapping', 'Precision Reaming'],
+    idealFor: 'Flange bolt patterns, structural base holes and threaded assembly plates.'
+  },
+  'mach-turning': {
+    id: 'mach-turning',
+    name: 'Turning',
+    categoryLabel: 'MACHINING',
+    image: '/images/gallery_assets/rotary_airlock_16.jpg',
+    description: 'Precision lathe turning, facing, boring and threading operations for cylindrical shafts, rollers, bushings, pins and precision turned assemblies.',
+    highlights: ['Lathe Turning', 'Shafts & Pins', 'Precision Threading'],
+    idealFor: 'Conveyor rollers, drive shafts, precision bushings and turned fasteners.'
+  },
+  'mach-jig-fixture-work': {
+    id: 'mach-jig-fixture-work',
+    name: 'Jig-Fixture Work',
+    categoryLabel: 'MACHINING',
+    image: '/images/service_jigs_fixtures.jpg',
+    description: 'High-precision toolroom machining of locating pins, resting pads, clamp jaws and guide blocks specifically built for custom manufacturing jigs and fixtures.',
+    highlights: ['Toolroom Machining', 'Locating Pins', 'Fixture Blocks'],
+    idealFor: 'Assembly line fixtures, welding fixture parts and precision clamping tools.'
+  },
+  'mach-toolroom-work': {
+    id: 'mach-toolroom-work',
+    name: 'Tool-Room Work',
+    categoryLabel: 'MACHINING',
+    image: '/images/about_workshop_indian.jpg',
+    description: 'Dedicated toolroom manufacturing services including die modifications, prototype component machining, gauge manufacturing and custom tooling solutions.',
+    highlights: ['Custom Tooling', 'Gauge Fabrication', 'Prototype Work'],
+    idealFor: 'Tooling rework, prototype development, go/no-go gauges and custom dies.'
+  },
+  'mach-forming': {
+    id: 'mach-forming',
+    name: 'Forming',
+    categoryLabel: 'MACHINING',
+    image: '/images/gallery_products/05_hydraulic_press_structure.png',
+    description: 'Hydraulic press and bending operations to shape sheet metal and plate sections into accurate channels, angles, curved covers and custom structural profiles.',
+    highlights: ['Hydraulic Press', 'Sheet Metal Bending', 'Section Forming'],
+    idealFor: 'Custom channel sections, curved panels, heavy enclosures and bent brackets.'
+  },
+  'mach-cylindrical-grinding': {
+    id: 'mach-cylindrical-grinding',
+    name: 'Cylindrical Grinding',
+    categoryLabel: 'MACHINING',
+    image: '/images/gallery_assets/rotary_airlock_16.jpg',
+    description: 'High-precision outer (OD) and inner (ID) diameter cylindrical grinding to achieve micron-level concentricity, fine surface finishes and strict shaft tolerances.',
+    highlights: ['OD/ID Grinding', 'Shaft Finishing', 'Concentricity'],
+    idealFor: 'Bearing journals, precision guide pins, spindle components and rollers.'
+  },
+  'mach-surface-grinding': {
+    id: 'mach-surface-grinding',
+    name: 'Surface Grinding',
+    categoryLabel: 'MACHINING',
+    image: '/images/service_surface_grinding_precision.jpg',
+    description: 'Precision surface grinding to produce ultra-flat datum faces, parallel guideways, spacer plates and tool steel blocks with mirror-grade surface finishes.',
+    highlights: ['Surface Flatness', 'Parallel Datum', 'Precision Finishing'],
+    idealFor: 'Tool steel plates, machine slide guideways, precision shims and dies.'
+  },
+
+  // ---------------- CONVEYOR & MATERIAL HANDLING (5 Items) ----------------
+  'conv-belt': {
+    id: 'conv-belt',
+    name: 'Belt Conveyor',
+    categoryLabel: 'CONVEYOR & MATERIAL HANDLING',
+    image: '/images/gallery_products/02_pvc_belt_conveyor.png',
+    description: 'Industrial belt conveyor systems engineered for smooth, reliable material transfer across production, packaging and handling lines with custom widths and lengths.',
+    highlights: ['Material Handling', 'Industrial Conveying', 'Custom Solutions'],
+    idealFor: 'Packaging lines, assembly operations and intra-plant material transit.'
+  },
+  'conv-flat': {
+    id: 'conv-flat',
+    name: 'Flat Conveyor',
+    categoryLabel: 'CONVEYOR & MATERIAL HANDLING',
+    image: '/images/service_conveyors.jpg',
+    description: 'Modular flat slat and roller conveyor solutions designed for stable component movement, inline buffering and seamless integration with production machinery.',
+    highlights: ['Flat Conveyors', 'Component Transit', 'Assembly Lines'],
+    idealFor: 'Component transit, assembly workstations and continuous part feeding.'
+  },
+  'conv-magnetic': {
+    id: 'conv-magnetic',
+    name: 'Magnetic Conveyor',
+    categoryLabel: 'CONVEYOR & MATERIAL HANDLING',
+    image: '/images/gallery_products/02_z_magnetic_conveyor.png',
+    description: 'Specialized magnetic conveyors designed for automatic chip evacuation, scrap metal transit and elevating ferrous components from machining centers.',
+    highlights: ['Magnetic Conveying', 'Chip Extraction', 'Scrap Removal'],
+    idealFor: 'CNC chip evacuation, stamping scrap handling and ferrous part elevation.'
+  },
+  'conv-trolleys': {
+    id: 'conv-trolleys',
+    name: 'Industrial Trolleys',
+    categoryLabel: 'CONVEYOR & MATERIAL HANDLING',
+    image: '/images/service_trolleys.jpg',
+    description: 'Ergonomic shopfloor transit trolleys, component picking carts and heavy-duty transport dollies built with industrial-grade casters and robust steel frames.',
+    highlights: ['Floor Transit', 'Heavy-Duty Casters', 'Custom Racks'],
+    idealFor: 'Shopfloor part transit, material handling and raw material transport.'
+  },
+  'conv-pallets': {
+    id: 'conv-pallets',
+    name: 'Industrial Pallets',
+    categoryLabel: 'CONVEYOR & MATERIAL HANDLING',
+    image: '/images/gallery_products/04_material_handling_trolley.png',
+    description: 'Heavy-gauge steel fabricated storage pallets and stackable stillages engineered for safe warehouse racking, heavy component storage and transport durability.',
+    highlights: ['Steel Pallets', 'Stacking Stillages', 'Warehouse Storage'],
+    idealFor: 'Heavy inventory racking, warehouse stacking and component shipping.'
+  },
+
+  // ---------------- JIGS & FIXTURES (STANDALONE SERVICE) ----------------
+  'jigs-fixtures': {
+    id: 'jigs-fixtures',
+    name: 'Jigs & Fixtures',
+    categoryLabel: 'JIGS & FIXTURES',
+    image: '/images/service_jigs_fixtures.jpg',
+    description: 'Custom-designed manufacturing jigs and holding fixtures engineered to ensure accurate part positioning, repeatable clamping and efficient assembly or welding operations.',
+    highlights: ['Custom Fixtures', 'Component Holding', 'Process Support'],
+    idealFor: 'Welding setups, production line assembly and precision machining operations.'
+  },
+
+  // ---------------- SPECIAL PURPOSE MACHINES (STANDALONE SERVICE) ----------------
+  'spm-service': {
+    id: 'spm-service',
+    name: 'Special Purpose Machines',
+    categoryLabel: 'SPM',
+    image: '/images/service_custom_spm.jpg',
+    description: 'Custom Special Purpose Machines (SPM) designed and built for dedicated industrial processes, automated operations and project-specific manufacturing requirements.',
+    highlights: ['Custom Automation', 'Machine Integration', 'Industrial Applications'],
+    idealFor: 'Dedicated production operations, automated tasks and custom machine needs.'
+  }
+};
+
+// =========================================================================
+// MAIN SERVICES PAGE COMPONENT
+// =========================================================================
 export default function ServicesPage() {
-  // Navigation Selection State:
-  // selectedMain: '01' | '02' | '03' | '04' | '05'
-  // selectedSub: null | 'ss' | 'ms' | 'milling' | 'grinding'
-  const [selectedMain, setSelectedMain] = useState('01');
-  const [selectedSub, setSelectedSub] = useState(null);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  // Sidebar Accordion Expanded States
-  const [openMainTree, setOpenMainTree] = useState({
-    '01': true,
-    '02': false,
-    '03': false,
-    '04': false,
-    '05': false
-  });
+  // Selected single service ID to display on the right (DEFAULT: first item)
+  const [selectedServiceId, setSelectedServiceId] = useState('ss-tube-structure');
 
-  const [openSubTree, setOpenSubTree] = useState({
-    'milling': false,
-    'grinding': false
-  });
+  // Sidebar expansion states
+  const [openFabrication, setOpenFabrication] = useState(true);
+  const [openSS, setOpenSS] = useState(true);
+  const [openMS, setOpenMS] = useState(false);
+  const [openMachining, setOpenMachining] = useState(false);
+  const [openMilling, setOpenMilling] = useState(false);
+  const [openGrinding, setOpenGrinding] = useState(false);
+  const [openConveyors, setOpenConveyors] = useState(false);
 
-  // Mobile Accordion state
-  const [mobileExpandedMain, setMobileExpandedMain] = useState('01');
+  // Mobile drawer state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Modal State for Deep Inspection
-  const [selectedDetailModal, setSelectedDetailModal] = useState(null);
-
+  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
-  // Close modal on escape
+  // Handle direct deep-linking via query params (?service=... or ?id=...)
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setSelectedDetailModal(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+    const serviceParam = searchParams.get('service');
+    const idParam = searchParams.get('id');
 
-  const selectMainCategory = (id) => {
-    setSelectedMain(id);
-    setSelectedSub(null);
-    setOpenMainTree((prev) => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+    if (idParam && SERVICES_DATA[idParam]) {
+      setSelectedServiceId(idParam);
+      expandTreeForService(idParam);
+    } else if (serviceParam) {
+      const match = Object.values(SERVICES_DATA).find(
+        (s) => s.name.toLowerCase() === serviceParam.toLowerCase()
+      );
+      if (match) {
+        setSelectedServiceId(match.id);
+        expandTreeForService(match.id);
+      }
+    }
+  }, [searchParams]);
+
+  // Helper to expand sidebar tree for a given service
+  const expandTreeForService = (id) => {
+    if (id.startsWith('ss-')) {
+      setOpenFabrication(true);
+      setOpenSS(true);
+    } else if (id.startsWith('ms-')) {
+      setOpenFabrication(true);
+      setOpenMS(true);
+    } else if (id.startsWith('mach-')) {
+      setOpenMachining(true);
+      if (id.includes('milling')) setOpenMilling(true);
+      if (id.includes('grinding')) setOpenGrinding(true);
+    } else if (id.startsWith('conv-')) {
+      setOpenConveyors(true);
+    }
   };
 
-  const selectSubCategory = (subKey, parentId) => {
-    setSelectedMain(parentId);
-    setSelectedSub(subKey);
+  // Handler to select an individual item
+  const handleSelectService = (id) => {
+    setSelectedServiceId(id);
+    setMobileMenuOpen(false);
+
+    // Smooth scroll to detail area on mobile
+    if (window.innerWidth < 992) {
+      const anchor = document.getElementById('catalogue-detail-content-area');
+      if (anchor) {
+        anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   };
 
-  const toggleSubTree = (subKey) => {
-    setOpenSubTree((prev) => ({
-      ...prev,
-      [subKey]: !prev[subKey]
-    }));
+  // Handler for INQUIRE NOW
+  const handleInquireNow = (serviceName) => {
+    navigate(`/contact?service=${encodeURIComponent(serviceName)}`, {
+      state: { service: serviceName }
+    });
   };
 
-  // Helper to build direct Contact URL with query parameter & state
-  const getInquiryUrl = (serviceName) => `/contact?service=${encodeURIComponent(serviceName)}`;
-
-  // =========================================================================
-  // DATA DEFINITIONS (100% REAL MKP ASSETS & EXACT SPECIFICATIONS)
-  // =========================================================================
-
-  // 1. SS FABRICATION (9 Items)
-  const SS_FABRICATION_SERVICES = [
-    {
-      id: 'ss-1',
-      num: '01',
-      name: 'Tube Structure & Channel Angle Fabrication',
-      description:
-        'Fabrication of stainless steel tube structures, channels and angle-based assemblies according to project requirements.',
-      image: '/images/gallery_assets/structural_frame_01.jpg',
-      tag: 'SS Structural',
-      discipline: 'Stainless Steel Fabrication'
-    },
-    {
-      id: 'ss-2',
-      num: '02',
-      name: 'SS Ducting Fabrication',
-      description:
-        'Fabrication of stainless steel ducting components for industrial air, process and material-handling applications.',
-      image: '/images/gallery_assets/sheetmetal_ducts_12.jpg',
-      tag: 'SS Ducting',
-      discipline: 'Stainless Steel Fabrication'
-    },
-    {
-      id: 'ss-3',
-      num: '03',
-      name: 'SS Tank Fabrication',
-      description:
-        'Fabrication of stainless steel tanks for industrial and process-related applications based on required design and usage.',
-      image: '/images/gallery_assets/sheetmetal_hopper_10.jpg',
-      tag: 'SS Vessels',
-      discipline: 'Stainless Steel Fabrication'
-    },
-    {
-      id: 'ss-4',
-      num: '04',
-      name: 'SS Pipeline Fabrication',
-      description:
-        'Stainless steel pipeline fabrication for industrial process and utility requirements.',
-      image: '/images/gallery_assets/filtration_skid_20.jpg',
-      tag: 'SS Piping',
-      discipline: 'Stainless Steel Fabrication'
-    },
-    {
-      id: 'ss-5',
-      num: '05',
-      name: 'Polishing & Buffing Work',
-      description:
-        'Surface finishing services for stainless steel components to achieve a clean and refined finish.',
-      image: '/images/service_surface_finishing.jpg',
-      tag: 'Finishing',
-      discipline: 'Stainless Steel Fabrication'
-    },
-    {
-      id: 'ss-6',
-      num: '06',
-      name: 'Passivation & Pickling Work',
-      description:
-        'Surface treatment processes for stainless steel components as required for fabrication and finishing applications.',
-      image: '/images/gallery_assets/process_skid_19.jpg',
-      tag: 'Chemical Treatment',
-      discipline: 'Stainless Steel Fabrication'
-    },
-    {
-      id: 'ss-7',
-      num: '07',
-      name: 'SS 3rd Party NDT Facility',
-      description:
-        'Third-party non-destructive testing support for applicable stainless steel fabrication and inspection requirements.',
-      image: '/images/qc_measuring.jpg',
-      tag: 'Quality & NDT',
-      discipline: 'Stainless Steel Fabrication'
-    },
-    {
-      id: 'ss-8',
-      num: '08',
-      name: 'Glass Blasting',
-      description:
-        'Glass blasting surface treatment for suitable stainless steel components and fabricated surfaces.',
-      image: '/images/gallery_assets/vertical_ducts_17.jpg',
-      tag: 'Surface Texture',
-      discipline: 'Stainless Steel Fabrication'
-    },
-    {
-      id: 'ss-9',
-      num: '09',
-      name: 'Laser Cutting',
-      description:
-        'Laser cutting for stainless steel sheets and components based on required shapes and fabrication requirements.',
-      image: '/images/hero_welding_fabrication.jpg',
-      tag: 'CNC Laser',
-      discipline: 'Stainless Steel Fabrication'
-    }
-  ];
-
-  // 2. MS FABRICATION (8 Items)
-  const MS_FABRICATION_SERVICES = [
-    {
-      id: 'ms-1',
-      num: '01',
-      name: 'Square Tube, Channel & I-Beam Fabrication',
-      description:
-        'Heavy-gauge MS square tube, structural channels and heavy I-beam structural welding and robust frame assemblies.',
-      image: '/images/gallery_assets/structural_frame_02.jpg',
-      tag: 'MS Structural',
-      discipline: 'Mild Steel Fabrication'
-    },
-    {
-      id: 'ms-2',
-      num: '02',
-      name: 'MS Ducting Work',
-      description:
-        'Fabrication of robust mild steel ducting, exhaust channels and industrial manifold systems.',
-      image: '/images/gallery_assets/sheetmetal_ducts_14.jpg',
-      tag: 'MS Ducting',
-      discipline: 'Mild Steel Fabrication'
-    },
-    {
-      id: 'ms-3',
-      num: '03',
-      name: 'MS Tank Fabrication',
-      description:
-        'Heavy-duty mild steel storage tanks, pressure vessels and reservoir fabrication designed to operational specs.',
-      image: '/images/gallery_assets/enclosure_cabinet_22.jpg',
-      tag: 'MS Tanks',
-      discipline: 'Mild Steel Fabrication'
-    },
-    {
-      id: 'ms-4',
-      num: '04',
-      name: 'MS Pipeline Fabrication',
-      description:
-        'Mild steel pipeline spools and utility distribution lines fabricated with certified weld integrity.',
-      image: '/images/service_fabrication.jpg',
-      tag: 'MS Piping',
-      discipline: 'Mild Steel Fabrication'
-    },
-    {
-      id: 'ms-5',
-      num: '05',
-      name: 'Powder Coating',
-      description:
-        'Durable protective powder coating in standard industrial shades for long-term corrosion resistance.',
-      image: '/images/gallery_assets/industrial_frame_15.jpg',
-      tag: 'Surface Coating',
-      discipline: 'Mild Steel Fabrication'
-    },
-    {
-      id: 'ms-6',
-      num: '06',
-      name: 'Sand Blasting & Painting',
-      description:
-        'Abrasive sand blasting surface preparation followed by multi-coat industrial epoxy primer and paint application.',
-      image: '/images/service_sandblasting_painting.jpg',
-      tag: 'Abrasive Blasting',
-      discipline: 'Mild Steel Fabrication'
-    },
-    {
-      id: 'ms-7',
-      num: '07',
-      name: 'MS 3rd Party NDT Facility',
-      description:
-        'Comprehensive 3rd-party non-destructive testing (NDT), ultrasonic and radiographic weld verification.',
-      image: '/images/precision_metrology_datum.jpg',
-      tag: 'Quality & NDT',
-      discipline: 'Mild Steel Fabrication'
-    },
-    {
-      id: 'ms-8',
-      num: '08',
-      name: 'Laser Cutting & Forming',
-      description:
-        'High-precision CNC sheet metal laser cutting, plate profiling and hydraulic press brake forming.',
-      image: '/images/hero_cnc_precision.jpg',
-      tag: 'CNC Cutting',
-      discipline: 'Mild Steel Fabrication'
-    }
-  ];
-
-  // 3. MACHINING SUB-SERVICES
-  const MILLING_SUB_SERVICES = [
-    {
-      id: 'mill-1',
-      num: '01',
-      name: 'Plano Milling',
-      description:
-        'Plano milling for machining larger components and heavy structural bed surfaces according to application requirements.',
-      image: '/images/gallery_assets/structural_frame_08.jpg',
-      tag: 'Heavy Beds',
-      discipline: 'Milling Capabilities'
-    },
-    {
-      id: 'mill-2',
-      num: '02',
-      name: 'VMC Milling',
-      description:
-        'VMC milling for precision components requiring controlled multi-axis CNC machining operations.',
-      image: '/images/hero_cnc_precision.jpg',
-      tag: 'CNC 3D Contours',
-      discipline: 'Milling Capabilities'
-    },
-    {
-      id: 'mill-3',
-      num: '03',
-      name: 'Universal Milling',
-      description:
-        'Universal milling for conventional machining requirements involving slots, keyways, and component features.',
-      image: '/images/about_workshop_indian.jpg',
-      tag: 'Toolroom Milling',
-      discipline: 'Milling Capabilities'
-    }
-  ];
-
-  const GRINDING_SUB_SERVICES = [
-    {
-      id: 'grind-1',
-      num: '01',
-      name: 'Cylindrical Grinding',
-      description:
-        'Cylindrical grinding for suitable round components, precision spindles, and shaft-related finishing requirements.',
-      image: '/images/gallery_assets/rotary_airlock_16.jpg',
-      tag: 'OD/ID Grinding',
-      discipline: 'Grinding & Finishing'
-    },
-    {
-      id: 'grind-2',
-      num: '02',
-      name: 'Surface Grinding',
-      description:
-        'Surface grinding for suitable flat surfaces, plates, guideways, and component finishing to tight tolerances.',
-      image: '/images/service_surface_grinding_precision.jpg',
-      tag: 'Datum Faces',
-      discipline: 'Grinding & Finishing'
-    }
-  ];
-
-  // 4. CONVEYOR & MATERIAL HANDLING
-  const CONVEYOR_ITEMS = [
-    {
-      id: 'conv-1',
-      num: '01',
-      name: 'Belt Conveyor',
-      description:
-        'Smooth and continuous part movement engineered for shopfloor line transit, assembly stations, and packaging operations.',
-      image: '/images/gallery_products/02_pvc_belt_conveyor.png',
-      tag: 'Transit Line',
-      discipline: 'Conveyor Systems'
-    },
-    {
-      id: 'conv-2',
-      num: '02',
-      name: 'Flat Conveyor',
-      description:
-        'Heavy-duty flat slat and modular conveyors tailored for stable mechanical component handling and accumulation.',
-      image: '/images/service_conveyors.jpg',
-      tag: 'Modular Systems',
-      discipline: 'Conveyor Systems'
-    },
-    {
-      id: 'conv-3',
-      num: '03',
-      name: 'Magnetic Conveyor',
-      description:
-        'Incline and horizontal magnetic chip and part conveyors for automated scrap collection and press tool lines.',
-      image: '/images/gallery_products/02_z_magnetic_conveyor.png',
-      tag: 'Chip Extraction',
-      discipline: 'Conveyor Systems'
-    },
-    {
-      id: 'mh-1',
-      num: '04',
-      name: 'Industrial Trolleys',
-      description:
-        'Ergonomic shopfloor transit trolleys, component carriers, and bin racks with heavy-duty caster systems.',
-      image: '/images/service_trolleys.jpg',
-      tag: 'Floor Transit',
-      discipline: 'Material Handling'
-    },
-    {
-      id: 'mh-2',
-      num: '05',
-      name: 'Industrial Pallets',
-      description:
-        'Heavy fabricated steel pallets and storage stillages engineered for safe high-density warehouse racking.',
-      image: '/images/gallery_products/04_material_handling_trolley.png',
-      tag: 'Storage Pallets',
-      discipline: 'Material Handling'
-    }
-  ];
-
-  // 5. JIGS & FIXTURES (5 Items)
-  const JIGS_FIXTURES_SERVICES = [
-    {
-      id: 'jig-1',
-      num: '01',
-      name: 'Welding Jigs & Fixtures',
-      description:
-        'Rigid clamping and locating fixtures designed to eliminate weld distortion and ensure batch consistency.',
-      image: '/images/gallery_assets/structural_frame_04.jpg',
-      tag: 'Welding Tooling',
-      discipline: 'Jigs & Fixtures'
-    },
-    {
-      id: 'jig-2',
-      num: '02',
-      name: 'Machining Fixtures',
-      description:
-        'High-rigidity VMC and milling fixtures ensuring quick part changeovers and repeatable datum referencing.',
-      image: '/images/service_jigs_fixtures.jpg',
-      tag: 'VMC Tooling',
-      discipline: 'Jigs & Fixtures'
-    },
-    {
-      id: 'jig-3',
-      num: '03',
-      name: 'Assembly Fixtures',
-      description:
-        'Custom assembly fixtures facilitating ergonomic part insertion, mechanical fastening, and alignment.',
-      image: '/images/gallery_products/01_fixture_making.png',
-      tag: 'Assembly Line',
-      discipline: 'Jigs & Fixtures'
-    },
-    {
-      id: 'jig-4',
-      num: '04',
-      name: 'Inspection Fixtures',
-      description:
-        'Precision checking gauges and dial-indicator inspection fixtures for rapid quality assurance.',
-      image: '/images/gallery_products/01_high_altitude_checking.png',
-      tag: 'Inspection QA',
-      discipline: 'Jigs & Fixtures'
-    },
-    {
-      id: 'jig-5',
-      num: '05',
-      name: 'Custom Component Holding Fixtures',
-      description:
-        'Bespoke mechanical, pneumatic, or manual component clamping fixtures tailored to client part geometries.',
-      image: '/images/about_cad_precision.png',
-      tag: 'Clamping Tooling',
-      discipline: 'Jigs & Fixtures'
-    }
-  ];
-
-  // 6. SPECIAL PURPOSE MACHINES (6 Items)
-  const SPM_SERVICES = [
-    {
-      id: 'spm-1',
-      num: '01',
-      name: 'Customized Special Purpose Machines',
-      description:
-        'Bespoke industrial machines designed around dedicated production steps, cycle times, and output targets.',
-      image: '/images/service_custom_spm.jpg',
-      tag: 'Turnkey SPM',
-      discipline: 'Special Purpose Machines'
-    },
-    {
-      id: 'spm-2',
-      num: '02',
-      name: 'Automated Production Machines',
-      description:
-        'Specialized automated machinery combining mechanical actuation, indexing, and process monitoring.',
-      image: '/images/gallery_welding_spm.jpg',
-      tag: 'Automated Cells',
-      discipline: 'Special Purpose Machines'
-    },
-    {
-      id: 'spm-3',
-      num: '03',
-      name: 'Material Handling & Transfer Mechanisms',
-      description:
-        'Automated pick-and-place transfer units, indexing turntables, and part orienting systems.',
-      image: '/images/service_material_transfer_mechanisms.jpg',
-      tag: 'Transfer Automation',
-      discipline: 'Special Purpose Machines'
-    },
-    {
-      id: 'spm-4',
-      num: '04',
-      name: 'Custom Machine Structures',
-      description:
-        'High-rigidity, vibration-dampened machine frames and gantry structures fabricated from stress-relieved steel.',
-      image: '/images/gallery_assets/structural_frame_08.jpg',
-      tag: 'Machine Bases',
-      discipline: 'Special Purpose Machines'
-    },
-    {
-      id: 'spm-5',
-      num: '05',
-      name: 'Component Positioning & Clamping Systems',
-      description:
-        'Integrated multi-axis pneumatic and hydraulic clamping units built into automated production cells.',
-      image: '/images/gallery_products/04_pneumatic_lifting_tackle.png',
-      tag: 'Clamping Systems',
-      discipline: 'Special Purpose Machines'
-    },
-    {
-      id: 'spm-6',
-      num: '06',
-      name: 'Application-Specific Automation Solutions',
-      description:
-        'Dedicated custom automation setups developed to resolve bottlenecks in specialized manufacturing processes.',
-      image: '/images/service_custom_machines_spm.jpg',
-      tag: 'Custom Engineering',
-      discipline: 'Special Purpose Machines'
-    }
-  ];
-
-  // Reusable visual capability card with direct INQUIRE NOW action
-  const renderEditorialCard = (item) => (
-    <div
-      key={item.id}
-      className="split-editorial-card"
-      onClick={() => setSelectedDetailModal(item)}
-    >
-      <div className="split-card-media">
-        <img
-          src={item.image}
-          alt={item.name}
-          className="split-card-img"
-          loading="lazy"
-        />
-        {item.tag && <span className="split-card-tag">{item.tag}</span>}
-      </div>
-
-      <div className="split-card-meta">
-        <div className="split-card-meta-left">
-          <span className="split-card-num">{item.num}</span>
-          <h5 className="split-card-title">{item.name}</h5>
-          {item.description && (
-            <p className="split-card-desc">{item.description}</p>
-          )}
-        </div>
-
-        {/* Direct Inquire Now CTA */}
-        <div className="split-card-action-bar">
-          <Link
-            to={getInquiryUrl(item.name)}
-            state={{ service: item.name }}
-            onClick={(e) => e.stopPropagation()}
-            className="split-card-inquire-link"
-          >
-            <span>INQUIRE NOW</span>
-            <ArrowRight size={13} />
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-
-  // =========================================================================
-  // RENDER RIGHT CONTENT AREA
-  // =========================================================================
-  const renderRightContentArea = () => {
-    // -------------------------------------------------------------
-    // 01 — INDUSTRIAL FABRICATION
-    // -------------------------------------------------------------
-    if (selectedMain === '01') {
-      const isSS = selectedSub === 'ss';
-      const isMS = selectedSub === 'ms';
-
-      // 1A. SS FABRICATION DIRECT VIEW
-      if (isSS) {
-        return (
-          <div className="split-right-view">
-            <div className="split-hero-banner">
-              <div className="split-hero-overlay" />
-              <img
-                src="/images/service_industrial_fabrication.jpg"
-                alt="Stainless Steel Fabrication"
-                className="split-hero-bg-img"
-              />
-              <div className="split-hero-content">
-                <span className="split-eyebrow-tag">01.A — STAINLESS STEEL FABRICATION</span>
-                <h2 className="split-hero-title">STAINLESS STEEL FABRICATION</h2>
-                <p className="split-hero-desc">
-                  We work with standard grades of stainless steel for fabrication requirements across multiple industrial applications, including pharmaceutical, chemical, oil &amp; gas and other process industries.
-                </p>
-
-                <div className="split-hero-inquire-wrap">
-                  <Link
-                    to={getInquiryUrl('SS Fabrication')}
-                    state={{ service: 'SS Fabrication' }}
-                    className="split-hero-inquire-btn"
-                  >
-                    <span>INQUIRE FOR SS FABRICATION</span>
-                    <ArrowRight size={15} />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="split-capabilities-section">
-              <div className="split-section-header">
-                <div>
-                  <span className="split-sub-tag">STAINLESS STEEL DISCIPLINES</span>
-                  <h3 className="split-section-title">SS Fabrication Capabilities</h3>
-                </div>
-                <span className="split-count-badge">9 Services</span>
-              </div>
-
-              <div className="split-cards-grid">
-                {SS_FABRICATION_SERVICES.map((s) => renderEditorialCard(s))}
-              </div>
-            </div>
-          </div>
-        );
-      }
-
-      // 1B. MS FABRICATION DIRECT VIEW
-      if (isMS) {
-        return (
-          <div className="split-right-view">
-            <div className="split-hero-banner">
-              <div className="split-hero-overlay" />
-              <img
-                src="/images/service_fabrication.jpg"
-                alt="Mild Steel Fabrication"
-                className="split-hero-bg-img"
-              />
-              <div className="split-hero-content">
-                <span className="split-eyebrow-tag">01.B — MILD STEEL FABRICATION</span>
-                <h2 className="split-hero-title">MILD STEEL FABRICATION</h2>
-                <p className="split-hero-desc">
-                  Heavy-duty mild steel structural fabrication with precision welding, surface finishing, sand blasting, powder coating and third-party inspection compliance.
-                </p>
-
-                <div className="split-hero-inquire-wrap">
-                  <Link
-                    to={getInquiryUrl('MS Fabrication')}
-                    state={{ service: 'MS Fabrication' }}
-                    className="split-hero-inquire-btn"
-                  >
-                    <span>INQUIRE FOR MS FABRICATION</span>
-                    <ArrowRight size={15} />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="split-capabilities-section">
-              <div className="split-section-header">
-                <div>
-                  <span className="split-sub-tag">MILD STEEL DISCIPLINES</span>
-                  <h3 className="split-section-title">MS Fabrication Capabilities</h3>
-                </div>
-                <span className="split-count-badge">8 Services</span>
-              </div>
-
-              <div className="split-cards-grid">
-                {MS_FABRICATION_SERVICES.map((s) => renderEditorialCard(s))}
-              </div>
-            </div>
-          </div>
-        );
-      }
-
-      // 1C. INDUSTRIAL FABRICATION MAIN VIEW (DIRECTLY SHOWS BOTH SS & MS CONTENT)
-      return (
-        <div className="split-right-view">
-          <div className="split-hero-banner">
-            <div className="split-hero-overlay" />
-            <img
-              src="/images/service_industrial_fabrication.jpg"
-              alt="Industrial Fabrication"
-              className="split-hero-bg-img"
-            />
-            <div className="split-hero-content">
-              <span className="split-eyebrow-tag">01. INDUSTRIAL FABRICATION</span>
-              <h2 className="split-hero-title">INDUSTRIAL FABRICATION</h2>
-              <p className="split-hero-desc">
-                We provide fabrication solutions in stainless steel and mild steel for a wide range of industrial applications, with a focus on quality workmanship, durability and practical fabrication requirements.
-              </p>
-
-              <div className="split-hero-inquire-wrap">
-                <Link
-                  to={getInquiryUrl('Industrial Fabrication')}
-                  state={{ service: 'Industrial Fabrication' }}
-                  className="split-hero-inquire-btn"
-                >
-                  <span>INQUIRE FOR INDUSTRIAL FABRICATION</span>
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* SS Fabrication Section */}
-          <div className="split-capabilities-section">
-            <div className="split-section-header">
-              <div>
-                <span className="split-sub-tag">01.A — STAINLESS STEEL</span>
-                <h3 className="split-section-title">SS Fabrication</h3>
-              </div>
-              <span className="split-count-badge">9 Services</span>
-            </div>
-
-            <div className="split-cards-grid">
-              {SS_FABRICATION_SERVICES.map((s) => renderEditorialCard(s))}
-            </div>
-          </div>
-
-          {/* MS Fabrication Section */}
-          <div className="split-capabilities-section" style={{ marginTop: '28px' }}>
-            <div className="split-section-header">
-              <div>
-                <span className="split-sub-tag">01.B — MILD STEEL</span>
-                <h3 className="split-section-title">MS Fabrication</h3>
-              </div>
-              <span className="split-count-badge">8 Services</span>
-            </div>
-
-            <div className="split-cards-grid">
-              {MS_FABRICATION_SERVICES.map((s) => renderEditorialCard(s))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // -------------------------------------------------------------
-    // 02 — MACHINING
-    // -------------------------------------------------------------
-    if (selectedMain === '02') {
-      const isMilling = selectedSub === 'milling';
-      const isGrinding = selectedSub === 'grinding';
-
-      // 2A. MILLING DIRECT VIEW
-      if (isMilling) {
-        return (
-          <div className="split-right-view">
-            <div className="split-hero-banner">
-              <div className="split-hero-overlay" />
-              <img
-                src="/images/hero_cnc_precision.jpg"
-                alt="Milling Capabilities"
-                className="split-hero-bg-img"
-              />
-              <div className="split-hero-content">
-                <span className="split-eyebrow-tag">02.A — MILLING PROCESSES</span>
-                <h2 className="split-hero-title">MILLING</h2>
-                <p className="split-hero-desc">
-                  Machining operations covering Plano Milling, VMC Milling and Universal Milling requirements for high-precision components.
-                </p>
-
-                <div className="split-hero-inquire-wrap">
-                  <Link
-                    to={getInquiryUrl('Milling')}
-                    state={{ service: 'Milling' }}
-                    className="split-hero-inquire-btn"
-                  >
-                    <span>INQUIRE FOR MILLING</span>
-                    <ArrowRight size={15} />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="split-capabilities-section">
-              <div className="split-section-header">
-                <div>
-                  <span className="split-sub-tag">CNC &amp; CONVENTIONAL MILLING</span>
-                  <h3 className="split-section-title">Milling Capabilities</h3>
-                </div>
-                <span className="split-count-badge">3 Subtypes</span>
-              </div>
-              <div className="split-cards-grid">
-                {MILLING_SUB_SERVICES.map((m) => renderEditorialCard(m))}
-              </div>
-            </div>
-          </div>
-        );
-      }
-
-      // 2B. GRINDING DIRECT VIEW
-      if (isGrinding) {
-        return (
-          <div className="split-right-view">
-            <div className="split-hero-banner">
-              <div className="split-hero-overlay" />
-              <img
-                src="/images/service_surface_grinding_precision.jpg"
-                alt="Grinding & Finishing"
-                className="split-hero-bg-img"
-              />
-              <div className="split-hero-content">
-                <span className="split-eyebrow-tag">02.B — FINISHING PROCESSES</span>
-                <h2 className="split-hero-title">GRINDING &amp; FINISHING</h2>
-                <p className="split-hero-desc">
-                  Finishing and grinding operations for components requiring surface and dimensional finishing to tight tolerances.
-                </p>
-
-                <div className="split-hero-inquire-wrap">
-                  <Link
-                    to={getInquiryUrl('Grinding & Finishing')}
-                    state={{ service: 'Grinding & Finishing' }}
-                    className="split-hero-inquire-btn"
-                  >
-                    <span>INQUIRE FOR GRINDING &amp; FINISHING</span>
-                    <ArrowRight size={15} />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="split-capabilities-section">
-              <div className="split-section-header">
-                <div>
-                  <span className="split-sub-tag">PRECISION FINISHING</span>
-                  <h3 className="split-section-title">Grinding Subtypes</h3>
-                </div>
-                <span className="split-count-badge">2 Subtypes</span>
-              </div>
-              <div className="split-cards-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-                {GRINDING_SUB_SERVICES.map((g) => renderEditorialCard(g))}
-              </div>
-            </div>
-          </div>
-        );
-      }
-
-      // 2C. MACHINING MAIN VIEW (COMPLETE CAPABILITIES ON RIGHT SIDE)
-      return (
-        <div className="split-right-view">
-          <div className="split-hero-banner">
-            <div className="split-hero-overlay" />
-            <img
-              src="/images/hero_cnc_precision.jpg"
-              alt="Precision Machining"
-              className="split-hero-bg-img"
-            />
-            <div className="split-hero-content">
-              <span className="split-eyebrow-tag">02. PRECISION MACHINING</span>
-              <h2 className="split-hero-title">MACHINING</h2>
-              <p className="split-hero-desc">
-                Machining capabilities covering cutting, milling, drilling, turning, forming and finishing requirements for industrial components.
-              </p>
-
-              <div className="split-hero-inquire-wrap">
-                <Link
-                  to={getInquiryUrl('Precision Machining')}
-                  state={{ service: 'Precision Machining' }}
-                  className="split-hero-inquire-btn"
-                >
-                  <span>INQUIRE FOR MACHINING</span>
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="split-machining-composite-flow">
-            <div className="split-section-header">
-              <div>
-                <span className="split-sub-tag">MACHINING DISCIPLINE</span>
-                <h3 className="split-section-title">Machining Services</h3>
-              </div>
-              <span className="split-count-badge">8 Disciplines</span>
-            </div>
-
-            {/* 01. Laser Cutting */}
-            <div className="split-cards-grid" style={{ marginBottom: '16px' }}>
-              {renderEditorialCard({
-                id: 'mach-laser',
-                num: '01',
-                name: 'Laser Cutting',
-                description: 'High-precision 2D CNC laser profiling for mild steel, stainless steel, and aluminum plates with clean edge finish.',
-                image: '/images/hero_welding_fabrication.jpg',
-                tag: 'CNC Laser',
-                discipline: 'Precision Machining'
-              })}
-            </div>
-
-            {/* 02. Milling (Nested Sub-Services Box) */}
-            <div className="split-nested-sub-container">
-              <div className="nested-sub-header">
-                <div className="nested-sub-header-title">
-                  <span className="nested-sub-num">02</span>
-                  <div>
-                    <h4 className="nested-title">Milling</h4>
-                    <p className="nested-desc">Plano Milling • VMC Milling • Universal Milling</p>
-                  </div>
-                </div>
-                <Link
-                  to={getInquiryUrl('Milling')}
-                  state={{ service: 'Milling' }}
-                  className="nested-sub-inquire-btn"
-                >
-                  <span>Inquire for Milling</span>
-                  <ArrowRight size={13} />
-                </Link>
-              </div>
-              <div className="split-cards-grid">
-                {MILLING_SUB_SERVICES.map((m) => renderEditorialCard(m))}
-              </div>
-            </div>
-
-            {/* 03-07. Simple Services (Drilling, Turning, Jig-Fixture, Tool-Room, Forming) */}
-            <div className="split-cards-grid" style={{ margin: '16px 0' }}>
-              {renderEditorialCard({
-                id: 'mach-drilling',
-                num: '03',
-                name: 'Drilling',
-                description: 'Radial and multi-spindle drilling, tapping, counterboring, and precision reaming for accurate hole patterns.',
-                image: '/images/service_custom_machines_spm.jpg',
-                tag: 'Drilling',
-                discipline: 'Precision Machining'
-              })}
-
-              {renderEditorialCard({
-                id: 'mach-turning',
-                num: '04',
-                name: 'Turning',
-                description: 'Precision lathe turning, facing, threading, and boring for cylindrical pins, shafts, rollers, and flanges.',
-                image: '/images/gallery_assets/rotary_airlock_16.jpg',
-                tag: 'Lathe Turning',
-                discipline: 'Precision Machining'
-              })}
-
-              {renderEditorialCard({
-                id: 'mach-jig-fixture',
-                num: '05',
-                name: 'Jig-Fixture Work',
-                description: 'Specialized toolroom machining of locating pins, clamp plates, and guide blocks to strict dimensional tolerances.',
-                image: '/images/service_jigs_fixtures.jpg',
-                tag: 'Toolroom Tooling',
-                discipline: 'Precision Machining'
-              })}
-
-              {renderEditorialCard({
-                id: 'mach-toolroom',
-                num: '06',
-                name: 'Tool-Room Work',
-                description: 'Custom precision tooling, die repair, gauge fabrication, and precision one-off prototype development.',
-                image: '/images/about_workshop_indian.jpg',
-                tag: 'Prototype Tooling',
-                discipline: 'Precision Machining'
-              })}
-
-              {renderEditorialCard({
-                id: 'mach-forming',
-                num: '07',
-                name: 'Forming',
-                description: 'Heavy hydraulic pressing, sheet metal bending, and section forming to specified radius profiles.',
-                image: '/images/gallery_products/05_hydraulic_press_structure.png',
-                tag: 'Press Forming',
-                discipline: 'Precision Machining'
-              })}
-            </div>
-
-            {/* 08. Grinding & Finishing (Nested Sub-Services Box) */}
-            <div className="split-nested-sub-container">
-              <div className="nested-sub-header">
-                <div className="nested-sub-header-title">
-                  <span className="nested-sub-num">08</span>
-                  <div>
-                    <h4 className="nested-title">Grinding &amp; Finishing</h4>
-                    <p className="nested-desc">Cylindrical Grinding • Surface Grinding</p>
-                  </div>
-                </div>
-                <Link
-                  to={getInquiryUrl('Grinding & Finishing')}
-                  state={{ service: 'Grinding & Finishing' }}
-                  className="nested-sub-inquire-btn"
-                >
-                  <span>Inquire for Grinding</span>
-                  <ArrowRight size={13} />
-                </Link>
-              </div>
-              <div className="split-cards-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-                {GRINDING_SUB_SERVICES.map((g) => renderEditorialCard(g))}
-              </div>
-            </div>
-
-          </div>
-        </div>
-      );
-    }
-
-    // -------------------------------------------------------------
-    // 03 — CONVEYOR & MATERIAL HANDLING
-    // -------------------------------------------------------------
-    if (selectedMain === '03') {
-      return (
-        <div className="split-right-view">
-          <div className="split-hero-banner">
-            <div className="split-hero-overlay" />
-            <img
-              src="/images/service_conveyors.jpg"
-              alt="Conveyor & Material Handling"
-              className="split-hero-bg-img"
-            />
-            <div className="split-hero-content">
-              <span className="split-eyebrow-tag">03. MATERIAL MOVEMENT</span>
-              <h2 className="split-hero-title">CONVEYOR &amp; MATERIAL HANDLING</h2>
-              <p className="split-hero-desc">
-                Solutions for conveying and handling industrial materials according to application and operational requirements.
-              </p>
-
-              <div className="split-hero-inquire-wrap">
-                <Link
-                  to={getInquiryUrl('Conveyor & Material Handling')}
-                  state={{ service: 'Conveyor & Material Handling' }}
-                  className="split-hero-inquire-btn"
-                >
-                  <span>INQUIRE FOR CONVEYORS &amp; HANDLING</span>
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="split-capabilities-section">
-            <div className="split-section-header">
-              <div>
-                <span className="split-sub-tag">TRANSIT NETWORKS &amp; SHOPFLOOR HANDLING</span>
-                <h3 className="split-section-title">Conveyor &amp; Material Handling Equipment</h3>
-              </div>
-              <span className="split-count-badge">5 Solutions</span>
-            </div>
-            <div className="split-cards-grid">
-              {CONVEYOR_ITEMS.map((c) => renderEditorialCard(c))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // -------------------------------------------------------------
-    // 04 — JIGS & FIXTURES
-    // -------------------------------------------------------------
-    if (selectedMain === '04') {
-      return (
-        <div className="split-right-view">
-          <div className="split-hero-banner">
-            <div className="split-hero-overlay" />
-            <img
-              src="/images/service_jigs_fixtures.jpg"
-              alt="Jigs & Fixtures"
-              className="split-hero-bg-img"
-            />
-            <div className="split-hero-content">
-              <span className="split-eyebrow-tag">04. TOOLING &amp; FIXTURES</span>
-              <h2 className="split-hero-title">JIGS &amp; FIXTURES</h2>
-              <p className="split-hero-desc">
-                We design and fabricate application-specific jigs and fixtures to support accurate, repeatable and efficient manufacturing operations. Our solutions are developed according to component geometry, production requirements and assembly needs, helping improve positioning, clamping and process consistency.
-              </p>
-
-              <div className="split-hero-inquire-wrap">
-                <Link
-                  to={getInquiryUrl('Jigs & Fixtures')}
-                  state={{ service: 'Jigs & Fixtures' }}
-                  className="split-hero-inquire-btn"
-                >
-                  <span>INQUIRE FOR JIGS &amp; FIXTURES</span>
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="split-capabilities-section">
-            <div className="split-section-header">
-              <div>
-                <span className="split-sub-tag">APPLICATION-SPECIFIC TOOLING</span>
-                <h3 className="split-section-title">Dedicated Fixtures</h3>
-              </div>
-              <span className="split-count-badge">5 Fixtures</span>
-            </div>
-            <div className="split-cards-grid">
-              {JIGS_FIXTURES_SERVICES.map((j) => renderEditorialCard(j))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // -------------------------------------------------------------
-    // 05 — SPECIAL PURPOSE MACHINES (SPM)
-    // -------------------------------------------------------------
-    if (selectedMain === '05') {
-      return (
-        <div className="split-right-view">
-          <div className="split-hero-banner">
-            <div className="split-hero-overlay" />
-            <img
-              src="/images/service_custom_spm.jpg"
-              alt="Special Purpose Machines"
-              className="split-hero-bg-img"
-            />
-            <div className="split-hero-content">
-              <span className="split-eyebrow-tag">05. CUSTOM AUTOMATION</span>
-              <h2 className="split-hero-title">SPECIAL PURPOSE MACHINES</h2>
-              <p className="split-hero-desc">
-                We develop customized Special Purpose Machines (SPMs) designed for specific industrial operations and production requirements. Our approach combines mechanical fabrication, component integration and application-focused engineering to deliver machines tailored to individual processes.
-              </p>
-
-              <div className="split-hero-inquire-wrap">
-                <Link
-                  to={getInquiryUrl('Special Purpose Machines (SPM)')}
-                  state={{ service: 'Special Purpose Machines (SPM)' }}
-                  className="split-hero-inquire-btn"
-                >
-                  <span>INQUIRE FOR SPECIAL PURPOSE MACHINES</span>
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="split-capabilities-section">
-            <div className="split-section-header">
-              <div>
-                <span className="split-sub-tag">TURNKEY AUTOMATION</span>
-                <h3 className="split-section-title">SPM Capabilities</h3>
-              </div>
-              <span className="split-count-badge">6 Capabilities</span>
-            </div>
-            <div className="split-cards-grid">
-              {SPM_SERVICES.map((s) => renderEditorialCard(s))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    return null;
-  };
+  // Active service object
+  const currentService = SERVICES_DATA[selectedServiceId] || SERVICES_DATA['ss-tube-structure'];
 
   return (
     <div className="services-page-root">
       
       {/* ========================================================================= */}
-      {/* 1. SERVICES HERO SECTION                                                  */}
+      {/* 1. TOP EDITORIAL BANNER                                                   */}
       {/* ========================================================================= */}
-      <section className="services-hero-top">
-        <div className="services-hero-overlay" />
-
-        <div className="services-full-container" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="services-hero-inner">
-            <div className="services-hero-badge-row">
-              <span className="services-hero-badge">SERVICES</span>
-              <span className="services-hero-badge-line" />
+      <section className="services-top-hero">
+        <div className="top-hero-overlay" />
+        <div className="services-full-container">
+          <div className="top-hero-content">
+            <div className="hero-badge-wrap">
+              <span className="hero-badge-text">MAULI KRUPA PRECISION WORKS</span>
+              <span className="hero-badge-line" />
             </div>
-
-            <h1 className="services-hero-title">
-              ENGINEERING &amp; MANUFACTURING
-              <br />
-              <span className="services-hero-accent">CAPABILITIES</span>
+            <h1 className="hero-title">
+              SERVICES <span className="hero-title-accent">CATALOGUE</span>
             </h1>
-
-            <p className="services-hero-text">
-              Mauli Krupa Precision Works provides industrial fabrication, machining, material handling, jigs &amp; fixtures and special-purpose machine capabilities.
+            <p className="hero-subtitle">
+              Select any capability from the index below to explore our industrial manufacturing and engineering services.
             </p>
-
-            <div className="services-hero-action-row">
-              <Link to="/contact" className="services-hero-btn">
-                <span>Discuss Your Requirement</span>
-                <ArrowRight size={16} />
-              </Link>
-            </div>
           </div>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. FULL-WIDTH TWO-COLUMN SERVICES CATALOGUE (DESKTOP)                     */}
+      {/* 2. FULL-WIDTH INDUSTRIAL CATALOGUE: LEFT SIDEBAR + RIGHT DETAIL           */}
       {/* ========================================================================= */}
-      <section className="services-catalogue-section">
+      <section className="services-main-layout-section">
         <div className="services-full-container">
-          
-          <div className="services-catalogue-layout">
+
+          {/* MOBILE ACCORDION SELECTOR BAR (< 992px) */}
+          <div className="mobile-category-bar">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="mobile-category-btn"
+            >
+              <div className="mobile-btn-copy">
+                <span className="mobile-btn-tag">CURRENTLY VIEWING:</span>
+                <span className="mobile-btn-title">{currentService.name}</span>
+              </div>
+              <ChevronDown
+                size={18}
+                className={`mobile-chevron ${mobileMenuOpen ? 'open' : ''}`}
+              />
+            </button>
+          </div>
+
+          <div className="services-catalogue-grid">
             
             {/* =================================================================== */}
-            {/* LEFT SIDEBAR: 25–28% CLEAN & REFINED SERVICE NAVIGATION             */}
+            {/* LEFT SIDEBAR: EXPANDABLE INDUSTRIAL SERVICE TREE NAVIGATION         */}
             {/* =================================================================== */}
-            <aside className="services-catalogue-sidebar">
-              <div className="sidebar-sticky-wrapper">
-                <div className="sidebar-tree-header">
-                  <span className="sidebar-tree-eyebrow">CAPABILITY INDEX</span>
-                  <h3 className="sidebar-tree-heading">Our Services</h3>
+            <aside className={`services-sidebar-column ${mobileMenuOpen ? 'mobile-visible' : ''}`}>
+              <div className="sidebar-container-box">
+                {/* Sidebar Header */}
+                <div className="sidebar-top-bar">
+                  <span className="sidebar-eyebrow">CAPABILITY INDEX</span>
+                  <h3 className="sidebar-title">Our Services</h3>
                 </div>
 
-                <div className="sidebar-tree-nav">
-                  
-                  {/* ---------------- 01 INDUSTRIAL FABRICATION ---------------- */}
-                  <div className={`nav-tree-item ${selectedMain === '01' ? 'is-active-main' : ''}`}>
+                {/* Sidebar Navigation Tree */}
+                <nav className="sidebar-tree-navigation">
+
+                  {/* ---------------- 1. INDUSTRIAL FABRICATION ---------------- */}
+                  <div className="sidebar-tree-group">
                     <div
-                      className="nav-tree-header"
-                      onClick={() => selectMainCategory('01')}
+                      className={`tree-group-header ${selectedServiceId.startsWith('ss-') || selectedServiceId.startsWith('ms-') ? 'active-parent' : ''}`}
+                      onClick={() => setOpenFabrication(!openFabrication)}
                     >
-                      <div className="nav-tree-header-left">
-                        <span className="nav-tree-num">01</span>
-                        <Factory size={16} className="nav-tree-icon" />
-                        <span className="nav-tree-label">Industrial Fabrication</span>
+                      <div className="header-left-col">
+                        <span className="tree-num">01</span>
+                        <Factory size={16} className="tree-icon" />
+                        <span className="tree-text">Industrial Fabrication</span>
                       </div>
-                      <div className="nav-tree-chevron">
-                        {openMainTree['01'] ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
-                      </div>
+                      <ChevronDown size={15} className={`tree-chevron ${openFabrication ? 'open' : ''}`} />
                     </div>
 
-                    {/* ONLY SHOW SS FABRICATION & MS FABRICATION */}
-                    {openMainTree['01'] && (
-                      <div className="nav-tree-sub-container">
-                        <div
-                          className={`nav-sub-leaf ${selectedMain === '01' && selectedSub === 'ss' ? 'active-leaf' : ''}`}
-                          onClick={() => selectSubCategory('ss', '01')}
-                        >
-                          <span className="sub-bullet" />
-                          <span className="sub-text">SS Fabrication</span>
-                          <ChevronRight size={13} className="sub-arrow" />
-                        </div>
-
-                        <div
-                          className={`nav-sub-leaf ${selectedMain === '01' && selectedSub === 'ms' ? 'active-leaf' : ''}`}
-                          onClick={() => selectSubCategory('ms', '01')}
-                        >
-                          <span className="sub-bullet" />
-                          <span className="sub-text">MS Fabrication</span>
-                          <ChevronRight size={13} className="sub-arrow" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* ---------------- 02 MACHINING ---------------- */}
-                  <div className={`nav-tree-item ${selectedMain === '02' ? 'is-active-main' : ''}`}>
-                    <div
-                      className="nav-tree-header"
-                      onClick={() => selectMainCategory('02')}
-                    >
-                      <div className="nav-tree-header-left">
-                        <span className="nav-tree-num">02</span>
-                        <Cog size={16} className="nav-tree-icon" />
-                        <span className="nav-tree-label">Machining</span>
-                      </div>
-                      <div className="nav-tree-chevron">
-                        {openMainTree['02'] ? <ChevronDown size={15} /> : <ChevronRight size={15} />}
-                      </div>
-                    </div>
-
-                    {/* ONLY SHOW MEANINGFUL MACHINING CATEGORIES */}
-                    {openMainTree['02'] && (
-                      <div className="nav-tree-sub-container">
-                        {/* Milling */}
-                        <div className="nav-nested-group">
+                    {/* EXPANDS TO: SS Fabrication & MS Fabrication ONLY */}
+                    {openFabrication && (
+                      <div className="tree-sub-branches">
+                        
+                        {/* SS FABRICATION */}
+                        <div className="sub-category-group">
                           <div
-                            className={`nav-sub-leaf ${selectedMain === '02' && selectedSub === 'milling' ? 'active-leaf' : ''}`}
-                            onClick={() => {
-                              selectSubCategory('milling', '02');
-                              toggleSubTree('milling');
-                            }}
+                            className={`sub-category-header ${selectedServiceId.startsWith('ss-') ? 'active-sub' : ''}`}
+                            onClick={() => setOpenSS(!openSS)}
                           >
                             <span className="sub-bullet" />
-                            <span className="sub-text">Milling</span>
-                            {openSubTree.milling ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                            <span className="sub-title">SS Fabrication</span>
+                            <ChevronDown size={13} className={`sub-chevron ${openSS ? 'open' : ''}`} />
                           </div>
 
-                          {openSubTree.milling && (
-                            <div className="nav-inner-leaf-box">
-                              <div className="nav-inner-leaf" onClick={() => selectSubCategory('milling', '02')}>
-                                Plano Milling
+                          {openSS && (
+                            <div className="leaf-items-list">
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-tube-structure' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-tube-structure')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Tube Structure &amp; Channel Angle Fabrication</span>
                               </div>
-                              <div className="nav-inner-leaf" onClick={() => selectSubCategory('milling', '02')}>
-                                VMC Milling
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-ducting' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-ducting')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>SS Ducting Fabrication</span>
                               </div>
-                              <div className="nav-inner-leaf" onClick={() => selectSubCategory('milling', '02')}>
-                                Universal Milling
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-tank' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-tank')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>SS Tank Fabrication</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-pipeline' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-pipeline')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>SS Pipeline Fabrication</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-polishing' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-polishing')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Polishing &amp; Buffing Work</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-passivation' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-passivation')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Passivation &amp; Pickling Work</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-ndt' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-ndt')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>SS 3rd Party NDT Facility</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-glass-blasting' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-glass-blasting')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Glass Blasting</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ss-laser-cutting' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ss-laser-cutting')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Laser Cutting</span>
                               </div>
                             </div>
                           )}
                         </div>
 
-                        <div className="nav-sub-leaf simple" onClick={() => selectMainCategory('02')}>
-                          <span className="sub-bullet" />
-                          <span className="sub-text">Drilling</span>
-                        </div>
-
-                        <div className="nav-sub-leaf simple" onClick={() => selectMainCategory('02')}>
-                          <span className="sub-bullet" />
-                          <span className="sub-text">Turning</span>
-                        </div>
-
-                        <div className="nav-sub-leaf simple" onClick={() => selectMainCategory('02')}>
-                          <span className="sub-bullet" />
-                          <span className="sub-text">Jig-Fixture Work</span>
-                        </div>
-
-                        <div className="nav-sub-leaf simple" onClick={() => selectMainCategory('02')}>
-                          <span className="sub-bullet" />
-                          <span className="sub-text">Tool-Room Work</span>
-                        </div>
-
-                        <div className="nav-sub-leaf simple" onClick={() => selectMainCategory('02')}>
-                          <span className="sub-bullet" />
-                          <span className="sub-text">Forming</span>
-                        </div>
-
-                        {/* Grinding & Finishing */}
-                        <div className="nav-nested-group">
+                        {/* MS FABRICATION */}
+                        <div className="sub-category-group">
                           <div
-                            className={`nav-sub-leaf ${selectedMain === '02' && selectedSub === 'grinding' ? 'active-leaf' : ''}`}
-                            onClick={() => {
-                              selectSubCategory('grinding', '02');
-                              toggleSubTree('grinding');
-                            }}
+                            className={`sub-category-header ${selectedServiceId.startsWith('ms-') ? 'active-sub' : ''}`}
+                            onClick={() => setOpenMS(!openMS)}
                           >
                             <span className="sub-bullet" />
-                            <span className="sub-text">Grinding &amp; Finishing</span>
-                            {openSubTree.grinding ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                            <span className="sub-title">MS Fabrication</span>
+                            <ChevronDown size={13} className={`sub-chevron ${openMS ? 'open' : ''}`} />
                           </div>
 
-                          {openSubTree.grinding && (
-                            <div className="nav-inner-leaf-box">
-                              <div className="nav-inner-leaf" onClick={() => selectSubCategory('grinding', '02')}>
-                                Cylindrical Grinding
+                          {openMS && (
+                            <div className="leaf-items-list">
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ms-tube-channel' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ms-tube-channel')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Square Tube, Channel &amp; I-Beam Fabrication</span>
                               </div>
-                              <div className="nav-inner-leaf" onClick={() => selectSubCategory('grinding', '02')}>
-                                Surface Grinding
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ms-ducting' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ms-ducting')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>MS Ducting Work</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ms-tank' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ms-tank')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>MS Tank Fabrication</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ms-pipeline' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ms-pipeline')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>MS Pipeline Fabrication</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ms-powder-coating' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ms-powder-coating')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Powder Coating</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ms-sand-blasting' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ms-sand-blasting')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Sand Blasting &amp; Painting</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ms-ndt' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ms-ndt')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>MS 3rd Party NDT Facility</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'ms-laser-forming' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('ms-laser-forming')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Laser Cutting &amp; Forming</span>
                               </div>
                             </div>
                           )}
@@ -1314,393 +683,466 @@ export default function ServicesPage() {
                     )}
                   </div>
 
-                  {/* ---------------- 03 CONVEYOR & MATERIAL HANDLING ---------------- */}
-                  <div className={`nav-tree-item ${selectedMain === '03' ? 'is-active-main' : ''}`}>
+                  {/* ---------------- 2. MACHINING ---------------- */}
+                  <div className="sidebar-tree-group">
                     <div
-                      className="nav-tree-header"
-                      onClick={() => selectMainCategory('03')}
+                      className={`tree-group-header ${selectedServiceId.startsWith('mach-') ? 'active-parent' : ''}`}
+                      onClick={() => setOpenMachining(!openMachining)}
                     >
-                      <div className="nav-tree-header-left">
-                        <span className="nav-tree-num">03</span>
-                        <Boxes size={16} className="nav-tree-icon" />
-                        <span className="nav-tree-label">Conveyor &amp; Material Handling</span>
+                      <div className="header-left-col">
+                        <span className="tree-num">02</span>
+                        <Cog size={16} className="tree-icon" />
+                        <span className="tree-text">Machining</span>
                       </div>
-                      <div className="nav-tree-chevron">
-                        <ChevronRight size={15} />
+                      <ChevronDown size={15} className={`tree-chevron ${openMachining ? 'open' : ''}`} />
+                    </div>
+
+                    {openMachining && (
+                      <div className="tree-sub-branches">
+                        {/* Laser Cutting */}
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'mach-laser-cutting' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('mach-laser-cutting')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Laser Cutting</span>
+                        </div>
+
+                        {/* Milling (Expandable -> Plano, VMC, Universal) */}
+                        <div className="sub-category-group">
+                          <div
+                            className={`sub-category-header ${selectedServiceId.includes('milling') ? 'active-sub' : ''}`}
+                            onClick={() => setOpenMilling(!openMilling)}
+                          >
+                            <span className="sub-bullet" />
+                            <span className="sub-title">Milling</span>
+                            <ChevronDown size={13} className={`sub-chevron ${openMilling ? 'open' : ''}`} />
+                          </div>
+
+                          {openMilling && (
+                            <div className="leaf-items-list">
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'mach-plano-milling' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('mach-plano-milling')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Plano Milling</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'mach-vmc-milling' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('mach-vmc-milling')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>VMC Milling</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'mach-universal-milling' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('mach-universal-milling')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Universal Milling</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Drilling */}
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'mach-drilling' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('mach-drilling')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Drilling</span>
+                        </div>
+
+                        {/* Turning */}
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'mach-turning' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('mach-turning')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Turning</span>
+                        </div>
+
+                        {/* Jig-Fixture Work */}
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'mach-jig-fixture-work' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('mach-jig-fixture-work')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Jig-Fixture Work</span>
+                        </div>
+
+                        {/* Tool-Room Work */}
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'mach-toolroom-work' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('mach-toolroom-work')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Tool-Room Work</span>
+                        </div>
+
+                        {/* Forming */}
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'mach-forming' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('mach-forming')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Forming</span>
+                        </div>
+
+                        {/* Grinding & Finishing (Expandable -> Cylindrical, Surface) */}
+                        <div className="sub-category-group">
+                          <div
+                            className={`sub-category-header ${selectedServiceId.includes('grinding') ? 'active-sub' : ''}`}
+                            onClick={() => setOpenGrinding(!openGrinding)}
+                          >
+                            <span className="sub-bullet" />
+                            <span className="sub-title">Grinding &amp; Finishing</span>
+                            <ChevronDown size={13} className={`sub-chevron ${openGrinding ? 'open' : ''}`} />
+                          </div>
+
+                          {openGrinding && (
+                            <div className="leaf-items-list">
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'mach-cylindrical-grinding' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('mach-cylindrical-grinding')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Cylindrical Grinding</span>
+                              </div>
+
+                              <div
+                                className={`leaf-item ${selectedServiceId === 'mach-surface-grinding' ? 'is-selected' : ''}`}
+                                onClick={() => handleSelectService('mach-surface-grinding')}
+                              >
+                                <span className="leaf-indicator" />
+                                <span>Surface Grinding</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
                       </div>
+                    )}
+                  </div>
+
+                  {/* ---------------- 3. CONVEYOR & MATERIAL HANDLING (STANDALONE CATEGORY) ---------------- */}
+                  <div className="sidebar-tree-group">
+                    <div
+                      className={`tree-group-header ${selectedServiceId.startsWith('conv-') ? 'active-parent' : ''}`}
+                      onClick={() => setOpenConveyors(!openConveyors)}
+                    >
+                      <div className="header-left-col">
+                        <span className="tree-num">03</span>
+                        <Boxes size={16} className="tree-icon" />
+                        <span className="tree-text">Conveyor &amp; Material Handling</span>
+                      </div>
+                      <ChevronDown size={15} className={`tree-chevron ${openConveyors ? 'open' : ''}`} />
+                    </div>
+
+                    {openConveyors && (
+                      <div className="tree-sub-branches">
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'conv-belt' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('conv-belt')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Belt Conveyor</span>
+                        </div>
+
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'conv-flat' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('conv-flat')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Flat Conveyor</span>
+                        </div>
+
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'conv-magnetic' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('conv-magnetic')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Magnetic Conveyor</span>
+                        </div>
+
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'conv-trolleys' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('conv-trolleys')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Industrial Trolleys</span>
+                        </div>
+
+                        <div
+                          className={`leaf-item-direct ${selectedServiceId === 'conv-pallets' ? 'is-selected' : ''}`}
+                          onClick={() => handleSelectService('conv-pallets')}
+                        >
+                          <span className="leaf-indicator" />
+                          <span>Industrial Pallets</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* ---------------- 4. JIGS & FIXTURES (STANDALONE — NO SUBTYPES) ---------------- */}
+                  <div className="sidebar-tree-group">
+                    <div
+                      className={`tree-group-header standalone-item ${selectedServiceId === 'jigs-fixtures' ? 'is-selected' : ''}`}
+                      onClick={() => handleSelectService('jigs-fixtures')}
+                    >
+                      <div className="header-left-col">
+                        <span className="tree-num">04</span>
+                        <Crosshair size={16} className="tree-icon" />
+                        <span className="tree-text">Jigs &amp; Fixtures</span>
+                      </div>
+                      <ChevronRight size={14} className="tree-standalone-chevron" />
                     </div>
                   </div>
 
-                  {/* ---------------- 04 JIGS & FIXTURES ---------------- */}
-                  <div className={`nav-tree-item ${selectedMain === '04' ? 'is-active-main' : ''}`}>
+                  {/* ---------------- 5. SPECIAL PURPOSE MACHINES (SPM) (STANDALONE — NO SUBTYPES) ---------------- */}
+                  <div className="sidebar-tree-group">
                     <div
-                      className="nav-tree-header"
-                      onClick={() => selectMainCategory('04')}
+                      className={`tree-group-header standalone-item ${selectedServiceId === 'spm-service' ? 'is-selected' : ''}`}
+                      onClick={() => handleSelectService('spm-service')}
                     >
-                      <div className="nav-tree-header-left">
-                        <span className="nav-tree-num">04</span>
-                        <Crosshair size={16} className="nav-tree-icon" />
-                        <span className="nav-tree-label">Jigs &amp; Fixtures</span>
+                      <div className="header-left-col">
+                        <span className="tree-num">05</span>
+                        <Cpu size={16} className="tree-icon" />
+                        <span className="tree-text">Special Purpose Machines (SPM)</span>
                       </div>
-                      <div className="nav-tree-chevron">
-                        <ChevronRight size={15} />
-                      </div>
+                      <ChevronRight size={14} className="tree-standalone-chevron" />
                     </div>
                   </div>
 
-                  {/* ---------------- 05 SPECIAL PURPOSE MACHINES ---------------- */}
-                  <div className={`nav-tree-item ${selectedMain === '05' ? 'is-active-main' : ''}`}>
-                    <div
-                      className="nav-tree-header"
-                      onClick={() => selectMainCategory('05')}
-                    >
-                      <div className="nav-tree-header-left">
-                        <span className="nav-tree-num">05</span>
-                        <Cpu size={16} className="nav-tree-icon" />
-                        <span className="nav-tree-label">Special Purpose Machines</span>
-                      </div>
-                      <div className="nav-tree-chevron">
-                        <ChevronRight size={15} />
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Compact Sidebar Support Box */}
-                <div className="sidebar-support-box">
-                  <div className="support-box-icon">
-                    <Headphones size={18} color="#800e13" />
-                  </div>
-                  <div>
-                    <h5 className="support-box-heading">Custom Requirement?</h5>
-                    <p className="support-box-desc">Share CAD or technical specs.</p>
-                    <Link to="/contact" className="support-box-link">
-                      <span>Contact Us</span>
-                      <ArrowRight size={11} />
-                    </Link>
-                  </div>
-                </div>
+                </nav>
 
               </div>
             </aside>
 
             {/* =================================================================== */}
-            {/* RIGHT COLUMN: 72–75% FULL-WIDTH RICH CONTENT                        */}
+            {/* RIGHT SIDE: BALANCED 2-COLUMN DETAIL LAYOUT                         */}
+            {/* [IMAGE (45%)] + [CATEGORY, TITLE, DESCRIPTION, SERVICE FOCUS, CTA (55%)] */}
             {/* =================================================================== */}
-            <main className="services-catalogue-content">
-              {renderRightContentArea()}
+            <main
+              id="catalogue-detail-content-area"
+              className="services-detail-main-content"
+            >
+              <div key={currentService.id} className="selected-service-card animate-detail-fade">
+                
+                {/* LEFT: SERVICE IMAGE (45%) */}
+                <div className="service-detail-image-col">
+                  <div className="detail-image-box">
+                    <img
+                      src={currentService.image}
+                      alt={currentService.name}
+                      className="detail-featured-img"
+                    />
+                  </div>
+                </div>
+
+                {/* RIGHT: SERVICE INFORMATION (55%) */}
+                <div className="service-detail-info-col">
+                  
+                  {/* 1. Small Category Label */}
+                  <div className="service-category-label">
+                    {currentService.categoryLabel}
+                  </div>
+
+                  {/* 2. Service Name */}
+                  <h2 className="service-title">
+                    {currentService.name}
+                  </h2>
+
+                  {/* 3. Short Description (2–3 lines, approx 25–40 words) */}
+                  <p className="service-description">
+                    {currentService.description}
+                  </p>
+
+                  {/* 4. KEY HIGHLIGHTS (Max 3 Short Points) */}
+                  {currentService.highlights && currentService.highlights.length > 0 && (
+                    <div className="service-highlights-block">
+                      <span className="service-section-eyebrow">KEY HIGHLIGHTS</span>
+                      <ul className="service-highlights-list">
+                        {currentService.highlights.map((point, idx) => (
+                          <li key={idx} className="highlight-item">
+                            <span className="highlight-dot" />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* 5. One Short "Ideal for" Line */}
+                  {currentService.idealFor && (
+                    <div className="service-ideal-for-wrap">
+                      <span className="ideal-for-label">Ideal for:</span>{' '}
+                      <span className="ideal-for-text">{currentService.idealFor}</span>
+                    </div>
+                  )}
+
+                  {/* 6. INQUIRE NOW Action Button */}
+                  <div className="service-action-wrap">
+                    <button
+                      onClick={() => handleInquireNow(currentService.name)}
+                      className="service-inquire-btn"
+                      id="service-inquire-now-btn"
+                    >
+                      <span>INQUIRE NOW</span>
+                      <ArrowRight size={15} />
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
             </main>
 
           </div>
-
-          {/* =================================================================== */}
-          {/* MOBILE ACCORDION (FALLBACK FOR VIEWPORTS < 900PX)                   */}
-          {/* =================================================================== */}
-          <div className="services-mobile-accordion">
-            {['01', '02', '03', '04', '05'].map((mId) => {
-              const isOpen = mobileExpandedMain === mId;
-              const titleMap = {
-                '01': '01 Industrial Fabrication',
-                '02': '02 Machining',
-                '03': '03 Conveyor & Material Handling',
-                '04': '04 Jigs & Fixtures',
-                '05': '05 Special Purpose Machines'
-              };
-
-              return (
-                <div key={mId} className={`mobile-nav-block ${isOpen ? 'is-open' : ''}`}>
-                  <div
-                    className="mobile-nav-block-header"
-                    onClick={() => {
-                      setMobileExpandedMain(isOpen ? null : mId);
-                      setSelectedMain(mId);
-                      setSelectedSub(null);
-                    }}
-                  >
-                    <h4 className="mobile-nav-title">{titleMap[mId]}</h4>
-                    <div className="mobile-nav-icon">
-                      {isOpen ? <Minus size={18} /> : <Plus size={18} />}
-                    </div>
-                  </div>
-
-                  {isOpen && (
-                    <div className="mobile-nav-block-body">
-                      {renderRightContentArea()}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. BOTTOM COMPACT INDUSTRIAL CTA BANNER                                   */}
-      {/* ========================================================================= */}
-      <section className="services-bottom-cta">
-        <div className="bottom-cta-overlay" />
-        
-        <div className="services-full-container" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="bottom-cta-inner">
-            <div className="bottom-cta-copy">
-              <span className="bottom-cta-eyebrow">HAVE A SPECIFIC REQUIREMENT?</span>
-              <h2 className="bottom-cta-heading">Let's discuss your fabrication, machining or custom engineering requirement.</h2>
-            </div>
-
-            <div className="bottom-cta-action">
-              <Link to="/contact" className="bottom-cta-button">
-                <span>INQUIRE NOW</span>
-                <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 4. BOTTOM TRUST BAR                                                       */}
-      {/* ========================================================================= */}
-      <section className="services-trust-bar">
-        <div className="services-full-container">
-          <div className="trust-bar-flex">
-            <div className="trust-item">
-              <ShieldCheck size={18} color="#800e13" />
-              <span>Quality Workmanship</span>
-            </div>
-            <div className="trust-divider" />
-
-            <div className="trust-item">
-              <Clock size={18} color="#800e13" />
-              <span>On-Time Delivery</span>
-            </div>
-            <div className="trust-divider" />
-
-            <div className="trust-item">
-              <Settings size={18} color="#800e13" />
-              <span>Custom Solutions</span>
-            </div>
-            <div className="trust-divider" />
-
-            <div className="trust-item">
-              <ThumbsUp size={18} color="#800e13" />
-              <span>Trusted by Industries</span>
-            </div>
-
-            <div className="trust-tagline">
-              <span>Precision • Reliability • Progress</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 5. SERVICE DETAIL MODAL                                                   */}
-      {/* ========================================================================= */}
-      {selectedDetailModal && (
-        <div className="service-modal-backdrop" onClick={() => setSelectedDetailModal(null)}>
-          <div className="service-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="service-modal-close"
-              onClick={() => setSelectedDetailModal(null)}
-              aria-label="Close modal"
-            >
-              <X size={18} color="#111827" />
-            </button>
-
-            <div className="service-modal-grid">
-              <div className="service-modal-media">
-                <img
-                  src={selectedDetailModal.image}
-                  alt={selectedDetailModal.name}
-                  className="service-modal-img"
-                />
-                <span className="service-modal-badge">{selectedDetailModal.tag}</span>
-              </div>
-
-              <div className="service-modal-body">
-                <span className="service-modal-discipline">{selectedDetailModal.discipline}</span>
-                <h3 className="service-modal-title">{selectedDetailModal.name}</h3>
-                <p className="service-modal-text">{selectedDetailModal.description}</p>
-
-                <div className="service-modal-actions">
-                  <Link
-                    to={getInquiryUrl(selectedDetailModal.name)}
-                    state={{ service: selectedDetailModal.name }}
-                    className="service-modal-inquire-btn"
-                    onClick={() => setSelectedDetailModal(null)}
-                  >
-                    <span>INQUIRE NOW</span>
-                    <ArrowRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* STYLES (FULL-WIDTH, HIGH UTILIZATION, NO EXCESSIVE MARGINS)               */}
+      {/* 3. STYLES: CLEAN EDITORIAL VISUAL COMPOSITION, FULL-WIDTH, MAROON ACCENTS */}
       {/* ========================================================================= */}
       <style>{`
         .services-page-root {
           background-color: #ffffff;
           color: #111827;
           min-height: 100vh;
+          width: 100%;
         }
 
-        /* FULL-WIDTH CONTAINER UTILIZATION */
+        /* Container using full viewport width with clean spacing */
         .services-full-container {
           width: 100%;
-          max-width: 1720px;
+          max-width: 1780px;
           margin-left: auto;
           margin-right: auto;
-          padding-left: clamp(16px, 2.5vw, 36px);
-          padding-right: clamp(16px, 2.5vw, 36px);
+          padding-left: clamp(16px, 2.2vw, 36px);
+          padding-right: clamp(16px, 2.2vw, 36px);
         }
 
-        /* 1. HERO SECTION */
-        .services-hero-top {
+        /* 1. TOP HERO SECTION */
+        .services-top-hero {
           position: relative;
-          padding-top: clamp(96px, 10vw, 126px);
-          padding-bottom: clamp(36px, 4.5vw, 54px);
+          padding-top: clamp(92px, 8.5vw, 116px);
+          padding-bottom: clamp(24px, 3vw, 36px);
           background-image: url('/images/hero_welding_fabrication.jpg');
           background-size: cover;
-          background-position: center 35%;
+          background-position: center 30%;
           background-repeat: no-repeat;
           overflow: hidden;
         }
 
-        .services-hero-overlay {
+        .top-hero-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(8, 11, 18, 0.95) 0%, rgba(15, 23, 42, 0.88) 100%);
+          background: linear-gradient(135deg, rgba(8, 12, 24, 0.96) 0%, rgba(15, 23, 42, 0.88) 100%);
           pointer-events: none;
         }
 
-        .services-hero-inner {
-          max-width: 880px;
+        .top-hero-content {
           position: relative;
           z-index: 2;
+          max-width: 820px;
         }
 
-        .services-hero-badge-row {
+        .hero-badge-wrap {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 12px;
+          margin-bottom: 6px;
         }
 
-        .services-hero-badge {
+        .hero-badge-text {
           font-family: var(--font-tech);
-          font-size: 12px;
+          font-size: 10.5px;
           font-weight: 700;
           letter-spacing: 0.14em;
           color: #f1f5f9;
           text-transform: uppercase;
         }
 
-        .services-hero-badge-line {
-          width: 28px;
+        .hero-badge-line {
+          width: 24px;
           height: 2px;
           background-color: #800e13;
           border-radius: 1px;
         }
 
-        .services-hero-title {
+        .hero-title {
           font-family: var(--font-heading);
-          font-size: clamp(30px, 3.8vw, 48px);
+          font-size: clamp(26px, 3.2vw, 42px);
           font-weight: 800;
-          line-height: 1.14;
-          letter-spacing: -0.025em;
+          line-height: 1.12;
+          letter-spacing: -0.02em;
           color: #ffffff;
-          margin: 0 0 12px 0;
+          margin: 0 0 6px 0;
         }
 
-        .services-hero-accent {
+        .hero-title-accent {
           color: #e03137;
         }
 
-        .services-hero-text {
-          font-size: clamp(14px, 1.1vw, 15.5px);
-          line-height: 1.55;
+        .hero-subtitle {
+          font-size: clamp(13.5px, 0.95vw, 15px);
+          line-height: 1.5;
           color: #cbd5e1;
-          margin: 0 0 20px 0;
-          max-width: 680px;
+          margin: 0;
+          max-width: 600px;
         }
 
-        .services-hero-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 11px 22px;
-          background-color: #800e13;
-          color: #ffffff;
-          font-family: var(--font-tech);
-          font-size: 12.5px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          text-decoration: none;
-          border-radius: 2px;
-          transition: background-color 0.2s ease, transform 0.2s ease;
-          box-shadow: 0 4px 12px rgba(128, 14, 19, 0.35);
-        }
-
-        .services-hero-btn:hover {
-          background-color: #670b10;
-          transform: translateY(-2px);
-          color: #ffffff;
-        }
-
-        /* 2. CATALOGUE SECTION & FULL-WIDTH 2-COLUMN LAYOUT */
-        .services-catalogue-section {
-          padding: 28px 0 54px;
+        /* 2. SPLIT LAYOUT SECTION */
+        .services-main-layout-section {
+          padding: 24px 0 54px;
           background-color: #ffffff;
-          border-bottom: 1px solid #e5e7eb;
         }
 
-        .services-catalogue-layout {
+        .services-catalogue-grid {
           display: grid;
-          grid-template-columns: minmax(260px, 26%) 1fr;
-          gap: 28px;
+          grid-template-columns: minmax(280px, 26%) 1fr;
+          gap: 32px;
           align-items: start;
         }
 
         /* SIDEBAR STYLES */
-        .services-catalogue-sidebar {
+        .services-sidebar-column {
           position: sticky;
-          top: 90px;
+          top: 88px;
+          width: 100%;
         }
 
-        .sidebar-sticky-wrapper {
+        .sidebar-container-box {
           background-color: #ffffff;
           border: 1px solid #e2e8f0;
           border-radius: 4px;
           overflow: hidden;
+          box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03);
         }
 
-        .sidebar-tree-header {
+        .sidebar-top-bar {
           padding: 14px 16px 10px;
           background-color: #0f172a;
           border-bottom: 3px solid #800e13;
         }
 
-        .sidebar-tree-eyebrow {
+        .sidebar-eyebrow {
           font-family: var(--font-tech);
           font-size: 9.5px;
           font-weight: 700;
           color: #e03137;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
           display: block;
           margin-bottom: 2px;
         }
 
-        .sidebar-tree-heading {
+        .sidebar-title {
           font-family: var(--font-heading);
           font-size: 14.5px;
           font-weight: 800;
@@ -1708,857 +1150,543 @@ export default function ServicesPage() {
           margin: 0;
         }
 
-        .sidebar-tree-nav {
+        .sidebar-tree-navigation {
           display: flex;
           flex-direction: column;
         }
 
-        .nav-tree-item {
+        .sidebar-tree-group {
           border-bottom: 1px solid #f1f5f9;
+          margin: 0;
+          padding: 0;
         }
 
-        .nav-tree-item:last-child {
+        .sidebar-tree-group:last-child {
           border-bottom: none;
         }
 
-        .nav-tree-header {
+        .tree-group-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 12px 14px;
+          padding: 11px 14px;
           cursor: pointer;
           background-color: #ffffff;
-          transition: background-color 0.15s ease;
+          transition: background-color 0.15s ease, border-color 0.15s ease;
+          border-left: 3.5px solid transparent;
+          margin: 0;
         }
 
-        .nav-tree-header:hover {
+        .tree-group-header:hover {
           background-color: #f8fafc;
         }
 
-        .nav-tree-item.is-active-main > .nav-tree-header {
-          background-color: #fff8f8;
+        .tree-group-header.active-parent {
+          background-color: #fff9f9;
           border-left: 3.5px solid #800e13;
         }
 
-        .nav-tree-header-left {
+        .tree-group-header.standalone-item {
+          cursor: pointer;
+          border-left: 3.5px solid transparent;
+        }
+
+        .tree-group-header.standalone-item:hover {
+          background-color: #f8fafc;
+        }
+
+        .tree-group-header.standalone-item.is-selected {
+          background-color: #800e13;
+          color: #ffffff;
+          border-left: 3.5px solid #0f172a;
+        }
+
+        .tree-group-header.standalone-item.is-selected .tree-num,
+        .tree-group-header.standalone-item.is-selected .tree-icon,
+        .tree-group-header.standalone-item.is-selected .tree-text {
+          color: #ffffff;
+        }
+
+        .tree-standalone-chevron {
+          color: #94a3b8;
+          opacity: 0.6;
+          transition: color 0.15s ease, opacity 0.15s ease;
+        }
+
+        .tree-group-header.standalone-item.is-selected .tree-standalone-chevron {
+          color: #ffffff;
+          opacity: 1;
+        }
+
+        .header-left-col {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           flex: 1;
         }
 
-        .nav-tree-num {
+        .tree-num {
           font-family: var(--font-tech);
           font-size: 11px;
           font-weight: 800;
           color: #800e13;
         }
 
-        .nav-tree-icon {
+        .tree-icon {
           color: #64748b;
         }
 
-        .nav-tree-item.is-active-main .nav-tree-icon {
+        .tree-group-header.active-parent .tree-icon {
           color: #800e13;
         }
 
-        .nav-tree-label {
+        .tree-text {
           font-family: var(--font-heading);
-          font-size: 13px;
+          font-size: 12.5px;
           font-weight: 700;
           color: #111827;
         }
 
-        .nav-tree-item.is-active-main .nav-tree-label {
+        .tree-group-header.active-parent .tree-text {
           color: #800e13;
         }
 
-        .nav-tree-chevron {
+        .tree-chevron {
           color: #94a3b8;
+          transition: transform 0.2s ease;
         }
 
-        /* Sub-Level Sidebar Items */
-        .nav-tree-sub-container {
+        .tree-chevron.open {
+          transform: rotate(180deg);
+        }
+
+        /* Sub branches */
+        .tree-sub-branches {
           background-color: #fafbfc;
-          padding: 4px 8px 6px 14px;
           border-top: 1px solid #f1f5f9;
+          padding: 4px 6px 6px 12px;
           display: flex;
           flex-direction: column;
           gap: 2px;
         }
 
-        .nav-sub-leaf {
+        .sub-category-group {
+          margin: 2px 0;
+        }
+
+        .sub-category-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 6px 8px;
-          border-radius: 3px;
           cursor: pointer;
-          transition: all 0.15s ease;
+          border-radius: 3px;
           font-size: 12px;
-          color: #475569;
-          font-weight: 600;
+          font-weight: 700;
+          color: #334155;
+          transition: all 0.15s ease;
         }
 
-        .nav-sub-leaf:hover {
+        .sub-category-header:hover {
           background-color: #f1f5f9;
           color: #800e13;
         }
 
-        .nav-sub-leaf.active-leaf {
-          background-color: #fff1f1;
+        .sub-category-header.active-sub {
           color: #800e13;
-          font-weight: 700;
+          background-color: #fff1f1;
         }
 
-        .nav-sub-leaf .sub-bullet {
-          width: 5px;
-          height: 5px;
+        .sub-bullet {
+          width: 6px;
+          height: 6px;
           border-radius: 50%;
-          background-color: #cbd5e1;
+          background-color: #800e13;
           margin-right: 8px;
           flex-shrink: 0;
         }
 
-        .nav-sub-leaf.active-leaf .sub-bullet {
-          background-color: #800e13;
-        }
-
-        .nav-sub-leaf .sub-text {
+        .sub-title {
           flex: 1;
         }
 
-        .nav-sub-leaf .sub-arrow {
+        .sub-chevron {
           color: #94a3b8;
+          transition: transform 0.2s ease;
         }
 
-        .nav-sub-leaf.simple {
-          justify-content: flex-start;
+        .sub-chevron.open {
+          transform: rotate(180deg);
         }
 
-        .nav-inner-leaf-box {
-          padding-left: 18px;
+        /* Leaf Items */
+        .leaf-items-list {
+          padding-left: 14px;
           margin: 2px 0 4px;
           display: flex;
           flex-direction: column;
-          gap: 2px;
+          gap: 1px;
         }
 
-        .nav-inner-leaf {
-          padding: 3px 6px;
-          font-size: 11px;
-          color: #64748b;
-          cursor: pointer;
-          border-radius: 2px;
-        }
-
-        .nav-inner-leaf:hover {
-          color: #800e13;
-          background-color: #fff1f1;
-        }
-
-        /* Sidebar Support Box */
-        .sidebar-support-box {
-          margin: 10px;
-          padding: 10px;
-          background-color: #f8fafc;
-          border: 1px solid #e2e8f0;
-          border-radius: 3px;
-          display: flex;
-          align-items: flex-start;
-          gap: 8px;
-        }
-
-        .support-box-icon {
-          width: 28px;
-          height: 28px;
-          border-radius: 3px;
-          background-color: #fff1f1;
+        .leaf-item,
+        .leaf-item-direct {
           display: flex;
           align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .support-box-heading {
-          font-family: var(--font-heading);
+          gap: 7px;
+          padding: 6px 8px;
           font-size: 11.5px;
-          font-weight: 700;
-          color: #111827;
-          margin: 0 0 1px 0;
-        }
-
-        .support-box-desc {
-          font-size: 10px;
-          color: #64748b;
-          margin: 0 0 3px 0;
-        }
-
-        .support-box-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          font-family: var(--font-tech);
-          font-size: 9.5px;
-          font-weight: 700;
-          color: #800e13;
-          text-transform: uppercase;
-          text-decoration: none;
-        }
-
-        /* RIGHT CONTENT PANEL (FULL-WIDTH USAGE & HIGH IMPACT) */
-        .services-catalogue-content {
-          background-color: #ffffff;
-          width: 100%;
-        }
-
-        .split-right-view {
-          display: flex;
-          flex-direction: column;
-          animation: serviceFade 0.2s ease;
-          width: 100%;
-        }
-
-        /* Large Full-Width Right Banner */
-        .split-hero-banner {
-          position: relative;
-          border-radius: 4px;
-          overflow: hidden;
-          background-color: #0f172a;
-          width: 100%;
-          min-height: clamp(240px, 20vw, 300px);
-          display: flex;
-          align-items: flex-end;
-          margin-bottom: 22px;
-        }
-
-        .split-hero-bg-img {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          opacity: 0.72;
-        }
-
-        .split-hero-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, rgba(8, 11, 18, 0.96) 0%, rgba(15, 23, 42, 0.65) 60%, rgba(15, 23, 42, 0.15) 100%);
-        }
-
-        .split-hero-content {
-          position: relative;
-          z-index: 2;
-          padding: 24px 28px;
-          width: 100%;
-        }
-
-        .split-eyebrow-tag {
-          font-family: var(--font-tech);
-          font-size: 10.5px;
-          font-weight: 800;
-          color: #e03137;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          display: block;
-          margin-bottom: 4px;
-        }
-
-        .split-hero-title {
-          font-family: var(--font-heading);
-          font-size: clamp(22px, 2.6vw, 30px);
-          font-weight: 800;
-          color: #ffffff;
-          margin: 0 0 6px 0;
-          letter-spacing: -0.01em;
-        }
-
-        .split-hero-desc {
-          font-size: 13.5px;
-          line-height: 1.55;
-          color: #e2e8f0;
-          margin: 0 0 16px 0;
-          max-width: 900px;
-        }
-
-        .split-hero-inquire-wrap {
-          display: flex;
-        }
-
-        .split-hero-inquire-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 9px 20px;
-          background-color: #800e13;
-          color: #ffffff;
-          font-family: var(--font-tech);
-          font-size: 11.5px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          text-decoration: none;
+          color: #475569;
+          font-weight: 500;
           border-radius: 2px;
-          transition: background-color 0.2s ease, transform 0.2s ease;
-        }
-
-        .split-hero-inquire-btn:hover {
-          background-color: #670b10;
-          transform: translateY(-1px);
-          color: #ffffff;
-        }
-
-        /* Section Headers */
-        .split-section-header {
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-          padding-bottom: 8px;
-          margin-bottom: 16px;
-          border-bottom: 2px solid #0f172a;
-        }
-
-        .split-sub-tag {
-          font-family: var(--font-tech);
-          font-size: 10px;
-          font-weight: 800;
-          color: #800e13;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          display: block;
-          margin-bottom: 2px;
-        }
-
-        .split-section-title {
-          font-family: var(--font-heading);
-          font-size: 18px;
-          font-weight: 800;
-          color: #111827;
-          margin: 0;
-        }
-
-        .split-count-badge {
-          font-family: var(--font-tech);
-          font-size: 11px;
-          font-weight: 700;
-          color: #800e13;
-        }
-
-        /* Full Width Substantial Cards Grid */
-        .split-cards-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-          width: 100%;
-        }
-
-        .split-editorial-card {
-          background-color: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 4px;
-          overflow: hidden;
           cursor: pointer;
-          display: flex;
-          flex-direction: column;
-          transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .split-editorial-card:hover {
-          transform: translateY(-3px);
-          border-color: #800e13;
-          box-shadow: 0 8px 18px rgba(15, 23, 42, 0.07);
-        }
-
-        .split-card-media {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 16 / 10;
-          background-color: #0f172a;
-          overflow: hidden;
-        }
-
-        .split-card-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          transition: transform 0.35s ease;
-        }
-
-        .split-editorial-card:hover .split-card-img {
-          transform: scale(1.05);
-        }
-
-        .split-card-tag {
-          position: absolute;
-          top: 8px;
-          left: 8px;
-          background: rgba(15, 23, 42, 0.85);
-          backdrop-filter: blur(4px);
-          color: #ffffff;
-          font-family: var(--font-tech);
-          font-size: 9px;
-          font-weight: 700;
-          padding: 2px 6px;
-          border-radius: 2px;
-          border-left: 2px solid #800e13;
-          text-transform: uppercase;
-        }
-
-        .split-card-meta {
-          padding: 14px 16px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          background-color: #ffffff;
-          flex: 1;
-        }
-
-        .split-card-meta-left {
-          flex: 1;
-          margin-bottom: 12px;
-        }
-
-        .split-card-num {
-          font-family: var(--font-tech);
-          font-size: 10.5px;
-          font-weight: 800;
-          color: #800e13;
-          display: block;
-          margin-bottom: 2px;
-        }
-
-        .split-card-title {
-          font-family: var(--font-heading);
-          font-size: 13.5px;
-          font-weight: 700;
-          color: #111827;
-          margin: 0 0 4px 0;
+          transition: all 0.15s ease;
           line-height: 1.35;
         }
 
-        .split-card-desc {
-          font-size: 11.5px;
-          line-height: 1.45;
-          color: #64748b;
-          margin: 0;
-        }
-
-        .split-card-action-bar {
-          border-top: 1px solid #f1f5f9;
-          padding-top: 9px;
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-        }
-
-        .split-card-inquire-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          font-family: var(--font-tech);
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          color: #800e13;
-          text-transform: uppercase;
-          text-decoration: none;
-          transition: color 0.15s ease, gap 0.15s ease;
-        }
-
-        .split-card-inquire-link:hover {
-          color: #e03137;
-          gap: 7px;
-        }
-
-        /* Nested Sub-Container for Milling & Grinding */
-        .split-nested-sub-container {
-          background-color: #f8fafc;
-          border: 1px solid #e2e8f0;
-          border-left: 3px solid #800e13;
-          border-radius: 4px;
-          padding: 16px;
-          margin-bottom: 18px;
-          width: 100%;
-        }
-
-        .nested-sub-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 14px;
-          flex-wrap: wrap;
-          gap: 10px;
-        }
-
-        .nested-sub-header-title {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        .nested-sub-num {
-          font-family: var(--font-tech);
-          font-size: 12.5px;
-          font-weight: 800;
-          color: #800e13;
-          background-color: #fff1f1;
-          padding: 2px 6px;
-          border-radius: 2px;
-        }
-
-        .nested-title {
-          font-family: var(--font-heading);
-          font-size: 15px;
-          font-weight: 800;
-          color: #111827;
-          margin: 0;
-        }
-
-        .nested-desc {
-          font-size: 11.5px;
-          color: #64748b;
-          margin: 0;
-        }
-
-        .nested-sub-inquire-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          font-family: var(--font-tech);
-          font-size: 11px;
-          font-weight: 700;
-          color: #800e13;
-          text-transform: uppercase;
-          text-decoration: none;
-          padding: 4px 10px;
-          border-radius: 2px;
-          background-color: #ffffff;
-          border: 1px solid #e2e8f0;
-          transition: all 0.15s ease;
-        }
-
-        .nested-sub-inquire-btn:hover {
-          background-color: #800e13;
-          border-color: #800e13;
-          color: #ffffff;
-        }
-
-        /* MOBILE ACCORDION */
-        .services-mobile-accordion {
-          display: none;
-        }
-
-        .mobile-nav-block {
-          background-color: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 4px;
-          margin-bottom: 8px;
-          overflow: hidden;
-        }
-
-        .mobile-nav-block-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 13px 15px;
-          cursor: pointer;
-        }
-
-        .mobile-nav-block.is-open .mobile-nav-block-header {
-          background-color: #800e13;
-          color: #ffffff;
-        }
-
-        .mobile-nav-title {
-          font-family: var(--font-heading);
-          font-size: 14px;
-          font-weight: 700;
-          color: inherit;
-          margin: 0;
-        }
-
-        .mobile-nav-block-body {
-          padding: 14px 10px;
-          border-top: 1px solid #f1f5f9;
-        }
-
-        /* 3. BOTTOM COMPACT CTA */
-        .services-bottom-cta {
-          position: relative;
-          padding: 44px 0;
-          background-image: url('/images/hero_welding_fabrication.jpg');
-          background-size: cover;
-          background-position: center 30%;
-          overflow: hidden;
-        }
-
-        .bottom-cta-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(8, 11, 18, 0.94) 0%, rgba(103, 11, 16, 0.88) 100%);
-        }
-
-        .bottom-cta-inner {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 24px;
-        }
-
-        .bottom-cta-eyebrow {
-          font-family: var(--font-tech);
-          font-size: 10.5px;
-          font-weight: 700;
-          color: #e03137;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          display: block;
-          margin-bottom: 4px;
-        }
-
-        .bottom-cta-heading {
-          font-family: var(--font-heading);
-          font-size: clamp(19px, 2.5vw, 28px);
-          font-weight: 800;
-          color: #ffffff;
-          margin: 0;
-          max-width: 760px;
-          line-height: 1.25;
-        }
-
-        .bottom-cta-button {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 11px 22px;
-          background-color: #ffffff;
-          color: #800e13;
-          font-family: var(--font-tech);
-          font-size: 12px;
-          font-weight: 700;
-          text-transform: uppercase;
-          text-decoration: none;
-          border-radius: 2px;
-          transition: all 0.2s ease;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          white-space: nowrap;
-        }
-
-        .bottom-cta-button:hover {
+        .leaf-item:hover,
+        .leaf-item-direct:hover {
           background-color: #f1f5f9;
-          transform: translateY(-2px);
-          color: #670b10;
+          color: #800e13;
         }
 
-        /* 4. BOTTOM TRUST BAR */
-        .services-trust-bar {
-          padding: 18px 0;
-          background-color: #ffffff;
-          border-bottom: 1px solid #e5e7eb;
-        }
-
-        .trust-bar-flex {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 12px;
-        }
-
-        .trust-item {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-family: var(--font-heading);
-          font-size: 12px;
+        .leaf-item.is-selected,
+        .leaf-item-direct.is-selected {
+          background-color: #800e13;
+          color: #ffffff;
           font-weight: 700;
-          color: #111827;
         }
 
-        .trust-divider {
-          width: 1px;
-          height: 16px;
-          background-color: #e2e8f0;
-        }
-
-        .trust-tagline {
-          font-family: var(--font-tech);
-          font-size: 10.5px;
-          font-weight: 600;
-          color: #64748b;
-          letter-spacing: 0.04em;
-        }
-
-        /* 5. MODAL STYLES */
-        .service-modal-backdrop {
-          position: fixed;
-          inset: 0;
-          background-color: rgba(10, 14, 22, 0.75);
-          backdrop-filter: blur(5px);
-          z-index: 999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-          animation: serviceFade 0.2s ease;
-        }
-
-        .service-modal-card {
-          background-color: #ffffff;
-          border-radius: 4px;
-          max-width: 720px;
-          width: 100%;
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 20px 48px rgba(0, 0, 0, 0.3);
-        }
-
-        .service-modal-close {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          width: 30px;
-          height: 30px;
+        .leaf-indicator {
+          width: 4px;
+          height: 4px;
           border-radius: 50%;
-          background-color: #f1f5f9;
-          border: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          z-index: 10;
+          background-color: #cbd5e1;
+          flex-shrink: 0;
         }
 
-        .service-modal-grid {
+        .leaf-item.is-selected .leaf-indicator,
+        .leaf-item-direct.is-selected .leaf-indicator {
+          background-color: #ffffff;
+        }
+
+        /* ========================================================================= */
+        /* RIGHT SIDE: BALANCED TWO-COLUMN DETAIL SHOWCASE (MEDIUM-SIZED BALANCED)   */
+        /* ========================================================================= */
+        .services-detail-main-content {
+          width: 100%;
+        }
+
+        .animate-detail-fade {
+          animation: detailFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes detailFadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(2px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .selected-service-card {
+          width: 100%;
+          background-color: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 4px;
+          padding: clamp(32px, 3.2vw, 44px);
+          box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
           display: grid;
-          grid-template-columns: 280px 1fr;
+          grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+          gap: clamp(32px, 3.5vw, 46px);
+          align-items: center;
+          min-height: 480px;
         }
 
-        .service-modal-media {
+        /* LEFT: SERVICE IMAGE (45%) */
+        .service-detail-image-col {
+          width: 100%;
+        }
+
+        .detail-image-box {
           position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          max-height: 430px;
+          min-height: 310px;
           background-color: #0f172a;
-          min-height: 250px;
+          border-radius: 4px;
+          overflow: hidden;
+          border: 1px solid #e2e8f0;
+          box-shadow: 0 2px 14px rgba(15, 23, 42, 0.05);
         }
 
-        .service-modal-img {
+        .detail-featured-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           display: block;
         }
 
-        .service-modal-badge {
-          position: absolute;
-          bottom: 8px;
-          left: 8px;
-          background: rgba(15, 23, 42, 0.85);
-          backdrop-filter: blur(4px);
-          color: #ffffff;
-          font-family: var(--font-tech);
-          font-size: 9px;
-          font-weight: 700;
-          padding: 2px 6px;
-          border-radius: 2px;
-          border-left: 2px solid #800e13;
-        }
-
-        .service-modal-body {
-          padding: 20px 18px;
+        /* RIGHT: SERVICE INFORMATION (55%) */
+        .service-detail-info-col {
           display: flex;
           flex-direction: column;
+          justify-content: center;
+          gap: 14px;
         }
 
-        .service-modal-discipline {
+        /* 1. Small Category Label */
+        .service-category-label {
           font-family: var(--font-tech);
-          font-size: 10px;
-          font-weight: 700;
-          color: #800e13;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          margin-bottom: 3px;
-        }
-
-        .service-modal-title {
-          font-family: var(--font-heading);
-          font-size: 17px;
+          font-size: 11.5px;
           font-weight: 800;
-          color: #111827;
-          margin: 0 0 6px 0;
+          letter-spacing: 0.14em;
+          color: #800e13;
+          text-transform: uppercase;
         }
 
-        .service-modal-text {
-          font-size: 12.5px;
-          line-height: 1.5;
-          color: #4b5563;
-          margin: 0 0 14px 0;
+        /* 2. Service Title */
+        .service-title {
+          font-family: var(--font-heading);
+          font-size: clamp(24px, 2.5vw, 32px);
+          font-weight: 800;
+          color: #0f172a;
+          margin: 0;
+          line-height: 1.22;
+          letter-spacing: -0.015em;
         }
 
-        .service-modal-actions {
-          margin-top: auto;
+        /* 3. Short 1-Sentence Description */
+        .service-description {
+          font-size: 15px;
+          line-height: 1.6;
+          color: #475569;
+          margin: 0;
+          max-width: 580px;
         }
 
-        .service-modal-inquire-btn {
+        /* 4. Key Highlights Block */
+        .service-highlights-block {
+          margin-top: 2px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .service-section-eyebrow {
+          font-family: var(--font-tech);
+          font-size: 10.5px;
+          font-weight: 800;
+          color: #0f172a;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        /* Highlights List */
+        .service-highlights-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .highlight-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #1e293b;
+        }
+
+        .highlight-dot {
+          width: 6.5px;
+          height: 6.5px;
+          border-radius: 50%;
+          background-color: #800e13;
+          flex-shrink: 0;
+        }
+
+        /* 5. Ideal for Line */
+        .service-ideal-for-wrap {
+          font-size: 13.5px;
+          line-height: 1.55;
+          margin-top: 2px;
+          padding-top: 4px;
+          border-top: 1px dashed #e2e8f0;
+        }
+
+        .ideal-for-label {
+          font-family: var(--font-tech);
+          font-size: 11px;
+          font-weight: 800;
+          color: #0f172a;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          margin-right: 4px;
+        }
+
+        .ideal-for-text {
+          font-size: 13.5px;
+          color: #475569;
+          font-weight: 500;
+        }
+
+        /* 6. Inquire Button */
+        .service-action-wrap {
+          padding-top: 4px;
+        }
+
+        .service-inquire-btn {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
-          padding: 8px 16px;
+          gap: 8px;
+          padding: 13px 32px;
           background-color: #800e13;
           color: #ffffff;
           font-family: var(--font-tech);
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
-          text-decoration: none;
+          border: none;
           border-radius: 2px;
+          cursor: pointer;
+          transition: background-color 0.2s ease, transform 0.2s ease;
+          box-shadow: 0 3px 14px rgba(128, 14, 19, 0.24);
         }
 
-        @keyframes serviceFade {
-          from { opacity: 0; transform: translateY(3px); }
-          to { opacity: 1; transform: translateY(0); }
+        .service-inquire-btn:hover {
+          background-color: #670b10;
+          transform: translateY(-2px);
         }
 
-        /* RESPONSIVE BREAKPOINTS */
-        @media (max-width: 1200px) {
-          .split-cards-grid {
-            grid-template-columns: repeat(2, 1fr);
+        /* MOBILE BAR (< 992px) */
+        .mobile-category-bar {
+          display: none;
+          margin-bottom: 18px;
+        }
+
+        .mobile-category-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 16px;
+          background-color: #0f172a;
+          color: #ffffff;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .mobile-btn-copy {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2px;
+        }
+
+        .mobile-btn-tag {
+          font-family: var(--font-tech);
+          font-size: 9px;
+          font-weight: 700;
+          color: #e03137;
+          letter-spacing: 0.1em;
+        }
+
+        .mobile-btn-title {
+          font-family: var(--font-heading);
+          font-size: 13.5px;
+          font-weight: 700;
+        }
+
+        .mobile-chevron {
+          transition: transform 0.2s ease;
+        }
+
+        .mobile-chevron.open {
+          transform: rotate(180deg);
+        }
+
+        /* ========================================================================= */
+        /* RESPONSIVE BREAKPOINTS                                                    */
+        /* ========================================================================= */
+        @media (max-width: 991px) {
+          .services-catalogue-grid {
+            grid-template-columns: 1fr;
           }
-        }
 
-        @media (max-width: 900px) {
-          .services-catalogue-layout {
+          .services-sidebar-column {
             display: none;
           }
-          .services-mobile-accordion {
+
+          .services-sidebar-column.mobile-visible {
+            display: block;
+            position: static;
+            margin-bottom: 20px;
+          }
+
+          .services-sidebar-column.mobile-visible .sidebar-container-box {
+            max-height: 65vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .mobile-category-bar {
             display: block;
           }
-          .split-cards-grid {
+
+          .selected-service-card {
             grid-template-columns: 1fr;
-            gap: 10px;
-          }
-          .bottom-cta-inner {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          .trust-bar-flex {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-          }
-          .trust-divider {
-            display: none;
-          }
-          .service-modal-grid {
-            grid-template-columns: 1fr;
-          }
-          .service-modal-media {
-            aspect-ratio: 16 / 10;
+            gap: 22px;
+            padding: 22px;
             min-height: auto;
+          }
+
+          .detail-image-box {
+            max-height: 320px;
+            min-height: auto;
+            aspect-ratio: 16 / 10;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .service-title {
+            font-size: 21px;
+          }
+
+          .service-inquire-btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .selected-service-card {
+            padding: 16px;
+            gap: 16px;
+          }
+          .detail-image-box {
+            max-height: 230px;
+          }
+          .service-title {
+            font-size: 19px;
+          }
+          .service-description {
+            font-size: 14px;
+          }
+          .highlight-item {
+            font-size: 13px;
           }
         }
       `}</style>
     </div>
   );
 }
+

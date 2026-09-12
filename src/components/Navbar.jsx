@@ -20,6 +20,23 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   // Requested Navigation Order: HOME -> ABOUT US -> SERVICES -> GALLERY -> CONTACT US
   const navItems = [
     { label: 'HOME', path: '/' },
@@ -126,7 +143,7 @@ export default function Navbar() {
         {/* Right Phone Contact Link: Direct Tel Call */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <a
-            href="tel:+919822327460"
+            href="tel:+919370741361"
             className="navbar-phone-btn"
             style={{
               display: 'inline-flex',
@@ -159,7 +176,7 @@ export default function Navbar() {
             }}
           >
             <Phone size={15} color="#c52227" strokeWidth={2.2} />
-            <span>+91 98223 27460</span>
+            <span>+91 93707 41361</span>
           </a>
 
           {/* Mobile Menu Toggle */}
@@ -187,18 +204,21 @@ export default function Navbar() {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div
+          className="mobile-drawer-menu"
           style={{
             position: 'fixed',
-            top: '80px',
+            top: 'var(--nav-height, 80px)',
             left: 0,
             right: 0,
+            maxHeight: 'calc(100dvh - var(--nav-height, 80px))',
+            overflowY: 'auto',
             backgroundColor: '#ffffff',
-            padding: '24px 24px 32px',
+            padding: '20px 20px 32px',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
             borderBottom: '1px solid #e5e7eb',
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
+            gap: '8px',
             zIndex: 99
           }}
         >
@@ -210,7 +230,7 @@ export default function Navbar() {
                 to={item.path}
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
-                  fontSize: '16px',
+                  fontSize: '15px',
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 600,
                   color: active ? '#c52227' : '#1f2937',
@@ -229,7 +249,7 @@ export default function Navbar() {
           })}
 
           <a
-            href="tel:+919822327460"
+            href="tel:+919370741361"
             onClick={() => setMobileMenuOpen(false)}
             style={{
               display: 'flex',
@@ -240,15 +260,15 @@ export default function Navbar() {
               backgroundColor: '#c52227',
               color: '#ffffff',
               fontFamily: 'var(--font-heading)',
-              fontSize: '15px',
+              fontSize: '14.5px',
               fontWeight: 600,
               textDecoration: 'none',
               borderRadius: '4px',
-              marginTop: '12px'
+              marginTop: '8px'
             }}
           >
             <Phone size={16} color="#ffffff" />
-            <span>+91 98223 27460</span>
+            <span>+91 93707 41361</span>
           </a>
         </div>
       )}

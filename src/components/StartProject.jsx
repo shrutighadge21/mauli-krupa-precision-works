@@ -202,9 +202,9 @@ export default function StartProject() {
                     Mauli Krupa Precision Works
                   </div>
                   <div style={{ fontSize: '13.5px', color: '#4b5563', lineHeight: 1.55 }}>
-                    Intelligent Cadet International School,<br />
-                    Vaishno Mata Marg, Sector No. 3,<br />
-                    Bhosari, Pimpri-Chinchwad, Maharashtra 411026
+                    S. No. 222/3, Gurukrupa Colony,<br />
+                    Sant Tukaram Nagar, Bhosari,<br />
+                    Pune, Maharashtra 411039
                   </div>
                 </div>
               </div>

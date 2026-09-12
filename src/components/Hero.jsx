@@ -118,13 +118,14 @@ export default function Hero() {
           <h1 
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(32px, 4.4vw, 56px)',
+              fontSize: 'clamp(28px, 5vw, 56px)',
               fontWeight: 700,
-              lineHeight: 1.12,
+              lineHeight: 1.14,
               letterSpacing: '-0.02em',
               textTransform: 'uppercase',
               color: '#ffffff',
-              marginBottom: '24px',
+              marginBottom: '20px',
+              wordBreak: 'break-word',
               textShadow: '0 3px 20px rgba(0, 0, 0, 0.85)'
             }}
           >
@@ -136,7 +137,7 @@ export default function Hero() {
           <p 
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(16px, 1.35vw, 18.5px)',
+              fontSize: 'clamp(15px, 1.3vw, 18.5px)',
               lineHeight: 1.65,
               color: '#f8fafc',
               maxWidth: '640px',
@@ -150,8 +151,9 @@ export default function Hero() {
 
         </div>
 
-        {/* Minimal Slide Indicator Lines at Bottom */}
+        {/* Minimal Slide Indicator Lines */}
         <div 
+          className="hero-slide-indicators"
           style={{
             position: 'absolute',
             bottom: '-48px',
@@ -185,6 +187,17 @@ export default function Hero() {
         </div>
 
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .hero-slide-indicators {
+            position: relative !important;
+            bottom: auto !important;
+            right: auto !important;
+            margin-top: 36px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

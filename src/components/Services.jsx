@@ -6,96 +6,81 @@ export default function Services() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeModalService, setActiveModalService] = useState(null);
 
-  // 6 Core Services using 100% authentic Indian manufacturing imagery & real product data
+  // 5 Core Services matching exact Services page hierarchy & high-resolution industrial assets
   const services = [
     {
       number: '01',
-      id: 'jigs-fixtures',
-      title: 'Jigs & Fixtures',
-      description: 'Precision-engineered jigs and fixtures designed to improve accuracy, consistency and efficiency across industrial manufacturing processes.',
-      image: '/images/service_jigs_fixtures.jpg',
-      alt: 'Precision Jigs and Fixtures Tooling & Inspection in Pune Workshop',
-      objectPosition: 'center 45%',
+      id: 'industrial-fabrication',
+      title: 'Industrial Fabrication',
+      description: 'Heavy structural steel fabrication, custom machine frames, pressure tanks, piping spools and industrial sheet metal engineering built to project specifications.',
+      image: '/images/service_fabrication.jpg',
+      alt: 'Heavy Industrial Metal Fabrication, Structural Frames and Tanks Workshop',
+      objectPosition: 'center 48%',
       specs: [
-        'Concentricity Checking Fixtures',
-        'Grinding & Welding Fixtures',
-        'Mechanical & Hydraulic Fixtures',
-        'Inspection Master Tooling as per Drawing'
+        'SS & MS Structural Framing & Channels',
+        'Process Tank & Vessel Fabrication',
+        'High-Integrity Pipeline Spools & Manifolds',
+        'CNC Laser Cutting & Press Brake Forming'
       ]
     },
     {
       number: '02',
-      id: 'conveyors-material-handling',
-      title: 'Conveyors & Material Handling',
-      description: 'Reliable conveyor and material handling solutions designed for smooth, efficient and organised movement of industrial materials.',
-      image: '/images/service_conveyors.jpg',
-      alt: 'Industrial Automated Conveyor Roller Systems and Material Handling Lines',
-      objectPosition: 'center 50%',
+      id: 'machining',
+      title: 'Machining',
+      description: 'High-precision CNC milling, plano milling, lathe turning, radial drilling, and cylindrical & surface grinding to strict micron tolerances.',
+      image: '/images/contact_hero_cnc.jpg',
+      alt: 'Precision CNC Milling, Plano Milling and Toolroom Machining Workshop',
+      objectPosition: 'center 45%',
       specs: [
-        'PVC & Rubber Belt Conveyors',
-        'Z-Type Magnetic Incline Conveyors',
-        'Bucket Elevators & Screw Conveyors',
-        'Chain, Gravity & Trolleys Track Conveyors'
+        'Multi-Axis VMC & Heavy Plano Milling',
+        'Precision Lathe Turning, Facing & Boring',
+        'Cylindrical OD/ID & Surface Grinding',
+        'Heavy Radial Drilling & Precision Tapping'
       ]
     },
     {
       number: '03',
-      id: 'industrial-trolleys',
-      title: 'Industrial Trolleys',
-      description: 'Custom industrial trolleys designed for safe, efficient and practical movement of components, materials and equipment.',
-      image: '/images/service_trolleys.jpg',
-      alt: 'Heavy Duty Industrial Shopfloor Transit and Platform Trolleys',
-      objectPosition: 'center 45%',
+      id: 'conveyor-material-handling',
+      title: 'Conveyor & Material Handling',
+      description: 'Industrial belt, flat slat, and magnetic conveyor systems alongside heavy-duty transit trolleys and steel storage pallets engineered for material movement.',
+      image: '/images/service_conveyors.jpg',
+      alt: 'Industrial Automated Conveyor Roller Systems and Material Handling Lines',
+      objectPosition: 'center 50%',
       specs: [
-        'Heavy Duty Platform Trolleys',
-        'Wire Mesh Component Trolleys',
-        'Hand Trolleys & Scrap Bin Carriers',
-        'Custom Material Handling Transit Racks'
+        'Industrial Belt & Flat Slat Conveyors',
+        'Z-Type Magnetic Scrap & Chip Conveyors',
+        'Custom Heavy-Duty Transit Trolleys',
+        'Heavy Steel Storage Pallets & Stillages'
       ]
     },
     {
       number: '04',
-      id: 'industrial-fabrication',
-      title: 'Industrial Fabrication',
-      description: 'Precision fabrication and engineered structural solutions developed to meet specific industrial and manufacturing requirements.',
-      image: '/images/service_fabrication.jpg',
-      alt: 'Heavy Industrial Metal Fabrication and Press Machinery Workshop',
-      objectPosition: 'center 48%',
+      id: 'jigs-fixtures',
+      title: 'Jigs & Fixtures',
+      description: 'Application-specific jigs and holding fixtures engineered for consistent positioning, rigid clamping, and repeatable manufacturing accuracy.',
+      image: '/images/service_jigs_fixtures.jpg',
+      alt: 'Precision Jigs and Fixtures Tooling & Inspection in Pune Workshop',
+      objectPosition: 'center 45%',
       specs: [
-        'Hydraulic Tool Pressing Machine Structures',
-        'Heavy Machine Base Beds & Frames',
-        '400A MIG & Arc Precision Welding',
-        'Plate Cutting, Bending & Welded Frameworks'
+        'Custom Welding & Assembly Fixtures',
+        'Machining Clamping & Tooling Jigs',
+        'Concentricity Inspection Fixtures',
+        'Locating Pins, Clamps & Guide Tooling'
       ]
     },
     {
       number: '05',
-      id: 'custom-engineering',
-      title: 'Custom Machines & Engineering Solutions',
-      description: 'Special-purpose machines and customised engineering solutions developed according to client drawings and industrial requirements.',
+      id: 'spm',
+      title: 'SPM',
+      description: 'Special Purpose Machines (SPM) and custom automated manufacturing equipment engineered to streamline dedicated production operations.',
       image: '/images/service_custom_spm.jpg',
-      alt: 'High-Precision 5-Axis CNC Milling Center and Custom Machine SPM',
+      alt: 'Special Purpose Machines, Custom Automated Machinery & Testing Rigs',
       objectPosition: 'center 45%',
       specs: [
-        'Welding SPM Machines as per Drawing',
+        'Custom Dedicated Welding SPM Machines',
+        'High-Pressure Checking & Testing Rigs',
         'Balance Straightening Press Machines',
-        'High Altitude Pressure Checking Rigs',
-        'Fuel Sensor Automated Testing Rigs'
-      ]
-    },
-    {
-      number: '06',
-      id: 'surface-finishing',
-      title: 'Surface Finishing',
-      description: 'Buffing, polishing and pickling facilities available to support high-quality surface finishing and industrial component requirements.',
-      image: '/images/service_surface_finishing.jpg',
-      alt: 'Industrial Buffing, Mirror Polishing and Pickling Facility',
-      objectPosition: 'center 45%',
-      specs: [
-        'Heavy Duty Metal Buffing & Polishing',
-        'Chemical Pickling & Passivation Tanks',
-        'Stainless Steel & Mild Steel Surface Treatment',
-        'Corrosion Resistance & Mirror / Satin Finish'
+        'Automated Component Assembly Systems'
       ]
     }
   ];
@@ -262,7 +247,7 @@ export default function Services() {
           }}
           className="services-showcase-viewport"
         >
-          {/* Smooth Crossfade Background Images — Lightened with High Clarity */}
+          {/* Smooth Crossfade Background Images — Original High-Resolution Clarity */}
           {services.map((service, index) => {
             const isActive = activeIndex === index;
             return (
@@ -274,10 +259,10 @@ export default function Services() {
                   backgroundImage: `url(${service.image})`,
                   backgroundSize: 'cover',
                   backgroundPosition: service.objectPosition || 'center 45%',
+                  backgroundRepeat: 'no-repeat',
                   opacity: isActive ? 1 : 0,
-                  transform: isActive ? 'scale(1)' : 'scale(1.04)',
-                  transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-                  filter: 'brightness(0.95) contrast(1.05) saturate(1.1)',
+                  transform: isActive ? 'scale(1)' : 'scale(1.02)',
+                  transition: 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                   pointerEvents: 'none'
                 }}
               />
@@ -513,9 +498,10 @@ export default function Services() {
             style={{
               maxWidth: '680px',
               width: '100%',
+              maxHeight: '88vh',
+              overflowY: 'auto',
               backgroundColor: '#ffffff',
               borderRadius: '4px',
-              overflow: 'hidden',
               boxShadow: '0 24px 60px rgba(0, 0, 0, 0.3)',
               position: 'relative',
               border: '1px solid #e5e7eb'

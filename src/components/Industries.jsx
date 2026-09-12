@@ -33,7 +33,7 @@ export default function Industries() {
         'Bogie fabrication & structural welding tooling',
         'High-tonnage hydraulic press weldment structures'
       ],
-      targetScroll: 0.02
+      targetScroll: 0.05
     },
     {
       number: '02',
@@ -49,7 +49,7 @@ export default function Industries() {
         'Robotic welding & modular BIW toggle jigs',
         'Concentricity checking & WIP transit racks'
       ],
-      targetScroll: 0.28
+      targetScroll: 0.25
     },
     {
       number: '03',
@@ -81,7 +81,7 @@ export default function Industries() {
         'Precision T-slot machine beds & base tables',
         'Heavy structural tooling & 400A MIG weldments'
       ],
-      targetScroll: 0.72
+      targetScroll: 0.75
     },
     {
       number: '05',
@@ -97,7 +97,7 @@ export default function Industries() {
         'Z-type magnetic & PVC heavy belt conveyors',
         'Multi-tier transit trolleys & material racks'
       ],
-      targetScroll: 0.98
+      targetScroll: 0.95
     }
   ];
 
@@ -141,22 +141,14 @@ export default function Industries() {
       if (!images || images.length !== TOTAL_FRAMES) return;
 
       const floatIndex = progressVal * (TOTAL_FRAMES - 1);
-      const idxA = Math.floor(floatIndex);
-      const idxB = Math.min(TOTAL_FRAMES - 1, idxA + 1);
-      const blend = floatIndex - idxA;
+      const frameIdx = Math.min(TOTAL_FRAMES - 1, Math.max(0, Math.round(floatIndex)));
 
-      const imgA = images[idxA];
-      const imgB = images[idxB];
+      const currentImg = images[frameIdx];
 
-      ctx.clearRect(0, 0, 1376, 768);
-
-      if (imgA && imgA.complete && imgA.naturalWidth > 0) {
+      if (currentImg && currentImg.complete && currentImg.naturalWidth > 0) {
+        ctx.clearRect(0, 0, 1376, 768);
         ctx.globalAlpha = 1;
-        ctx.drawImage(imgA, 0, 0, 1376, 768);
-      }
-      if (blend > 0.002 && imgB && imgB.complete && imgB.naturalWidth > 0) {
-        ctx.globalAlpha = blend;
-        ctx.drawImage(imgB, 0, 0, 1376, 768);
+        ctx.drawImage(currentImg, 0, 0, 1376, 768);
       }
     };
 
@@ -168,8 +160,8 @@ export default function Industries() {
       const diff = target - current;
 
       if (Math.abs(diff) > 0.0001) {
-        // Fluid physical dampening (lerp factor: 0.16 for responsive, silky-smooth scrubbing)
-        const next = current + diff * 0.16;
+        // Fluid physical dampening (lerp factor: 0.20 for responsive, silky-smooth scrubbing)
+        const next = current + diff * 0.20;
         currentProgressRef.current = next;
         setScrollProgress(next);
         renderFrame(next);
@@ -178,11 +170,11 @@ export default function Industries() {
         let newIndex = 0;
         if (next < 0.20) {
           newIndex = 0;
-        } else if (next < 0.45) {
+        } else if (next < 0.40) {
           newIndex = 1;
-        } else if (next < 0.70) {
+        } else if (next < 0.60) {
           newIndex = 2;
-        } else if (next < 0.90) {
+        } else if (next < 0.80) {
           newIndex = 3;
         } else {
           newIndex = 4;
@@ -251,7 +243,7 @@ export default function Industries() {
         position: 'relative',
         backgroundColor: '#ffffff',
         color: '#111827',
-        minHeight: '340vh', // Generous runway for intentional, smooth engineering storytelling
+        minHeight: '380vh', // Generous runway for intentional, smooth engineering storytelling
         borderTop: '1px solid #f1f3f5',
         borderBottom: '1px solid #f1f3f5'
       }}
@@ -807,6 +799,7 @@ export default function Industries() {
         {/* ========================================================================= */}
         <div className="container-custom" style={{ position: 'relative', zIndex: 10 }}>
           <div
+            className="industries-bottom-status-row"
             style={{
               paddingTop: '10px',
               borderTop: '1px solid #f1f3f5',
@@ -820,11 +813,11 @@ export default function Industries() {
               textTransform: 'uppercase'
             }}
           >
-            <div>[01] FULLY ASSEMBLED</div>
-            <div style={{ color: '#c52227', fontWeight: 700 }}>
+            <div className="status-bracket-left">[01] FULLY ASSEMBLED</div>
+            <div className="status-center-tag" style={{ color: '#c52227', fontWeight: 700, textAlign: 'center' }}>
               {activeIndustry.stageTag}
             </div>
-            <div>[05] COMPLETE EXPLODED CAD VIEW</div>
+            <div className="status-bracket-right">[05] COMPLETE EXPLODED CAD VIEW</div>
           </div>
         </div>
       </div>
@@ -838,23 +831,49 @@ export default function Industries() {
         }
 
         @media (max-width: 992px) {
+          .industries-sticky-viewport {
+            height: 100vh !important;
+            height: 100dvh !important;
+            padding: clamp(12px, 2vh, 20px) 0 !important;
+          }
           .industries-three-col-layout {
             grid-template-columns: 1fr !important;
-            gap: 20px !important;
+            gap: 14px !important;
           }
           .left-industry-nav {
             display: none !important;
           }
           .main-engineering-canvas {
-            height: 280px !important;
+            height: clamp(200px, 32vh, 320px) !important;
           }
           .right-industry-detail {
             min-height: auto !important;
             text-align: center !important;
             align-items: center !important;
           }
+          .right-industry-detail h3 {
+            font-size: 19px !important;
+          }
+          .right-industry-detail p {
+            font-size: 13px !important;
+            margin-bottom: 10px !important;
+            max-width: 480px !important;
+          }
           .industries-stage-progress-bar {
-            margin-top: 8px !important;
+            margin-top: 6px !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .status-bracket-left,
+          .status-bracket-right {
+            display: none !important;
+          }
+          .industries-bottom-status-row {
+            justify-content: center !important;
+          }
+          .status-center-tag {
+            font-size: 10px !important;
           }
         }
       `}</style>

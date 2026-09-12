@@ -119,27 +119,10 @@ export default function OurImpact() {
       style={{
         position: 'relative',
         backgroundColor: '#ffffff',
-        borderTop: '1px solid #f1f5f9',
-        borderBottom: '1px solid #f1f5f9',
         padding: 'clamp(72px, 8vw, 110px) 0',
         overflow: 'hidden'
       }}
     >
-      {/* Background Precision Engineering Blueprint Grid Overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `
-            linear-gradient(to right, rgba(0, 0, 0, 0.018) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(0, 0, 0, 0.018) 1px, transparent 1px)
-          `,
-          backgroundSize: '48px 48px',
-          pointerEvents: 'none',
-          zIndex: 1
-        }}
-      />
-
       <div className="container-custom" style={{ position: 'relative', zIndex: 2 }}>
         
         {/* ========================================================================= */}
@@ -217,35 +200,10 @@ export default function OurImpact() {
         </div>
 
         {/* ========================================================================= */}
-        {/* EDITORIAL ASYMMETRICAL COMPOSITION (Connected with Hairline Precision Guides) */}
+        {/* EDITORIAL ASYMMETRICAL COMPOSITION (Clean & Open Layout) */}
         {/* ========================================================================= */}
         <div className="impact-editorial-container" style={{ position: 'relative', width: '100%' }}>
           
-          {/* Thin Horizontal Connecting Baseline Top */}
-          <div
-            style={{
-              position: 'relative',
-              width: '100%',
-              height: '1px',
-              backgroundColor: '#e2e8f0',
-              marginBottom: 'clamp(36px, 4.5vw, 54px)'
-            }}
-          >
-            {/* Subtle red progress line across top guide */}
-            <div
-              style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                height: '100%',
-                width: isVisible ? '100%' : '0%',
-                backgroundColor: '#c52227',
-                opacity: 0.35,
-                transition: 'width 1.8s cubic-bezier(0.16, 1, 0.3, 1)'
-              }}
-            />
-          </div>
-
           {/* Top Tier: Metric 01 (Left) & Metric 02 (Offset Right) */}
           <div
             className="impact-top-tier"
@@ -258,11 +216,11 @@ export default function OurImpact() {
               alignItems: 'start'
             }}
           >
-            {/* METRIC 01: 50+ (Positioned Left Anchor, Span 5) */}
+            {/* METRIC 01: 50+ (Positioned Left Anchor, Span 6) */}
             <div
               className="impact-metric-block"
               style={{
-                gridColumn: 'span 5',
+                gridColumn: 'span 6',
                 opacity: isVisible ? 1 : 0,
                 transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
                 transition: 'opacity 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -317,30 +275,11 @@ export default function OurImpact() {
                   lineHeight: 1.55,
                   color: '#64748b',
                   margin: 0,
-                  maxWidth: '300px'
+                  maxWidth: '340px'
                 }}
               >
                 {metrics[0].detail}
               </p>
-            </div>
-
-            {/* Middle Spacer / Subtle Vertical Line on Desktop (Span 2) */}
-            <div
-              className="impact-tier-divider hidden lg:flex"
-              style={{
-                gridColumn: 'span 1',
-                justifyContent: 'center',
-                height: '100%',
-                paddingTop: '8px'
-              }}
-            >
-              <div
-                style={{
-                  width: '1px',
-                  height: '80px',
-                  backgroundColor: '#e2e8f0'
-                }}
-              />
             </div>
 
             {/* METRIC 02: 05 (Positioned Offset Right, Span 6) */}
@@ -403,7 +342,7 @@ export default function OurImpact() {
                   lineHeight: 1.55,
                   color: '#64748b',
                   margin: 0,
-                  maxWidth: '320px'
+                  maxWidth: '340px'
                 }}
               >
                 {metrics[1].detail}
@@ -420,8 +359,7 @@ export default function OurImpact() {
               columnGap: 'clamp(24px, 4vw, 48px)',
               rowGap: '32px',
               alignItems: 'center',
-              paddingTop: 'clamp(20px, 3vw, 36px)',
-              borderTop: '1px solid #f1f5f9'
+              paddingTop: 'clamp(12px, 2vw, 24px)'
             }}
           >
             {/* SUBTLE REAL INDUSTRIAL / WORKSHOP PHOTOGRAPH (Clean, bright, non-dominant, real Indian tooling) */}
@@ -577,8 +515,6 @@ export default function OurImpact() {
         <div
           style={{
             marginTop: 'clamp(44px, 5vw, 60px)',
-            paddingTop: '20px',
-            borderTop: '1px solid #f1f5f9',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'flex-start'
@@ -623,12 +559,9 @@ export default function OurImpact() {
           .impact-top-tier > div:first-child {
             grid-column: span 1 !important;
           }
-          .impact-top-tier > div:nth-child(3) {
+          .impact-top-tier > div:nth-child(2) {
             grid-column: span 1 !important;
             padding-left: 0 !important;
-          }
-          .impact-tier-divider {
-            display: none !important;
           }
           .impact-lower-tier {
             grid-template-columns: 1fr 1fr !important;
@@ -649,7 +582,7 @@ export default function OurImpact() {
             margin-bottom: 36px !important;
           }
           .impact-top-tier > div:first-child,
-          .impact-top-tier > div:nth-child(3) {
+          .impact-top-tier > div:nth-child(2) {
             grid-column: span 1 !important;
           }
           .impact-lower-tier {

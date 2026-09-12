@@ -87,10 +87,10 @@ export default function ContactPage() {
     setErrors({});
   };
 
-  const mapAddress = "Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026";
-  const mapQuery = encodeURIComponent("Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026");
+  const mapAddress = "S. No. 222/3, Gurukrupa Colony, Sant Tukaram Nagar, Bhosari, Pune, Maharashtra 411039";
+  const mapQuery = encodeURIComponent("Mauli Krupa Precision Works, S. No. 222/3, Gurukrupa Colony, Sant Tukaram Nagar, Bhosari, Pune, Maharashtra 411039");
   const googleMapEmbedUrl = `https://maps.google.com/maps?q=${mapQuery}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent("Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026")}`;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent("Mauli Krupa Precision Works, S. No. 222/3, Gurukrupa Colony, Sant Tukaram Nagar, Bhosari, Pune, Maharashtra 411039")}`;
 
   return (
     <div className="contact-page-wrapper" style={{ backgroundColor: '#ffffff', color: '#111827', overflow: 'hidden' }}>
@@ -759,10 +759,9 @@ export default function ContactPage() {
                         marginBottom: '4px'
                       }}
                     >
-                      Intelligent Cadet International School,<br />
-                      Vaishno Mata Marg, Sector No. 3,<br />
-                      Bhosari, Pimpri-Chinchwad,<br />
-                      Maharashtra 411026
+                      S. No. 222/3, Gurukrupa Colony,<br />
+                      Sant Tukaram Nagar, Bhosari,<br />
+                      Pune, Maharashtra 411039
                     </div>
                     <span style={{ fontSize: '12.5px', color: '#6b7280' }}>Visit our facility</span>
                   </div>
@@ -838,7 +837,7 @@ export default function ContactPage() {
               }}
             >
               <strong style={{ color: '#ffffff', display: 'block' }}>MAULI KRUPA PRECISION WORKS</strong>
-              <span>Intelligent Cadet International School, Vaishno Mata Marg, Sector No. 3, Bhosari, Pimpri-Chinchwad, Maharashtra 411026</span>
+              <span>S. No. 222/3, Gurukrupa Colony, Sant Tukaram Nagar, Bhosari, Pune, Maharashtra 411039</span>
             </div>
           </div>
         </div>
@@ -1008,6 +1007,13 @@ export default function ContactPage() {
             border-left: none !important;
             border-top: 1px solid #e5e7eb;
             padding-top: 36px;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .editorial-submit-btn {
+            width: 100% !important;
+            justify-content: center !important;
           }
         }
       `}</style>

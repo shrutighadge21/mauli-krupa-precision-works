@@ -398,13 +398,38 @@ button {
   font-size: 14px;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments and global viewport safety */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 960px) {
+  :root {
+    --nav-height: 74px;
+  }
+}
+
 @media (max-width: 768px) {
   :root {
     --nav-height: 70px;
   }
+  .container-custom, .container-wide {
+    padding-left: clamp(16px, 4vw, 24px);
+    padding-right: clamp(16px, 4vw, 24px);
+  }
   .btn-primary-red, .btn-secondary-white, .btn-outline-white {
-    padding: 12px 22px;
+    padding: 12px 20px;
     font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --nav-height: 66px;
+  }
+  .container-custom, .container-wide {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }

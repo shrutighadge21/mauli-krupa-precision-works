@@ -37,24 +37,6 @@ export const GALLERY_ITEMS = [
     specs: ['Modular gantry framework', 'Twin SS 304 transition hoppers', 'Overhead hoist support beam', 'Pre-drilled field assembly joints']
   },
   {
-    id: 'sheetmetal-hopper-10',
-    code: 'MKP-SHT-01',
-    title: 'Stainless Steel Hoppers',
-    category: 'Sheet Metal & Ducts',
-    image: '/images/gallery_png_products/sheetmetal_hopper_10.png',
-    description: 'Custom fabricated SS 304 transition hoppers with flared intake collars, diagonal transfer chutes, and precision flanged connections.',
-    specs: ['AISI 304 3.0mm stainless steel sheet', 'Purged TIG smooth sanitary welds', 'Laser cut bolt-circle intake flanges', 'Pickled & passivated surface finish']
-  },
-  {
-    id: 'sheetmetal-cabinet-11',
-    code: 'MKP-ENC-01',
-    title: 'Heavy Modular Enclosure',
-    category: 'Enclosures & Cabinets',
-    image: '/images/gallery_png_products/sheetmetal_cabinet_11.png',
-    description: 'Fully enclosed fabricated sheet metal cabinet with modular access doors, internal equipment mounting rails, and ventilation louvers.',
-    specs: ['2.5mm CRCA sheet steel fabrication', 'Precision CNC press-brake bends', 'Heavy industrial piano hinges & locks', 'Dual internal component sub-panels']
-  },
-  {
     id: 'sheetmetal-ducts-12',
     code: 'MKP-SHT-02',
     title: 'Stainless Steel Ducting',
@@ -62,15 +44,6 @@ export const GALLERY_ITEMS = [
     image: '/images/gallery_png_products/sheetmetal_ducts_12.png',
     description: 'Modular rectangular stainless steel duct segments, 90° transitions, offset bends, and collection boxes staged after welding.',
     specs: ['SS 304 2.0mm & 3.0mm ducting', 'Continuous leak-proof TIG seam welds', 'Angle iron connection bolt flanges', 'High temperature & fume resistant']
-  },
-  {
-    id: 'sheetmetal-ducts-13',
-    code: 'MKP-SHT-03',
-    title: 'Flanged Chute Diverters',
-    category: 'Sheet Metal & Ducts',
-    image: '/images/gallery_png_products/sheetmetal_ducts_13.png',
-    description: 'TIG-welded precision sheet metal duct transitions with internal diverter vanes and laser-cut connection flanges.',
-    specs: ['Internal flow guidance vanes', 'Precision CNC plasma & laser blanks', 'Square-to-round transition profile', 'Pressure test verified seams']
   },
   {
     id: 'coal-crusher-01',
@@ -82,24 +55,6 @@ export const GALLERY_ITEMS = [
     specs: ['Heavy MS plate casing (16mm-25mm)', 'Alloy steel crushing rotor shafts', 'Self-aligning heavy spherical roller bearings', 'Reinforced foundation frame skid']
   },
   {
-    id: 'rotary-airlock-16',
-    code: 'MKP-EQP-01',
-    title: 'Rotary Airlock Valve',
-    category: 'Industrial Equipment',
-    image: '/images/gallery_png_products/rotary_airlock_16.png',
-    description: 'Precision-machined rotary airlock feeder valves complete with flange housings, rotor vanes, and geared electric motor drive units.',
-    specs: ['8-vane closed-pocket precision rotor', '0.10mm radial clearance to stator bore', 'Direct-coupled inline helical gear motor', 'Gland packed air purge shaft seals']
-  },
-  {
-    id: 'vertical-ducts-17',
-    code: 'MKP-SHT-05',
-    title: 'Vertical Drop Chutes',
-    category: 'Sheet Metal & Ducts',
-    image: '/images/gallery_png_products/vertical_ducts_17.png',
-    description: 'Vertical downcomer duct assemblies with top flared inlets, right-angle discharge branches, and precision drilled bolt flanges.',
-    specs: ['Heavy duty carbon steel chute tubes', 'Reinforced elbow impact wear plates', 'Standard PN10/ANSI bolt flanges', 'Internal wear-resistant lining optional']
-  },
-  {
     id: 'process-skid-19',
     code: 'MKP-EQP-03',
     title: 'Fluid Process Skid',
@@ -107,15 +62,6 @@ export const GALLERY_ITEMS = [
     image: '/images/gallery_png_products/process_skid_19.png',
     description: 'Turnkey skid-mounted process system featuring stainless steel piping manifolds, dual booster pumps, and filter columns.',
     specs: ['SS 316L schedule 40 piping headers', 'Dual multistage centrifugal booster pumps', 'Integrated drip containment drain tray', 'Factory hydrostatic pressure certified']
-  },
-  {
-    id: 'filtration-skid-20',
-    code: 'MKP-EQP-04',
-    title: 'Filtration Vessel Rig',
-    category: 'Industrial Equipment',
-    image: '/images/gallery_png_products/filtration_skid_20.png',
-    description: 'Vertical stainless steel filter housing and process skid assembly with quick-clamp sanitary top head and valve manifold.',
-    specs: ['High pressure stainless filtration column', 'Tri-clamp sanitary quick-release dome', 'Glycerin-filled analog pressure gauges', 'Compact footprint workshop skid frame']
   },
   {
     id: 'structural-frame-07',
@@ -181,15 +127,6 @@ export const GALLERY_ITEMS = [
     specs: ['Overhead safety handrail enclosure', 'Anti-slip industrial walkway grating', 'High load capacity structural columns', 'Rigid diagonal tension bracing rods']
   },
   {
-    id: 'structural-frame-06',
-    code: 'MKP-STR-06',
-    title: 'High-Bay Structural Rig',
-    category: 'Structural Fabrication',
-    image: '/images/gallery_png_products/structural_frame_06.png',
-    description: 'Full-height workshop assembly check of vertical gantry columns, structural trusses, and sub-frame mount brackets.',
-    specs: ['Pre-delivery complete shop assembly', 'Full bolt-up alignment verification', 'Overhead suspension attachment brackets', 'Modular multi-section disassembly']
-  },
-  {
     id: 'structural-frame-08',
     code: 'MKP-STR-08',
     title: 'Hopper Support Truss',
@@ -217,15 +154,6 @@ export const GALLERY_ITEMS = [
     specs: ['Multi-axis CNC press brake forming', 'Consistent radius bends without distortion', 'Precision flanged connection lips', 'Batch manufactured under strict QA']
   },
   {
-    id: 'industrial-frame-15',
-    code: 'MKP-MAC-02',
-    title: 'Rigid Machine Base',
-    category: 'Machine Structures',
-    image: '/images/gallery_png_products/industrial_frame_15.png',
-    description: 'Heavy structural steel bed frame for industrial processing equipment, fabricated with 400A MIG welding and internal reinforcing gussets.',
-    specs: ['Internal diagonal rib cage reinforcement', 'High torsional and bending stiffness', 'Machined mounting pads for motor/gearbox', 'Epoxy industrial machine gray paint']
-  },
-  {
     id: 'rotary-feeder-18',
     code: 'MKP-EQP-02',
     title: 'Rotary Feeder Assembly',
@@ -233,15 +161,6 @@ export const GALLERY_ITEMS = [
     image: '/images/gallery_png_products/rotary_feeder_18.png',
     description: 'Close-up view of precision rotor housing, shaft bearing assembly, safety guard, and high-torque industrial motor drive.',
     specs: ['Close-tolerance CNC turned rotor body', 'Heavy cast iron end covers & seal hubs', 'Safety mesh chain drive enclosure', 'Variable frequency drive compatible']
-  },
-  {
-    id: 'equipment-group-21',
-    code: 'MKP-EQP-05',
-    title: 'Custom Machinery Assemblies',
-    category: 'Industrial Equipment',
-    image: '/images/gallery_png_products/equipment_group_21.png',
-    description: 'Collection of specialized workshop manufacturing assemblies including material transfer chutes, drive stations, and process equipment.',
-    specs: ['Custom turnkey fabrication packages', 'Integrated electrical & mechanical mounting', 'Factory pre-commissioned & inspected', 'Supplied with test certificates']
   },
   {
     id: 'cad-design-26',
@@ -323,15 +242,6 @@ export const GALLERY_ITEMS = [
     image: '/images/gallery_png_products/04_material_handling_trolley.png',
     description: 'Ergonomic multi-tier component transit trolley equipped with heavy polyurethane caster wheels and vibration dampening.',
     specs: ['Heavy tubular steel construction', '750kg payload rating per trolley', 'Lockable swivel polyurethane wheels', 'Rubber-lined shelf surfaces']
-  },
-  {
-    id: 'hydraulic-structure',
-    code: 'MKP-FAB-02',
-    title: 'Hydraulic Press Structure',
-    category: 'Structural Fabrication',
-    image: '/images/gallery_png_products/05_hydraulic_press_structure.png',
-    description: 'Heavy-gauge steel C-frame machine structure fabricated with 400A MIG welding and stress-relieved machined bed plates.',
-    specs: ['30mm thick steel side uprights', 'CNC bored cylinder mounting flange', 'Internal gusset stiffness ribs', 'Stress relief heat treatment verified']
   },
   {
     id: 'pvc-conveyor',
